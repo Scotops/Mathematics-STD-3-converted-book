@@ -86,7 +86,15 @@
         <span data-id="pg100_n0015">What did you observe in task 1 and 2?</span>
       </div>
     </div>
-  </section>
+
+<div data-adt-drawing class="mt-8 rounded-2xl border border-sky-300 bg-sky-50 p-5 shadow-sm">
+  <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+    <h2 class="text-lg font-semibold text-slate-800">Draw your answer</h2>
+    <button type="button" data-clear-drawing class="rounded-lg border border-slate-500 bg-white px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100">Clear drawing</button>
+  </div>
+  <canvas tabindex="0" aria-label="Drawing area for your answer" class="block w-full touch-none rounded-lg border-2 border-dashed border-slate-400 bg-white" style="height:260px"></canvas>
+</div>
+</section>
 </div>
     </main>
 
@@ -94,7 +102,9 @@
     <div class="relative z-50" id="nav-container"></div>
     <script src="./assets/offline-preloader.js?v=7"></script>
     <script src="./assets/scorm.js"></script>
+    <script src="./assets/activity-tools.js"></script>
     <script src="./assets/base.bundle.local.js"></script>
+    <script src="./assets/page-number.js"></script>
 </body>
 
 </html>
