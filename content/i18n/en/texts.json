@@ -5845,7 +5845,7 @@
   "pg172_n0038": "Subtracting Tanzanian currency is done like subtracting whole numbers from right to left.",
   "pg173_im002": "Example 1: shs 48965 95 cts minus shs 25843 85 cts. Steps: subtract cents, 95 minus 85 equals 10 cts; subtract shillings, 48965 minus 25843 equals shs 23122. Therefore, the answer is shs 23122 10 cts.",
   "pg173_n0002": "Example 1",
-  "pg173_n0003": "shs 48965 95 cts ? shs 25843 85 cts =",
+  "pg173_n0003": "shs 48965 95 cts − shs 25843 85 cts =",
   "pg173_n0004": "Steps",
   "pg173_n0005": "1. Subtract cents: 95 − 85 = 10 cts.",
   "pg173_n0006": "Write 10 cts in the cents place.",
