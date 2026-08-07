@@ -1,0 +1,11 @@
+/* Shared reading size: headings retain hierarchy; lesson and answer text stays consistent. */
+#content :is(p, li, td, th, label, input, textarea) {
+  font-size: 18px !important;
+  line-height: 1.55 !important;
+}
+
+@media (max-width: 640px) {
+  #content :is(p, li, td, th, label, input, textarea) {
+    font-size: 16px !important;
+  }
+}
