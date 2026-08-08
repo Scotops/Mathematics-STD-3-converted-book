@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="370" viewBox="0 0 1200 370" role="img" aria-label="Place-value addition diagram for 472395 plus 134826 equals 607221">
+  <defs>
+    <marker id="arrow-blue" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9z" fill="#13aeea"/></marker>
+    <marker id="arrow-pink" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9z" fill="#df147d"/></marker>
+    <marker id="arrow-orange" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9z" fill="#f6ae36"/></marker>
+    <marker id="arrow-green" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9z" fill="#07974c"/></marker>
+    <marker id="arrow-brown" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9z" fill="#5a391b"/></marker>
+    <marker id="arrow-purple" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9z" fill="#74368b"/></marker>
+  </defs>
+  <rect width="1200" height="370" rx="18" fill="white"/>
+  <g fill="#1f2937" font-family="Arial, sans-serif" font-size="35" text-anchor="middle">
+    <text x="90" y="50">4</text><text x="170" y="50">7</text><text x="250" y="50">2</text><text x="330" y="50">3</text><text x="410" y="50">9</text><text x="490" y="50">5</text>
+    <text x="550" y="50">+</text>
+    <text x="640" y="50">1</text><text x="720" y="50">3</text><text x="800" y="50">4</text><text x="880" y="50">8</text><text x="960" y="50">2</text><text x="1040" y="50">6</text>
+    <text x="1095" y="50">=</text>
+    <text x="1140" y="50">6</text><text x="1190" y="50">0</text>
+  </g>
+  <!-- Sum is placed on its own clearly aligned row for small screens. -->
+  <g fill="#1f2937" font-family="Arial, sans-serif" font-size="35" text-anchor="middle">
+    <text x="640" y="338">6</text><text x="720" y="338">0</text><text x="800" y="338">7</text><text x="880" y="338">2</text><text x="960" y="338">2</text><text x="1040" y="338">1</text>
+  </g>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="5">
+    <path d="M90 75V285H640V325" stroke="#13aeea" marker-end="url(#arrow-blue)"/><path d="M640 75V255H640V325" stroke="#13aeea" marker-end="url(#arrow-blue)"/>
+    <path d="M170 75V250H720V325" stroke="#df147d" marker-end="url(#arrow-pink)"/><path d="M720 75V220H720V325" stroke="#df147d" marker-end="url(#arrow-pink)"/>
+    <path d="M250 75V215H800V325" stroke="#f6ae36" marker-end="url(#arrow-orange)"/><path d="M800 75V185H800V325" stroke="#f6ae36" marker-end="url(#arrow-orange)"/>
+    <path d="M330 75V180H880V325" stroke="#07974c" marker-end="url(#arrow-green)"/><path d="M880 75V150H880V325" stroke="#07974c" marker-end="url(#arrow-green)"/>
+    <path d="M410 75V145H960V325" stroke="#5a391b" marker-end="url(#arrow-brown)"/><path d="M960 75V120H960V325" stroke="#5a391b" marker-end="url(#arrow-brown)"/>
+    <path d="M490 75V110H1040V325" stroke="#74368b" marker-end="url(#arrow-purple)"/><path d="M1040 75V90H1040V325" stroke="#74368b" marker-end="url(#arrow-purple)"/>
+  </g>
+  <g fill="#13aeea"><circle cx="90" cy="75" r="7"/><circle cx="640" cy="75" r="7"/></g><g fill="#df147d"><circle cx="170" cy="75" r="7"/><circle cx="720" cy="75" r="7"/></g><g fill="#f6ae36"><circle cx="250" cy="75" r="7"/><circle cx="800" cy="75" r="7"/></g><g fill="#07974c"><circle cx="330" cy="75" r="7"/><circle cx="880" cy="75" r="7"/></g><g fill="#5a391b"><circle cx="410" cy="75" r="7"/><circle cx="960" cy="75" r="7"/></g><g fill="#74368b"><circle cx="490" cy="75" r="7"/><circle cx="1040" cy="75" r="7"/></g>
+</svg>
