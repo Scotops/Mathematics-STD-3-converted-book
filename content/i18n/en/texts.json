@@ -1579,6 +1579,7 @@
   "pg039_n0013": "Example 1",
   "pg039_n0014": "Write the missing numbers in the following sequence:",
   "pg039_n0015": "1, 4, 7, 10, 13, 16, 19, 22, 25.",
+  "pg039_n0015_completed": "1, 4, 7, 10, 13, 16, 19, 22, 25.",
   "pg039_n0016": "Solution",
   "pg039_n0017": "In this sequence, the numbers are increasing by 3 in each step:",
   "pg039_n0018": "Thus,",
