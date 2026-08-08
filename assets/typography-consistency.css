@@ -19,6 +19,32 @@
   white-space: pre;
 }
 
+/* Applied by numerical-alignment.js to worked addition and subtraction.
+   Every row shares the same right edge, which is the ones column. */
+#content .adt-vertical-arithmetic {
+  align-items: stretch !important;
+  box-sizing: border-box;
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 8ch;
+  width: 8ch;
+}
+
+#content .adt-vertical-arithmetic > [data-id] {
+  box-sizing: border-box;
+  display: block;
+  min-width: 0;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  text-align: right !important;
+  width: 100%;
+}
+
+/* Regrouped digits sit above the next place-value column, not the ones. */
+#content .adt-vertical-arithmetic > .adt-carry-row {
+  padding-right: 1ch !important;
+}
+
 @media (max-width: 640px) {
   #content :is(p, li, td, th, label, input, textarea) {
     font-size: 16px !important;
