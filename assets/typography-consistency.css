@@ -4,6 +4,21 @@
   line-height: 1.55 !important;
 }
 
+/* Keep every calculation column stable: digits have equal widths, so ones,
+   tens and hundreds remain vertically aligned at every screen size. */
+#content :is(.font-mono, pre, table, input) {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+/* Worked vertical calculations use a shared right edge (the ones column). */
+#content pre {
+  display: inline-block;
+  min-width: 7ch;
+  text-align: right;
+  white-space: pre;
+}
+
 @media (max-width: 640px) {
   #content :is(p, li, td, th, label, input, textarea) {
     font-size: 16px !important;
