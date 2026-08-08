@@ -2282,7 +2282,7 @@
   "pg055_im003_crop_v1": "Example 3: 162792 + 531203 arranged in a place-value table with columns Hundred Thousands, Ten Thousands, Thousands, Hundreds, Tens, and Ones. The first row is 1, 6, 2, 7, 9, 2; the second row is 5, 3, 1, 2, 0, 3; the sum row is 6, 9, 3, 9, 9, 5. Therefore, the answer is 693995.",
   "pg055_n0034": "Example 3",
   "pg055_n0036": "162792",
-  "pg055_n0037": "+\\ 531203",
+  "pg055_n0037": "+ 531203",
   "pg055_n0038": "<math><menclose notation=\"bottom\" class=\"tml-underline\"><mrow><mspace width=\"2em\"></mspace><mspace width=\"2em\"></mspace><mspace width=\"2em\"></mspace></mrow></menclose></math>",
   "pg055_n0039": "<math><menclose notation=\"bottom\" class=\"tml-underline\"><mrow><mspace width=\"2em\"></mspace><mspace width=\"2em\"></mspace><mspace width=\"2em\"></mspace></mrow></menclose></math>",
   "pg055_n0041": "Solution",
