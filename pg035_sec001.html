@@ -116,11 +116,19 @@
     </main>
 
     <script type="text/javascript">
-        window.correctAnswers = JSON.parse('{"item-1":"8790779","item-2":"1000340","item-3":"5999456","item-4":"164578","item-5":"8641521","item-6":"600000","item-7":"6000","item-8":"600","item-9":"600000","item-10":"60000","item-11":"60"}');
+        window.correctAnswers = JSON.parse('{"item-1":"8790779","item-2":"1000340","item-3":"5999456","item-4":"740609","item-5":"8641521","item-6":"600000","item-7":"6000","item-8":"600","item-9":"600000","item-10":"60000","item-11":"60"}');
+    </script>
+    <script>
+      // Learners may write large abacus numbers with commas or spaces.
+      document.addEventListener('input', function (event) {
+        if (event.target.matches('[data-activity-item="item-4"], [data-activity-item="item-5"]')) {
+          event.target.value = event.target.value.replace(/[\s,]/g, '');
+        }
+      });
     </script>
     <div class="relative z-50" id="interface-container"></div>
     <div class="relative z-50" id="nav-container"></div>
-    <script src="./assets/offline-preloader.js?v=7"></script>
+    <script src="./assets/offline-preloader.js?v=25"></script>
     <script src="./assets/scorm.js"></script>
     <script src="./assets/base.bundle.local.js"></script>
 </body>
