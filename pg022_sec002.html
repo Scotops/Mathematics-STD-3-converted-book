@@ -30,9 +30,16 @@
     <script type="text/javascript">
         window.correctAnswers = JSON.parse('{"item-1":"1728","item-2":"0","item-3":"80","item-4":"8000","item-5":"1","item-6":"0","item-7":"0","item-8":"800"}');
     </script>
+    <script type="text/javascript">
+      document.addEventListener('input', function (event) {
+        if (event.target.matches('[data-activity-item]')) {
+          event.target.value = event.target.value.replace(/[\s,]/g, '');
+        }
+      });
+    </script>
     <div class="relative z-50" id="interface-container"></div>
     <div class="relative z-50" id="nav-container"></div>
-    <script src="./assets/offline-preloader.js?v=7"></script>
+    <script src="./assets/offline-preloader.js?v=19"></script>
     <script src="./assets/scorm.js"></script>
     <script src="./assets/activity-tools.js"></script>
     <script src="./assets/base.bundle.local.js"></script>
