@@ -6,8 +6,12 @@
  */
 (() => {
   const operator = '[+\\-\\u2212\\u2013]';
-  const numberRow = new RegExp(`^${operator}?\\s*\\d[\\d,.\\s]*$`);
+  // Includes ordinary vertical arithmetic and the shilling/cents layouts used
+  // later in the book.  The detector remains deliberately strict so narrative
+  // sentences are never reflowed as a calculation.
+  const numberRow = new RegExp(`^${operator}?\\s*(?:(?:shs|tsh|tzs)\\s*)?\\d[\\d,.\\s]*(?:cts)?$`, 'i');
   const ruleRow = /^[\-_\u2500\u2014]{3,}$/;
+  const headerRow = /^(?:shs\s+)?(?:cts|cst)$/i;
 
   function addStyles() {
     if (document.getElementById('adt-numerical-alignment-styles')) return;
@@ -26,6 +30,7 @@
         /* Room for an operation sign, its following space and a carry digit. */
         min-width: calc(var(--adt-digits) * 1ch + 2.75ch);
         width: calc(var(--adt-digits) * 1ch + 2.75ch);
+        white-space: pre !important;
       }
       #content .adt-vertical-arithmetic > .adt-numeric-row {
         box-sizing: border-box;
@@ -45,6 +50,15 @@
       }
       #content .adt-vertical-arithmetic > .adt-carry-row {
         padding-right: 1ch !important;
+      }
+      #content .adt-vertical-arithmetic > .adt-currency-header {
+        box-sizing: border-box;
+        display: block !important;
+        min-width: 0;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        text-align: right !important;
+        width: 100% !important;
       }
       #content .adt-pre-calculation {
         display: inline-flex !important;
@@ -73,8 +87,9 @@
 
   function rowKind(row) {
     const value = row.textContent.replace(/\u00a0/g, ' ').trim();
-    if (!value && /(?:^|\\s)(?:h-|border-|w-)/.test(row.className || '')) return 'line';
+    if (!value && /(?:^|\s)(?:h-|border-|w-)/.test(row.className || '')) return 'line';
     if (ruleRow.test(value)) return 'rule';
+    if (headerRow.test(value)) return 'header';
     if (numberRow.test(value)) return 'number';
     return null;
   }
@@ -83,7 +98,12 @@
     return Array.from(block.children).filter((row) => {
       // Rows may contain a simple span for the TTS data-id, but should not
       // contain a complete table, answer field or explanatory paragraph.
-      return !row.querySelector('input, textarea, table, p, ol, ul, section');
+      if (row.querySelector('input, textarea, table, p, ol, ul, section')) return false;
+      const value = row.textContent.replace(/\u00a0/g, ' ').trim();
+      const isVisibleRule = /(?:^|\s)(?:h-|border-|w-)/.test(row.className || '');
+      // Empty placeholder rows are common in exercises; they do not form part
+      // of the written calculation and must not prevent its alignment.
+      return Boolean(value) || isVisibleRule;
     });
   }
 
@@ -115,6 +135,7 @@
       block.style.setProperty('--adt-digits', String(maxDigits));
       rows.forEach((row, index) => {
         if (kinds[index] === 'number') row.classList.add('adt-numeric-row');
+        if (kinds[index] === 'header') row.classList.add('adt-currency-header');
         if (kinds[index] === 'rule') row.classList.add('adt-calc-rule');
         if (kinds[index] === 'line') row.classList.add('adt-calc-line');
         if (/(text-red|text-rose|text-orange)/.test(row.className)) row.classList.add('adt-carry-row');
@@ -136,7 +157,54 @@
       const parsed = lines.map((line) => {
         if (ruleRow.test(line)) return { rule: true };
         const match = line.match(new RegExp(`^(${operator})?\\s*([0-9][0-9,.\\s]*)$`));
-        return match ? { operator: match[1] || '', digits: match[2].replace(/\\s+/g, '') } : null;
+        return match ? { operator: match[1] || '', digits: match[2].replace(/\s+/g, '') } : null;
+      });
+      const numericRows = parsed.filter((row) => row && !row.rule);
+      if (numericRows.length < 2 || parsed.some((row) => !row)) return;
+      if (!numericRows.some((row) => row.operator) && !parsed.some((row) => row.rule)) return;
+
+      const maxDigits = Math.max(...numericRows.map((row) => row.digits.replace(/[^0-9]/g, '').length));
+      block.classList.add('adt-pre-calculation');
+      block.style.setProperty('--adt-digits', String(maxDigits));
+      block.textContent = '';
+      parsed.forEach((row) => {
+        const line = document.createElement('span');
+        if (row.rule) {
+          line.className = 'adt-calc-rule';
+          line.textContent = '\u2500'.repeat(maxDigits + 1);
+        } else {
+          line.className = 'adt-calc-row';
+          const sign = document.createElement('span');
+          sign.className = 'adt-calc-operator';
+          sign.textContent = row.operator;
+          const digits = document.createElement('span');
+          digits.className = 'adt-calc-digits';
+          digits.textContent = row.digits;
+          line.append(sign, digits);
+        }
+        block.append(line);
+      });
+    });
+  }
+
+  // Some converted pages place all rows in a single data-id span instead of
+  // individual row elements. Convert only verified arithmetic strings into
+  // the same aligned grid used for preformatted calculations.
+  function alignLeafMultilineCalculations() {
+    const content = document.getElementById('content');
+    if (!content) return;
+
+    content.querySelectorAll('[data-id], .whitespace-pre, .whitespace-pre-line').forEach((block) => {
+      if (block.classList.contains('adt-pre-calculation') || block.children.length) return;
+      const raw = block.textContent.replace(/\u00a0/g, ' ');
+      if (!/\r?\n/.test(raw)) return;
+      const lines = raw.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+      if (lines.length < 2 || lines.length > 8) return;
+
+      const parsed = lines.map((line) => {
+        if (ruleRow.test(line)) return { rule: true };
+        const match = line.match(new RegExp(`^(${operator})?\\s*((?:(?:shs|tsh|tzs)\\s*)?[0-9][0-9,.\\s]*(?:cts)?)$`, 'i'));
+        return match ? { operator: match[1] || '', digits: match[2].replace(/\s+/g, ' ') } : null;
       });
       const numericRows = parsed.filter((row) => row && !row.rule);
       if (numericRows.length < 2 || parsed.some((row) => !row)) return;
@@ -175,6 +243,7 @@
       addStyles();
       alignCalculationBlocks();
       alignPlainMultilineCalculations();
+      alignLeafMultilineCalculations();
     }, 80);
   }
 
