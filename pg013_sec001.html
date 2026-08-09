@@ -27,6 +27,39 @@
     <script src="./assets/offline-preloader.js?v=46"></script>
     <script src="./assets/scorm.js"></script>
     <script src="./assets/base.bundle.local.js"></script>
+    <script>
+      /* The source conversion left literal blank tokens on this continuation
+         page. Replace them with real fields after localized text is loaded. */
+      (function () {
+        const token = /\[\[blank:(item-\d+)\]\]/g;
+        function installFields() {
+          document.querySelectorAll('.fitb-sentence').forEach((sentence) => {
+            if (!token.test(sentence.textContent || '')) return;
+            token.lastIndex = 0;
+            const source = sentence.textContent;
+            const fragment = document.createDocumentFragment();
+            let cursor = 0;
+            source.replace(token, (match, item, offset) => {
+              fragment.append(source.slice(cursor, offset));
+              const input = document.createElement('input');
+              input.type = 'text';
+              input.maxLength = 1;
+              input.inputMode = 'numeric';
+              input.dataset.activityItem = item;
+              input.setAttribute('aria-label', 'Answer for ' + item.replace('-', ' '));
+              input.className = 'mx-1 inline-block h-9 w-14 rounded border border-slate-400 bg-white px-1 text-center text-[20px] align-middle focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200 max-sm:h-8 max-sm:w-12 max-sm:text-[16px]';
+              fragment.append(input);
+              cursor = offset + match.length;
+              return match;
+            });
+            fragment.append(source.slice(cursor));
+            sentence.replaceChildren(fragment);
+          });
+        }
+        installFields();
+        window.setTimeout(installFields, 700);
+      }());
+    </script>
     <script src="./assets/numerical-alignment.js?v=2"></script>
 </body>
 

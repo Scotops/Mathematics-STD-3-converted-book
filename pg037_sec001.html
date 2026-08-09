@@ -11,6 +11,30 @@
     <link href="./assets/typography-consistency.css" rel="stylesheet">
     <link href="./assets/libs/fontawesome/css/all.min.css" rel="stylesheet">
     <link href="./assets/fonts.css" rel="stylesheet">
+    <style>
+      /* Exercise 10, Question 1 is a comparison table in the source book. */
+      #content section > div.mb-8:first-of-type > .grid {
+        gap: 0;
+        border: 1px solid #3c352d;
+        border-radius: 0;
+        overflow: hidden;
+      }
+      #content section > div.mb-8:first-of-type > .grid > div {
+        min-height: 72px;
+        padding: 0;
+        border-right: 1px solid #3c352d;
+        border-bottom: 1px solid #3c352d;
+      }
+      #content section > div.mb-8:first-of-type > .grid > div:nth-child(3n) { border-right: 0; }
+      #content section > div.mb-8:first-of-type > .grid > div:nth-last-child(-n+3) { border-bottom: 0; }
+      #content section > div.mb-8:first-of-type > .grid input {
+        height: 42px;
+        width: 46px;
+        border-color: #3c352d;
+        border-radius: 0;
+        background: #ddd29a;
+      }
+    </style>
 </head>
 
 <body class="min-h-screen flex items-center justify-center">
@@ -26,6 +50,13 @@
     </script>
     <div class="relative z-50" id="interface-container"></div>
     <div class="relative z-50" id="nav-container"></div>
+    <style>
+      .comparison-table-grid { border: 2px solid #facc15; border-radius: 1rem; padding: 1rem; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.08); }
+      .comparison-table-grid > div { border: 1px solid #f4c34c; border-radius: .75rem; background: #fffbeb; }
+    </style>
+    <script>
+      document.querySelector('section .grid.grid-cols-3')?.classList.add('comparison-table-grid');
+    </script>
     <script src="./assets/offline-preloader.js?v=46"></script>
     <script src="./assets/scorm.js"></script>
     <script src="./assets/base.bundle.local.js"></script>
