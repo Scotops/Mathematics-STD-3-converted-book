@@ -45,6 +45,40 @@
   padding-right: 1ch !important;
 }
 
+/* Converted multiline calculations (<pre> and font-mono blocks) are rebuilt
+   by numerical-alignment.js.  The operator occupies its own narrow column,
+   while every numeric row ends at the shared ones column. */
+#content .adt-pre-calculation {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  line-height: 1.1 !important;
+  white-space: normal !important;
+}
+
+#content .adt-pre-calculation > .adt-calc-row {
+  display: grid;
+  grid-template-columns: 1.15ch calc(var(--adt-digits) * 1ch);
+  min-height: 1.1em;
+}
+
+#content .adt-pre-calculation .adt-calc-operator {
+  text-align: left;
+}
+
+#content .adt-pre-calculation .adt-calc-digits {
+  text-align: right;
+}
+
+#content .adt-pre-calculation > .adt-calc-rule {
+  display: block;
+  letter-spacing: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
 @media (max-width: 640px) {
   #content :is(p, li, td, th, label, input, textarea) {
     font-size: 16px !important;
