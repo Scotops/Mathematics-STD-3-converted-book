@@ -16,13 +16,15 @@
   let queue = [];
   let queueIndex = 0;
   let keepAliveTimer = null;
-  let suppressBundledAudio = false;
+  let suppressBundledAudio = canUseWebSpeech;
   let pendingControlTimer = null;
   let sessionVoice = null;
+  const trackedAudio = new Set();
 
   const nativeMediaPlay = window.HTMLMediaElement?.prototype?.play;
   if (nativeMediaPlay) {
     window.HTMLMediaElement.prototype.play = function (...args) {
+      if (this instanceof HTMLAudioElement) trackedAudio.add(this);
       if (suppressBundledAudio && this instanceof HTMLAudioElement) {
         this.pause();
         this.currentTime = 0;
@@ -30,6 +32,21 @@
       }
       return nativeMediaPlay.apply(this, args);
     };
+  }
+
+  // The bundled reader creates detached audio objects with `new Audio()`.
+  // Track those objects as soon as the page starts so they can never continue
+  // underneath the single Web Speech narrator.
+  const NativeAudio = window.Audio;
+  if (typeof NativeAudio === 'function') {
+    const TrackedAudio = function (...args) {
+      const audio = new NativeAudio(...args);
+      trackedAudio.add(audio);
+      return audio;
+    };
+    TrackedAudio.prototype = NativeAudio.prototype;
+    Object.setPrototypeOf(TrackedAudio, NativeAudio);
+    window.Audio = TrackedAudio;
   }
 
   const ignoredTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'SVG', 'PATH', 'IFRAME']);
@@ -191,7 +208,8 @@
   }
 
   function stopBundledAudio() {
-    document.querySelectorAll('audio').forEach((audio) => {
+    const allAudio = new Set([...trackedAudio, ...document.querySelectorAll('audio')]);
+    allAudio.forEach((audio) => {
       audio.pause();
       try { audio.currentTime = 0; } catch {}
     });
@@ -242,7 +260,7 @@
   function stop() {
     cancelled = true;
     if (canUseWebSpeech) synth.cancel();
-    suppressBundledAudio = false;
+    suppressBundledAudio = canUseWebSpeech;
     finish();
   }
 
@@ -264,7 +282,7 @@
     stopBundledAudio();
     if (pendingControlTimer) window.clearTimeout(pendingControlTimer);
     pendingControlTimer = window.setTimeout(() => {
-      if (!playing) suppressBundledAudio = false;
+      if (!playing) suppressBundledAudio = canUseWebSpeech;
     }, 1200);
   }, true);
 
