@@ -36,13 +36,13 @@
           ['pg011_n0005', '(a) 1020'],
           ['pg011_n0006', '(b) 2010'],
           ['pg011_n0007', '(c) 1687'],
-          ['pg011_read_item_d', '(d) 7922'],
-          ['pg011_read_item_e', '(e) 8888'],
-          ['pg011_read_item_f', '(f) 1692'],
-          ['pg011_read_item_g', '(g) 5401'],
-          ['pg011_read_item_h', '(h) 9111'],
-          ['pg011_read_item_i', '(i) 3333'],
-          ['pg011_read_item_j', '(j) 2000']
+          ['pg011_n0008', '(d) 7922'],
+          ['pg011_n0009', '(e) 8888'],
+          ['pg011_n0011', '(f) 1692'],
+          ['pg011_n0012', '(g) 5401'],
+          ['pg011_n0013', '(h) 9111'],
+          ['pg011_n0014', '(i) 3333'],
+          ['pg011_n0015', '(j) 2000']
         ];
         const sequence = document.createElement('div');
         sequence.id = 'pg011-read-aloud-items';
@@ -54,6 +54,7 @@
           item.textContent = text;
           sequence.append(item, document.createTextNode(' '));
         }
+        document.querySelectorAll('label[data-id^="pg011_read_item_"]').forEach((label) => label.removeAttribute('data-id'));
         instruction.insertAdjacentElement('afterend', sequence);
       })();
     </script>
