@@ -24,46 +24,10 @@
     </script>
     <div class="relative z-50" id="interface-container"></div>
     <div class="relative z-50" id="nav-container"></div>
-    <script>
-      // Keep read-aloud in the same order as the visible question grid. The
-      // answer labels below are interactive controls, so they must not be the
-      // source used for the page narration.
-      (() => {
-        const instruction = document.querySelector('[data-id="pg011_n0003"]');
-        if (!instruction || document.getElementById('pg011-read-aloud-items')) return;
-
-        const items = [
-          ['pg011_n0005', '(a) 1020'],
-          ['pg011_n0006', '(b) 2010'],
-          ['pg011_n0007', '(c) 1687'],
-          ['pg011_n0008', '(d) 7922'],
-          ['pg011_n0009', '(e) 8888'],
-          ['pg011_n0011', '(f) 1692'],
-          ['pg011_n0012', '(g) 5401'],
-          ['pg011_n0013', '(h) 9111'],
-          ['pg011_n0014', '(i) 3333'],
-          ['pg011_n0015', '(j) 2000']
-        ];
-        const sequence = document.createElement('div');
-        sequence.id = 'pg011-read-aloud-items';
-        // Keep the narration-only sequence available to the reader runtime while
-        // keeping it out of the visual page. The book CSS has no `sr-only` rule.
-        sequence.setAttribute('style', 'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;');
-        for (const [id, text] of items) {
-          document.querySelectorAll(`label[data-id="${id}"]`).forEach((label) => label.removeAttribute('data-id'));
-          const item = document.createElement('span');
-          item.dataset.id = id;
-          item.textContent = text;
-          sequence.append(item, document.createTextNode(' '));
-        }
-        document.querySelectorAll('label[data-id^="pg011_read_item_"]').forEach((label) => label.removeAttribute('data-id'));
-        instruction.insertAdjacentElement('afterend', sequence);
-      })();
-    </script>
     <script src="./assets/offline-preloader.js?v=46"></script>
     <script src="./assets/scorm.js"></script>
     <script src="./assets/base.bundle.local.js"></script>
-    <script src="./assets/accessible-tts.js?v=2"></script>
+    <script src="./assets/accessible-tts.js?v=3"></script>
 <script src="./assets/numerical-alignment.js?v=5"></script>
 </body>
 

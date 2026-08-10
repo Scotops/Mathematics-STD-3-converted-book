@@ -8,6 +8,9 @@
 
   const MAX_CHUNK_LENGTH = 180;
   const ENGLISH_LANG = 'en-US';
+  const synth = window.speechSynthesis;
+  const Utterance = window.SpeechSynthesisUtterance;
+  const canUseWebSpeech = Boolean(synth && typeof synth.speak === 'function' && typeof Utterance === 'function');
   let playing = false;
   let cancelled = false;
   let queue = [];
@@ -120,7 +123,8 @@
   }
 
   function preferredVoice() {
-    const voices = window.speechSynthesis.getVoices();
+    if (!canUseWebSpeech || typeof synth.getVoices !== 'function') return null;
+    const voices = synth.getVoices();
     const english = voices.filter((voice) => /^en([_-]|$)/i.test(voice.lang));
     const pool = english.length ? english : voices;
     const score = (voice) => {
@@ -149,7 +153,7 @@
 
   function playNext() {
     if (cancelled || queueIndex >= queue.length) return finish();
-    const utterance = new SpeechSynthesisUtterance(queue[queueIndex++]);
+    const utterance = new Utterance(queue[queueIndex++]);
     const voice = preferredVoice();
     utterance.lang = voice?.lang || ENGLISH_LANG;
     if (voice) utterance.voice = voice;
@@ -161,13 +165,14 @@
       // not prevent the rest of the page from being read.
       if (!cancelled && event.error !== 'interrupted' && event.error !== 'canceled') window.setTimeout(playNext, 30);
     };
-    window.speechSynthesis.speak(utterance);
+    synth.speak(utterance);
   }
 
   function start() {
     const text = sanitizeForSpeech(extractPageText());
     if (!text) return;
-    window.speechSynthesis.cancel();
+    if (!canUseWebSpeech) return;
+    synth.cancel();
     cancelled = false;
     queue = splitIntoChunks(text);
     queueIndex = 0;
@@ -177,8 +182,8 @@
     // after an otherwise ordinary list item such as (c).
     if (keepAliveTimer) window.clearInterval(keepAliveTimer);
     keepAliveTimer = window.setInterval(() => {
-      if (playing && !cancelled && speechSynthesis.speaking && !speechSynthesis.paused) {
-        speechSynthesis.resume();
+      if (playing && !cancelled && synth.speaking && !synth.paused) {
+        synth.resume();
       }
     }, 7000);
     document.documentElement.classList.add('adt-tts-playing');
@@ -187,7 +192,7 @@
 
   function stop() {
     cancelled = true;
-    window.speechSynthesis.cancel();
+    if (canUseWebSpeech) synth.cancel();
     finish();
   }
 
@@ -205,6 +210,8 @@
   document.addEventListener('click', (event) => {
     const control = event.target instanceof Element ? event.target.closest('button, [role="button"]') : null;
     if (!isReadAloudControl(control)) return;
+    // If a browser has no Web Speech API, preserve the ADT's bundled reader.
+    if (!canUseWebSpeech) return;
     event.preventDefault();
     event.stopImmediatePropagation();
     playing ? stop() : start();
@@ -221,5 +228,7 @@
     get isPlaying() { return playing; }
   });
 
-  window.speechSynthesis.addEventListener?.('voiceschanged', preferredVoice);
+  if (canUseWebSpeech && typeof synth.addEventListener === 'function') {
+    synth.addEventListener('voiceschanged', preferredVoice);
+  }
 })();
