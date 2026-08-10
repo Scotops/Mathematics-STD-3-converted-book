@@ -12,7 +12,8 @@
   <style>
     .place-example { max-width: 1000px; margin: 2rem auto; padding: 2.5rem; border: 3px solid #9a7c00; border-radius: 1.5rem; background: #fff; color: #242424; }
     .place-example h2 { display: inline-block; margin: -4.8rem 0 2rem 2rem; padding: .75rem 2rem; border-radius: 1.25rem; background: #9a7c00; color: #fff; font: 700 2rem/1.1 Arial, sans-serif; }
-    .place-example .instruction { margin: 0 0 1.6rem; font-size: 1.65rem; line-height: 1.35; }
+    .place-example .instruction { margin: 0; font-size: 1.65rem; line-height: 1.35; }
+    .place-example .instruction-continuation { margin: 0 0 1.6rem; }
     .place-example .questions, .place-example .answers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem 3rem; }
     .place-example .question { font-size: 1.5rem; font-weight: 600; }
     .place-example h3 { margin: 2rem 0 1.25rem; font-size: 1.85rem; font-weight: 700; }
@@ -34,7 +35,8 @@
       <h1 class="sr-only">Example 5: Place value of digits in whole numbers</h1>
       <article class="place-example">
         <h2 data-id="pg009_n0002">Example 5</h2>
-        <p class="instruction" data-id="pg009_n0003">Identify the place value of each digit in the following whole numbers:</p>
+        <p class="instruction" data-id="pg009_n0003">Identify the place value of each digit in the following whole</p>
+        <p class="instruction instruction-continuation" aria-hidden="true">numbers:</p>
         <div class="questions" aria-label="Numbers to identify">
           <p class="question" data-id="pg009_n0004">(a) 4628</p>
           <p class="question" data-id="pg009_n0005">(b) 3456</p>
