@@ -24,6 +24,9 @@ TEXTS_PATH = I18N / "texts.json"
 AUDIO_MAP_PATH = I18N / "audios.json"
 AUDIO_DIR = I18N / "audio"
 VOICE = "en-US-GuyNeural"
+# Bump the filename whenever a narration correction is published. This keeps
+# readers from receiving an older clip from their browser cache.
+AUDIO_SUFFIX = "labels_v3"
 LABEL = re.compile(r"^\s*\(([A-Za-z])\)\s*")
 # List labels can also appear inside one narration item, for example
 # "Answer: (a) ...; (b) ...". Limit this to school-list labels so units such
@@ -35,6 +38,13 @@ BLANK = re.compile(r"\[\[blank(?::[^\]]+)?\]\]")
 # male narration rather than having their line labels read in screen order.
 EXPLICIT_OVERRIDES = {
     "pg009_n0003": "Identify the place value of each digit in the following whole numbers.",
+    # Example 5 must say the list label as an English letter, then the number.
+    # Writing the number out avoids the speech service interpreting a short
+    # label-plus-digits phrase in an unexpected language or reading style.
+    "pg009_n0004": "A, four thousand six hundred and twenty-eight.",
+    "pg009_n0005": "B, three thousand four hundred and fifty-six.",
+    "pg009_n0006": "C, seven thousand three hundred and four.",
+    "pg009_n0007": "D, nine thousand.",
     "pg009_n0009": "A, four thousands, six hundreds, two tens, and eight ones.",
     "pg009_n0015": "B, three thousands, four hundreds, five tens, and six ones.",
     "pg009_n0021": "C, seven thousands, three hundreds, zero tens, and four ones.",
@@ -63,7 +73,7 @@ def spoken_text(value: str) -> str:
 
 async def write_clip(item_id: str, value: str, semaphore: asyncio.Semaphore) -> tuple[str, str]:
     # A new filename prevents a browser from replaying its cached v1 clip.
-    filename = f"tts_{item_id}_labels_v2.mp3"
+    filename = f"tts_{item_id}_{AUDIO_SUFFIX}.mp3"
     destination = AUDIO_DIR / filename
     async with semaphore:
         for attempt in range(3):
@@ -89,7 +99,10 @@ async def main(
     texts = json.loads(TEXTS_PATH.read_text(encoding="utf-8"))
     audios = json.loads(AUDIO_MAP_PATH.read_text(encoding="utf-8"))
     if item_ids:
-        candidates = [(item_id, texts[item_id]) for item_id in item_ids]
+        candidates = [
+            (item_id, EXPLICIT_OVERRIDES.get(item_id, texts[item_id]))
+            for item_id in item_ids
+        ]
     elif overrides_only:
         candidates = list(EXPLICIT_OVERRIDES.items())
     elif embedded_only:
