@@ -3,7 +3,8 @@
 The ADT reader plays the MP3 mapped to each data-id. It does not use browser
 speech synthesis, so the recorded narration must contain clear label words.
 This utility keeps the existing male book voice while narrating ``(a)`` as
-``A.``, ``(b)`` as ``B.``, and so on. Display text is never changed here.
+the English letter ``A,``, ``(b)`` as ``B,``, and so on. Display text is
+never changed here.
 """
 
 from __future__ import annotations
@@ -24,6 +25,10 @@ AUDIO_MAP_PATH = I18N / "audios.json"
 AUDIO_DIR = I18N / "audio"
 VOICE = "en-US-GuyNeural"
 LABEL = re.compile(r"^\s*\(([A-Za-z])\)\s*")
+# List labels can also appear inside one narration item, for example
+# "Answer: (a) ...; (b) ...". Limit this to school-list labels so units such
+# as "(m)" are not changed.
+LIST_LABEL = re.compile(r"(?<![A-Za-z0-9])\(([a-j])\)(?![A-Za-z0-9])", re.IGNORECASE)
 BLANK = re.compile(r"\[\[blank(?::[^\]]+)?\]\]")
 
 # These visual diagrams need a complete, natural explanation in the existing
@@ -39,9 +44,10 @@ EXPLICIT_OVERRIDES = {
 
 def spoken_text(value: str) -> str:
     """Return the text that should be spoken without changing displayed text."""
-    match = LABEL.match(value)
-    if match:
-        value = f"{match.group(1).upper()}. " + value[match.end():]
+    # A comma forces the English voice to say the letter by itself before the
+    # question. A full stop can make short labels sound like an article or be
+    # swallowed by some speech engines.
+    value = LIST_LABEL.sub(lambda match: f"{match.group(1).upper()}, ", value)
     value = BLANK.sub("dash", value)
     for symbol, words in {
         "\u00f7": " divided by ",
@@ -56,7 +62,8 @@ def spoken_text(value: str) -> str:
 
 
 async def write_clip(item_id: str, value: str, semaphore: asyncio.Semaphore) -> tuple[str, str]:
-    filename = f"tts_{item_id}_labels_v1.mp3"
+    # A new filename prevents a browser from replaying its cached v1 clip.
+    filename = f"tts_{item_id}_labels_v2.mp3"
     destination = AUDIO_DIR / filename
     async with semaphore:
         for attempt in range(3):
@@ -72,11 +79,25 @@ async def write_clip(item_id: str, value: str, semaphore: asyncio.Semaphore) -> 
     raise RuntimeError("unreachable")
 
 
-async def main(limit: int | None, offset: int, overrides_only: bool) -> None:
+async def main(
+    limit: int | None,
+    offset: int,
+    overrides_only: bool,
+    embedded_only: bool,
+    item_ids: list[str] | None,
+) -> None:
     texts = json.loads(TEXTS_PATH.read_text(encoding="utf-8"))
     audios = json.loads(AUDIO_MAP_PATH.read_text(encoding="utf-8"))
-    if overrides_only:
+    if item_ids:
+        candidates = [(item_id, texts[item_id]) for item_id in item_ids]
+    elif overrides_only:
         candidates = list(EXPLICIT_OVERRIDES.items())
+    elif embedded_only:
+        candidates = [
+            (item_id, value)
+            for item_id, value in texts.items()
+            if isinstance(value, str) and not LABEL.match(value) and LIST_LABEL.search(value)
+        ]
     else:
         candidates = [
             (item_id, value)
@@ -101,5 +122,7 @@ if __name__ == "__main__":
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument("--overrides-only", action="store_true")
+    parser.add_argument("--embedded-only", action="store_true")
+    parser.add_argument("--ids", nargs="+", help="Regenerate only the named text IDs.")
     args = parser.parse_args()
-    asyncio.run(main(args.limit, args.offset, args.overrides_only))
+    asyncio.run(main(args.limit, args.offset, args.overrides_only, args.embedded_only, args.ids))
