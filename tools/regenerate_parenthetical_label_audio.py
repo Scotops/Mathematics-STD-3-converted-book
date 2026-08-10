@@ -51,6 +51,11 @@ EXPLICIT_OVERRIDES = {
     "pg009_n0027": "D, nine thousands, zero hundreds, zero tens, and zero ones.",
     # Keep the complete instruction together in one clear clip for question 7.
     "pg011_n0003": "Write the place value of the shaded digit in the following whole numbers.",
+    # Keep every fill-in sentence together so read-aloud does not stop at the input controls.
+    "pg011_sec002_tts_a": "A, in two thousand nine hundred and sixty-eight, 2 is in dash, 9 is in dash, 6 is in dash, and 8 is in dash.",
+    "pg011_sec002_tts_b": "B, in nine thousand eight hundred and one, 9 is in dash, 8 is in dash, 0 is in dash, and 1 is in dash.",
+    "pg011_sec002_tts_c": "C, in seven thousand two hundred and thirty-six, 7 is in dash, 2 is in dash, 3 is in dash, and 6 is in dash.",
+    "pg011_sec002_tts_d": "D, in five thousand six hundred and forty-nine, 5 is in dash, 6 is in dash, 4 is in dash, and 9 is in dash.",
 }
 
 

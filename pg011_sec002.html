@@ -91,6 +91,45 @@
 </div>
     </main>
 
+    <script>
+      (() => {
+        const firstItem = document.querySelector('[data-id="pg011_n0017"]');
+        if (!firstItem || document.getElementById('pg011-sec002-read-aloud')) return;
+
+        // The visible exercise is split by answer inputs.  Provide one hidden,
+        // complete read-aloud sequence so every word and sub-item is spoken.
+        const visibleIds = [
+          'pg011_n0017', 'pg011_n0018', 'pg011_n0020', 'pg011_n0021',
+          'pg011_n0022', 'pg011_n0024', 'pg011_n0025', 'pg011_n0026',
+          'pg011_n0028', 'pg011_n0029', 'pg011_n0030', 'pg011_n0032',
+          'pg011_n0033', 'pg011_n0034'
+        ];
+        visibleIds.forEach((id) => {
+          document.querySelectorAll(`[data-id="${id}"]`).forEach((element) => {
+            element.removeAttribute('data-id');
+          });
+        });
+
+        const readAloud = document.createElement('div');
+        readAloud.id = 'pg011-sec002-read-aloud';
+        readAloud.setAttribute('aria-hidden', 'true');
+        readAloud.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;';
+        [
+          ['pg011_n0017', '8.'],
+          ['pg011_n0018', 'Fill in the blanks with the place values of the given digits.'],
+          ['pg011_sec002_tts_a', 'A, in two thousand nine hundred and sixty-eight, 2 is in dash, 9 is in dash, 6 is in dash, and 8 is in dash.'],
+          ['pg011_sec002_tts_b', 'B, in nine thousand eight hundred and one, 9 is in dash, 8 is in dash, 0 is in dash, and 1 is in dash.'],
+          ['pg011_sec002_tts_c', 'C, in seven thousand two hundred and thirty-six, 7 is in dash, 2 is in dash, 3 is in dash, and 6 is in dash.'],
+          ['pg011_sec002_tts_d', 'D, in five thousand six hundred and forty-nine, 5 is in dash, 6 is in dash, 4 is in dash, and 9 is in dash.']
+        ].forEach(([id, text]) => {
+          const item = document.createElement('span');
+          item.dataset.id = id;
+          item.textContent = text;
+          readAloud.append(item);
+        });
+        firstItem.insertAdjacentElement('afterend', readAloud);
+      })();
+    </script>
     <script type="text/javascript">
         window.correctAnswers = JSON.parse('{"item-1":"thousands","item-2":"hundreds","item-3":"tens","item-4":"ones","item-5":"thousands","item-6":"hundreds","item-7":"tens","item-8":"ones","item-9":"thousands","item-10":"hundreds","item-11":"tens","item-12":"ones","item-13":"thousands","item-14":"hundreds","item-15":"tens","item-16":"ones"}');
     </script>

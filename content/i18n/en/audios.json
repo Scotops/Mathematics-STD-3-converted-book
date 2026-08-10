@@ -6234,5 +6234,9 @@
   "pg011_read_item_g": "tts_pg011_read_item_g_labels_v3.mp3",
   "pg011_read_item_h": "tts_pg011_read_item_h_labels_v3.mp3",
   "pg011_read_item_i": "tts_pg011_read_item_i_labels_v3.mp3",
-  "pg011_read_item_j": "tts_pg011_read_item_j_labels_v3.mp3"
+  "pg011_read_item_j": "tts_pg011_read_item_j_labels_v3.mp3",
+  "pg011_sec002_tts_a": "tts_pg011_sec002_tts_a_labels_v3.mp3",
+  "pg011_sec002_tts_b": "tts_pg011_sec002_tts_b_labels_v3.mp3",
+  "pg011_sec002_tts_c": "tts_pg011_sec002_tts_c_labels_v3.mp3",
+  "pg011_sec002_tts_d": "tts_pg011_sec002_tts_d_labels_v3.mp3"
 }
