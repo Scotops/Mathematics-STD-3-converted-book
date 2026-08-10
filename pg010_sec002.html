@@ -20,6 +20,40 @@
     </main>
 
     <script type="text/javascript">
+        // Give every continuation item its own read-aloud unit before the reader starts.
+        // This keeps the spoken order on this page: Question 4, then 5, then 6.
+        (() => {
+            const headingIds = {
+                "4. Place value questions": "pg010_sec002_q4_heading",
+                "5. Hundreds and thousands": "pg010_sec002_q5_heading",
+                "6. Identify the place value of each digit": "pg010_sec002_q6_heading"
+            };
+            document.querySelectorAll("h2").forEach((heading) => {
+                const id = headingIds[heading.textContent.trim()];
+                if (id) heading.dataset.id = id;
+            });
+
+            const addReadAloudId = (startsWith, id, spokenText) => {
+                const paragraph = [...document.querySelectorAll("p")]
+                    .find((node) => node.firstChild && node.firstChild.nodeType === Node.TEXT_NODE && node.firstChild.nodeValue.trim().startsWith(startsWith));
+                if (!paragraph) return;
+                const span = document.createElement("span");
+                span.dataset.id = id;
+                span.textContent = spokenText;
+                paragraph.replaceChild(span, paragraph.firstChild);
+                paragraph.insertBefore(document.createTextNode(" "), span.nextSibling);
+            };
+
+            addReadAloudId("(a) Which digit is in the hundreds", "pg010_n0010", "(a) Which digit is in the hundreds place in 7029?");
+            addReadAloudId("(b) Which digit is in the thousands", "pg010_n0011", "(b) Which digit is in the thousands place in 8173?");
+            addReadAloudId("(c) Identify the digit in the tens", "pg010_n0012", "(c) Identify the digit in the tens place in 3487.");
+            addReadAloudId("(d) A number has 0", "pg010_n0013", "(d) A number has 0 in the ones place, 6 in the tens place and 7 in the hundreds place. What is the number?");
+            addReadAloudId("(a) How many hundreds", "pg010_n0016", "(a) How many hundreds are there in 3287?");
+            addReadAloudId("(b) There are 9614", "pg010_n0017", "(b) There are 9614 apples in a basket. How many thousands of apples are there?");
+            addReadAloudId("6247:", "pg010_n0021", "6247");
+            addReadAloudId("9999:", "pg010_n0022", "9999");
+            addReadAloudId("7001:", "pg010_n0023", "7001");
+        })();
         window.correctAnswers = JSON.parse('{"item-1":"1000","item-2":"0","item-3":"0","item-4":"1","item-5":"6000","item-6":"600","item-7":"60","item-8":"6","item-9":"4000","item-10":"0","item-11":"0","item-12":"0","item-13":"3000","item-14":"300","item-15":"30","item-16":"9"}');
         Object.assign(window.correctAnswers, {"item-17":"0","item-18":"8","item-19":"8","item-20":"760","item-21":"2","item-22":"9","item-23":"6000","item-24":"200","item-25":"40","item-26":"7","item-27":"9000","item-28":"900","item-29":"90","item-30":"9","item-31":"7000","item-32":"0","item-33":"0","item-34":"1"});
     </script>
