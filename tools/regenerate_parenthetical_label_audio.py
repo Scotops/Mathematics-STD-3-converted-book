@@ -35,10 +35,10 @@ BLANK = re.compile(r"\[\[blank(?::[^\]]+)?\]\]")
 # male narration rather than having their line labels read in screen order.
 EXPLICIT_OVERRIDES = {
     "pg009_n0003": "Identify the place value of each digit in the following whole numbers.",
-    "pg009_n0009": "A. Four thousands, six hundreds, two tens, and eight ones.",
-    "pg009_n0015": "B. Three thousands, four hundreds, five tens, and six ones.",
-    "pg009_n0021": "C. Seven thousands, three hundreds, zero tens, and four ones.",
-    "pg009_n0027": "D. Nine thousands, zero hundreds, zero tens, and zero ones.",
+    "pg009_n0009": "A, four thousands, six hundreds, two tens, and eight ones.",
+    "pg009_n0015": "B, three thousands, four hundreds, five tens, and six ones.",
+    "pg009_n0021": "C, seven thousands, three hundreds, zero tens, and four ones.",
+    "pg009_n0027": "D, nine thousands, zero hundreds, zero tens, and zero ones.",
 }
 
 
