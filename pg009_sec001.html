@@ -19,14 +19,14 @@
     .place-example h3 { margin: 2rem 0 1.25rem; font-size: 1.85rem; font-weight: 700; }
     .place-card { min-height: 18rem; border: 1px solid #d7c069; border-radius: 1rem; padding: 1.25rem; background: #fffdf7; }
     .place-card > p { margin: 0 0 .9rem; font-size: 1.35rem; font-weight: 600; }
-    .place-diagram { position: relative; height: 13rem; min-width: 19rem; }
+    .place-diagram { position: relative; width: min(100%, 22.5rem); height: 13rem; margin: 0 auto; }
     .place-connectors { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-    .place-digits { position: absolute; top: .4rem; left: 1.35rem; display: grid; grid-template-columns: repeat(4, 2.9rem); font-size: 1.35rem; }
+    .place-digits { position: absolute; top: 2%; left: 4%; width: 45%; display: grid; grid-template-columns: repeat(4, 1fr); font-size: clamp(1.15rem, 5.5vw, 1.35rem); }
     .place-digit { text-align: center; font-weight: 700; }
-    .place-labels { position: absolute; top: 1.25rem; left: 12.4rem; display: grid; gap: .65rem; font-size: 1.25rem; }
+    .place-labels { position: absolute; top: 6%; left: 53%; display: grid; gap: .65rem; font-size: clamp(1.05rem, 5vw, 1.25rem); }
     .ones { color: #3498db; } .tens { color: #e6008d; } .hundreds { color: #ff9800; } .thousands { color: #2f9e44; }
     .place-label { margin-left: .8rem; font-weight: 600; }
-    @media (max-width: 700px) { .place-example { margin: 1rem; padding: 1.25rem; } .place-example h2 { margin: -3rem 0 1.5rem .5rem; font-size: 1.55rem; } .place-example .instruction { font-size: 1.25rem; } .place-example .questions, .place-example .answers { grid-template-columns: 1fr; gap: 1rem; } }
+    @media (max-width: 700px) { .place-example { margin: 1rem; padding: 1.25rem; } .place-example h2 { margin: -3rem 0 1.5rem .5rem; font-size: 1.55rem; } .place-example .instruction { font-size: 1.25rem; } .place-example .questions, .place-example .answers { grid-template-columns: 1fr; gap: 1rem; } .place-card { min-height: 16rem; padding: 1rem; } .place-diagram { width: 100%; max-width: 22.5rem; height: clamp(11.5rem, 58vw, 13rem); } .place-labels { gap: clamp(.35rem, 2vw, .65rem); } }
   </style>
 </head>
 <body class="min-h-screen bg-white">
