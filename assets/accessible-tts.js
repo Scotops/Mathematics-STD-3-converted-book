@@ -275,7 +275,7 @@
 
   // Capture before the bundled audio player. This leaves all other dock tools
   // alone while making the book's speaker control reliably narrate the page.
-  document.addEventListener('pointerdown', (event) => {
+  window.addEventListener('pointerdown', (event) => {
     const control = event.target instanceof Element ? event.target.closest('button, [role="button"]') : null;
     if (!canUseWebSpeech || !isReadAloudControl(control)) return;
     suppressBundledAudio = true;
@@ -286,7 +286,7 @@
     }, 1200);
   }, true);
 
-  document.addEventListener('click', (event) => {
+  window.addEventListener('click', (event) => {
     const control = event.target instanceof Element ? event.target.closest('button, [role="button"]') : null;
     if (!isReadAloudControl(control)) return;
     // If a browser has no Web Speech API, preserve the ADT's bundled reader.
