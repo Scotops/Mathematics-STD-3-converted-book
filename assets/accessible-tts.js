@@ -40,6 +40,21 @@
     return value || ' __adt_empty_field__ ';
   }
 
+  function mathText(element) {
+    if (!(element instanceof Element)) return String(element?.textContent || '').trim();
+    const tag = element.tagName.toUpperCase();
+    const children = [...element.children];
+    if (tag === 'MFRAC' && children.length >= 2) {
+      return `${mathText(children[0])} over ${mathText(children[1])}`;
+    }
+    if (tag === 'MO') {
+      const operator = element.textContent.trim();
+      return ({ '+': 'plus', '=': 'equals', '−': 'minus', '-': 'minus', '×': 'times', '÷': 'divided by' })[operator] || operator;
+    }
+    if (!children.length) return element.textContent.trim();
+    return children.map(mathText).filter(Boolean).join(' ');
+  }
+
   function extractPageText() {
     const root = document.querySelector('#content') || document.body;
     const pieces = [];
@@ -58,12 +73,21 @@
       const element = node;
       if (ignoredTags.has(element.tagName) || !isVisible(element)) return;
 
+      if (element.dataset.ttsText) {
+        add(element.dataset.ttsText);
+        return;
+      }
+
       if (element.matches('input, textarea, select')) {
         add(fieldText(element));
         return;
       }
       if (element.tagName === 'IMG') {
         add(element.getAttribute('alt'));
+        return;
+      }
+      if (element.tagName === 'MATH') {
+        add(mathText(element));
         return;
       }
 
