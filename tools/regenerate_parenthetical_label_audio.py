@@ -49,6 +49,8 @@ EXPLICIT_OVERRIDES = {
     "pg009_n0015": "B, three thousands, four hundreds, five tens, and six ones.",
     "pg009_n0021": "C, seven thousands, three hundreds, zero tens, and four ones.",
     "pg009_n0027": "D, nine thousands, zero hundreds, zero tens, and zero ones.",
+    # Keep the complete instruction together in one clear clip for question 7.
+    "pg011_n0003": "Write the place value of the shaded digit in the following whole numbers.",
 }
 
 
