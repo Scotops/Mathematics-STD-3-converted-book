@@ -33,6 +33,30 @@
                 if (id) heading.dataset.id = id;
             });
 
+            // Question 6 continues the original exercise with all ten listed
+            // numbers.  Keep each list label and number as separate read-aloud
+            // units so (a), (b), … are spoken simply as A, B, … in order.
+            const q6Heading = [...document.querySelectorAll("h2")]
+                .find((heading) => heading.textContent.trim() === "6. Identify the place value of each digit");
+            if (q6Heading && q6Heading.nextElementSibling) {
+                const q6Items = [
+                    ["a", "6247", "pg010_n0021"], ["b", "9999", "pg010_n0022"], ["c", "7001", "pg010_n0023"],
+                    ["d", "4444", "pg010_sec002_q6_value_d"], ["e", "3239", "pg010_sec002_q6_value_e"],
+                    ["f", "2776", "pg010_sec002_q6_value_f"], ["g", "1111", "pg010_sec002_q6_value_g"],
+                    ["h", "8107", "pg010_sec002_q6_value_h"], ["i", "9009", "pg010_sec002_q6_value_i"],
+                    ["j", "5108", "pg010_sec002_q6_value_j"]
+                ];
+                let inputIndex = 23;
+                q6Heading.nextElementSibling.className = "grid gap-3 md:grid-cols-3";
+                q6Heading.nextElementSibling.innerHTML = q6Items.map(([letter, number, numberId]) => {
+                    const fields = ["Thousands", "Hundreds", "Tens", "Ones"].map((place) => {
+                        const item = `item-${inputIndex++}`;
+                        return `<input data-activity-item="${item}" aria-label="${number} ${place}" class="w-16 rounded border border-stone-400 bg-white px-1 text-center" type="text">`;
+                    }).join(" ");
+                    return `<p><span data-id="pg010_sec002_q6_label_${letter}">(${letter})</span> <span data-id="${numberId}">${number}</span>: ${fields}</p>`;
+                }).join("");
+            }
+
             const addReadAloudId = (startsWith, id, spokenText) => {
                 const paragraph = [...document.querySelectorAll("p")]
                     .find((node) => node.firstChild && node.firstChild.nodeType === Node.TEXT_NODE && node.firstChild.nodeValue.trim().startsWith(startsWith));
@@ -50,12 +74,9 @@
             addReadAloudId("(d) A number has 0", "pg010_n0013", "(d) A number has 0 in the ones place, 6 in the tens place and 7 in the hundreds place. What is the number?");
             addReadAloudId("(a) How many hundreds", "pg010_n0016", "(a) How many hundreds are there in 3287?");
             addReadAloudId("(b) There are 9614", "pg010_n0017", "(b) There are 9614 apples in a basket. How many thousands of apples are there?");
-            addReadAloudId("6247:", "pg010_n0021", "6247");
-            addReadAloudId("9999:", "pg010_n0022", "9999");
-            addReadAloudId("7001:", "pg010_n0023", "7001");
         })();
         window.correctAnswers = JSON.parse('{"item-1":"1000","item-2":"0","item-3":"0","item-4":"1","item-5":"6000","item-6":"600","item-7":"60","item-8":"6","item-9":"4000","item-10":"0","item-11":"0","item-12":"0","item-13":"3000","item-14":"300","item-15":"30","item-16":"9"}');
-        Object.assign(window.correctAnswers, {"item-17":"0","item-18":"8","item-19":"8","item-20":"760","item-21":"2","item-22":"9","item-23":"6000","item-24":"200","item-25":"40","item-26":"7","item-27":"9000","item-28":"900","item-29":"90","item-30":"9","item-31":"7000","item-32":"0","item-33":"0","item-34":"1"});
+        Object.assign(window.correctAnswers, {"item-17":"0","item-18":"8","item-19":"8","item-20":"760","item-21":"2","item-22":"9","item-23":"6000","item-24":"200","item-25":"40","item-26":"7","item-27":"9000","item-28":"900","item-29":"90","item-30":"9","item-31":"7000","item-32":"0","item-33":"0","item-34":"1","item-35":"4000","item-36":"400","item-37":"40","item-38":"4","item-39":"3000","item-40":"200","item-41":"30","item-42":"9","item-43":"2000","item-44":"700","item-45":"70","item-46":"6","item-47":"1000","item-48":"100","item-49":"10","item-50":"1","item-51":"8000","item-52":"100","item-53":"0","item-54":"7","item-55":"9000","item-56":"0","item-57":"0","item-58":"9","item-59":"5000","item-60":"100","item-61":"0","item-62":"8"});
     </script>
     <div class="relative z-50" id="interface-container"></div>
     <div class="relative z-50" id="nav-container"></div>
