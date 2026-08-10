@@ -92,6 +92,8 @@
       .replace(/[×✕]/g, ' times ')
       .replace(/\+/g, ' plus ')
       .replace(/=/g, ' equals ')
+      .replace(/(\d)\s*-\s*(\d)/g, '$1 minus $2')
+      .replace(/\//g, ' divided by ')
       .replace(/(\d)\s*[−–—-]\s*(\d)/g, '$1 minus $2')
       .replace(/\s*<\s*/g, ' less than ')
       .replace(/\s*>\s*/g, ' greater than ')
