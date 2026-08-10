@@ -16,6 +16,21 @@
   let queue = [];
   let queueIndex = 0;
   let keepAliveTimer = null;
+  let suppressBundledAudio = false;
+  let pendingControlTimer = null;
+  let sessionVoice = null;
+
+  const nativeMediaPlay = window.HTMLMediaElement?.prototype?.play;
+  if (nativeMediaPlay) {
+    window.HTMLMediaElement.prototype.play = function (...args) {
+      if (suppressBundledAudio && this instanceof HTMLAudioElement) {
+        this.pause();
+        this.currentTime = 0;
+        return Promise.resolve();
+      }
+      return nativeMediaPlay.apply(this, args);
+    };
+  }
 
   const ignoredTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'SVG', 'PATH', 'IFRAME']);
   const blockTags = new Set(['P', 'LI', 'DT', 'DD', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'FIGCAPTION', 'CAPTION', 'ARTICLE', 'SECTION']);
@@ -175,10 +190,17 @@
     document.documentElement.classList.remove('adt-tts-playing');
   }
 
+  function stopBundledAudio() {
+    document.querySelectorAll('audio').forEach((audio) => {
+      audio.pause();
+      try { audio.currentTime = 0; } catch {}
+    });
+  }
+
   function playNext() {
     if (cancelled || queueIndex >= queue.length) return finish();
     const utterance = new Utterance(queue[queueIndex++]);
-    const voice = preferredVoice();
+    const voice = sessionVoice;
     utterance.lang = voice?.lang || ENGLISH_LANG;
     if (voice) utterance.voice = voice;
     utterance.rate = 0.92;
@@ -196,7 +218,10 @@
     const text = sanitizeForSpeech(extractPageText());
     if (!text) return;
     if (!canUseWebSpeech) return;
+    suppressBundledAudio = true;
+    stopBundledAudio();
     synth.cancel();
+    sessionVoice = preferredVoice();
     cancelled = false;
     queue = splitIntoChunks(text);
     queueIndex = 0;
@@ -217,6 +242,7 @@
   function stop() {
     cancelled = true;
     if (canUseWebSpeech) synth.cancel();
+    suppressBundledAudio = false;
     finish();
   }
 
@@ -231,6 +257,17 @@
 
   // Capture before the bundled audio player. This leaves all other dock tools
   // alone while making the book's speaker control reliably narrate the page.
+  document.addEventListener('pointerdown', (event) => {
+    const control = event.target instanceof Element ? event.target.closest('button, [role="button"]') : null;
+    if (!canUseWebSpeech || !isReadAloudControl(control)) return;
+    suppressBundledAudio = true;
+    stopBundledAudio();
+    if (pendingControlTimer) window.clearTimeout(pendingControlTimer);
+    pendingControlTimer = window.setTimeout(() => {
+      if (!playing) suppressBundledAudio = false;
+    }, 1200);
+  }, true);
+
   document.addEventListener('click', (event) => {
     const control = event.target instanceof Element ? event.target.closest('button, [role="button"]') : null;
     if (!isReadAloudControl(control)) return;
@@ -238,6 +275,10 @@
     if (!canUseWebSpeech) return;
     event.preventDefault();
     event.stopImmediatePropagation();
+    if (pendingControlTimer) {
+      window.clearTimeout(pendingControlTimer);
+      pendingControlTimer = null;
+    }
     playing ? stop() : start();
   }, true);
 
