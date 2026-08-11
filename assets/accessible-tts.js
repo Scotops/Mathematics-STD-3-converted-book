@@ -404,6 +404,7 @@
     extractPageText,
     expandNumbersForSpeech,
     integerToWords,
+    mathText,
     sanitizeForSpeech,
     splitIntoChunks,
     start,
