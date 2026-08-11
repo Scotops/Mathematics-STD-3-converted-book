@@ -21,16 +21,17 @@
 
     <div class="relative z-50" id="interface-container"></div>
     <div class="relative z-50" id="nav-container"></div>
-    <script src="./assets/offline-preloader.js?v=56"></script>
+    <script src="./assets/offline-preloader.js?v=59"></script>
     <script src="./assets/scorm.js"></script>
     <script>
       // Each image has a visible caption with the same shape name. Narrate the
       // caption once and omit the duplicate alt-text reading.
       document.querySelectorAll('img[data-id^="pg109_im"]').forEach((image) => {
         image.dataset.ttsIgnore = '';
+        image.removeAttribute('data-id');
       });
     </script>
-    <script src="./assets/accessible-tts.js?v=12"></script>
+    <script src="./assets/accessible-tts.js?v=14"></script>
     <script src="./assets/base.bundle.local.js"></script>
 <script src="./assets/numerical-alignment.js?v=5"></script>
 </body>
