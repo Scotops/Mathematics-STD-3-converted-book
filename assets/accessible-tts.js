@@ -79,6 +79,13 @@
     if (tag === 'MFRAC' && children.length >= 2) {
       return `${mathText(children[0])} over ${mathText(children[1])}`;
     }
+    // MathJax converts source MathML into these CHTML elements. Preserve the
+    // numerator/denominator boundary so 3/4 is never spoken as "three four".
+    if (tag === 'MJX-MFRAC' || element.classList.contains('mjx-mfrac')) {
+      const numerator = element.querySelector(':scope > mjx-num, :scope > .mjx-num');
+      const denominator = element.querySelector(':scope > mjx-den, :scope > .mjx-den');
+      if (numerator && denominator) return `${mathText(numerator)} over ${mathText(denominator)}`;
+    }
     if (tag === 'MO') {
       const operator = element.textContent.trim();
       return ({ '+': 'plus', '=': 'equals', '−': 'minus', '-': 'minus', '×': 'times', '÷': 'divided by' })[operator] || operator;
@@ -127,6 +134,10 @@
         return;
       }
       if (element.tagName === 'MATH') {
+        add(mathText(element));
+        return;
+      }
+      if (element.tagName === 'MJX-MFRAC' || element.classList.contains('mjx-mfrac')) {
         add(mathText(element));
         return;
       }
@@ -227,6 +238,8 @@
       .replace(/\+/g, ' plus ')
       .replace(/=/g, ' equals ')
       .replace(/(\d)\s*-\s*(\d)/g, '$1 minus $2')
+      // Numeric slashes in this chapter are fractions, not division signs.
+      .replace(/(\d[\d,]*)\s*\/\s*(\d[\d,]*)/g, '$1 over $2')
       .replace(/\//g, ' divided by ')
       .replace(/(\d)\s*[−–—-]\s*(\d)/g, '$1 minus $2')
       .replace(/\s*<\s*/g, ' less than ')
