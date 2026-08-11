@@ -123,6 +123,18 @@
         return;
       }
 
+      // Keep a visually styled number together when one of its digits is
+      // wrapped for underlining, shading or emphasis. Limiting this to an
+      // individual inline span prevents unrelated values in diagrams and
+      // layouts from being combined.
+      if (element.tagName === 'SPAN' && element.children.length && !element.querySelector('input, textarea, select, img, math')) {
+        const compactNumber = String(element.textContent || '').replace(/\s+/g, '');
+        if (/^\d[\d,.]*$/.test(compactNumber)) {
+          add(compactNumber);
+          return;
+        }
+      }
+
       const tag = element.tagName;
       const isRow = tag === 'TR';
       const isCell = tag === 'TD' || tag === 'TH';
@@ -184,13 +196,7 @@
   }
 
   function expandNumbersForSpeech(text) {
-    const rejoined = String(text || '')
-      // Visual styling often wraps an underlined or shaded digit in its own
-      // span. The DOM walker then sees 4765 as fragments such as "4 765" or
-      // "18 6 7". Rejoin only uninterrupted runs of numeric fragments;
-      // table cells remain protected by the commas inserted by the walker.
-      .replace(/\b\d+(?:\s+\d+)+\b/g, (fragments) => fragments.replace(/\s+/g, ''));
-    return rejoined.replace(/\b\d[\d,]*(?:\.\d+)?\b/g, numberTokenToWords);
+    return String(text || '').replace(/\b\d[\d,]*(?:\.\d+)?\b/g, numberTokenToWords);
   }
 
   function sanitizeForSpeech(text) {
