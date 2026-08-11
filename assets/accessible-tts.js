@@ -136,8 +136,59 @@
     return pieces.join(' ').replace(/\s+([,.;:?!])/g, '$1').replace(/(?:\.\s*){2,}/g, '. ').trim();
   }
 
+  const SMALL_NUMBERS = [
+    'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
+    'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
+    'seventeen', 'eighteen', 'nineteen'
+  ];
+  const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+
+  function integerToWords(value) {
+    if (!Number.isSafeInteger(value) || value < 0) return String(value);
+    if (value < 20) return SMALL_NUMBERS[value];
+    if (value < 100) {
+      const remainder = value % 10;
+      return `${TENS[Math.floor(value / 10)]}${remainder ? `-${SMALL_NUMBERS[remainder]}` : ''}`;
+    }
+    if (value < 1000) {
+      const remainder = value % 100;
+      return `${SMALL_NUMBERS[Math.floor(value / 100)]} hundred${remainder ? ` and ${integerToWords(remainder)}` : ''}`;
+    }
+    const scales = [
+      [1_000_000_000, 'billion'],
+      [1_000_000, 'million'],
+      [1_000, 'thousand']
+    ];
+    for (const [size, name] of scales) {
+      if (value >= size) {
+        const leading = Math.floor(value / size);
+        const remainder = value % size;
+        const joiner = remainder && remainder < 100 ? ' and ' : ' ';
+        return `${integerToWords(leading)} ${name}${remainder ? `${joiner}${integerToWords(remainder)}` : ''}`;
+      }
+    }
+    return String(value);
+  }
+
+  function numberTokenToWords(token) {
+    const compact = token.replace(/,/g, '');
+    const [whole, fraction] = compact.split('.');
+    // Preserve leading zeroes because they carry meaning in times, decimals,
+    // identifiers and written arithmetic.
+    const wholeWords = whole.length > 1 && whole.startsWith('0')
+      ? [...whole].map((digit) => SMALL_NUMBERS[Number(digit)]).join(' ')
+      : integerToWords(Number(whole));
+    if (fraction === undefined) return wholeWords;
+    const fractionWords = [...fraction].map((digit) => SMALL_NUMBERS[Number(digit)]).join(' ');
+    return `${wholeWords} point ${fractionWords}`;
+  }
+
+  function expandNumbersForSpeech(text) {
+    return String(text || '').replace(/\b\d[\d,]*(?:\.\d+)?\b/g, numberTokenToWords);
+  }
+
   function sanitizeForSpeech(text) {
-    return String(text || '')
+    const sanitized = String(text || '')
       // Item markers must be spoken as English letters, without parentheses.
       .replace(/\(\s*([a-z])\s*\)/gi, (_, letter) => ` ${letter.toUpperCase()}, `)
       // Underlines and empty inputs are the blanks printed in the original book.
@@ -158,6 +209,7 @@
       .replace(/\s*>\s*/g, ' greater than ')
       .replace(/\s+/g, ' ')
       .trim();
+    return expandNumbersForSpeech(sanitized);
   }
 
   function splitIntoChunks(text, maxLength = MAX_CHUNK_LENGTH) {
@@ -303,6 +355,8 @@
   // Exposed for the existing audio-button event handler and for testing.
   window.ADTAccessibleTTS = Object.freeze({
     extractPageText,
+    expandNumbersForSpeech,
+    integerToWords,
     sanitizeForSpeech,
     splitIntoChunks,
     start,
