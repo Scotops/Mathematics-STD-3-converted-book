@@ -110,6 +110,14 @@
         return;
       }
 
+      // Exercise question numbers need their own spoken beat. The pause token
+      // is handled by the playback queue and is never sent to the voice.
+      const visibleText = String(element.textContent || '').trim();
+      if (element.tagName === 'SPAN' && /^\d+\.$/.test(visibleText)) {
+        add(`Question ${visibleText} [[adt_pause]]`);
+        return;
+      }
+
       if (element.matches('input, textarea, select')) {
         add(fieldText(element));
         return;
@@ -130,7 +138,11 @@
       if (element.tagName === 'SPAN' && element.children.length && !element.querySelector('input, textarea, select, img, math')) {
         const compactNumber = String(element.textContent || '').replace(/\s+/g, '');
         if (/^\d[\d,.]*$/.test(compactNumber)) {
-          add(compactNumber);
+          const underlined = [...element.querySelectorAll('span')]
+            .filter((child) => /underline/i.test(child.style.textDecoration || child.style.textDecorationLine || ''))
+            .map((child) => String(child.textContent || '').replace(/\s+/g, ''))
+            .join('');
+          add(underlined ? `${compactNumber}, underlined digit ${underlined}.` : compactNumber);
           return;
         }
       }
@@ -225,20 +237,25 @@
   }
 
   function splitIntoChunks(text, maxLength = MAX_CHUNK_LENGTH) {
-    const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
+    const pauseToken = '[[adt_pause]]';
+    const sections = String(text || '').split(pauseToken);
     const chunks = [];
-    let current = '';
-    const push = () => { if (current.trim()) chunks.push(current.trim()); current = ''; };
-    for (const sentence of sentences) {
-      const words = sentence.trim().split(/\s+/);
-      for (const word of words) {
-        const candidate = current ? `${current} ${word}` : word;
-        if (candidate.length > maxLength && current) push();
-        current = current ? `${current} ${word}` : word;
+    sections.forEach((section, sectionIndex) => {
+      const sentences = section.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [section];
+      let current = '';
+      const push = () => { if (current.trim()) chunks.push(current.trim()); current = ''; };
+      for (const sentence of sentences) {
+        const words = sentence.trim().split(/\s+/).filter(Boolean);
+        for (const word of words) {
+          const candidate = current ? `${current} ${word}` : word;
+          if (candidate.length > maxLength && current) push();
+          current = current ? `${current} ${word}` : word;
+        }
+        if (current.length >= Math.floor(maxLength * 0.65)) push();
       }
-      if (current.length >= Math.floor(maxLength * 0.65)) push();
-    }
-    push();
+      push();
+      if (sectionIndex < sections.length - 1) chunks.push('__adt_speech_pause__');
+    });
     return chunks;
   }
 
@@ -281,7 +298,12 @@
 
   function playNext() {
     if (cancelled || queueIndex >= queue.length) return finish();
-    const utterance = new Utterance(queue[queueIndex++]);
+    const nextChunk = queue[queueIndex++];
+    if (nextChunk === '__adt_speech_pause__') {
+      window.setTimeout(playNext, 650);
+      return;
+    }
+    const utterance = new Utterance(nextChunk);
     const voice = sessionVoice;
     utterance.lang = voice?.lang || ENGLISH_LANG;
     if (voice) utterance.voice = voice;
