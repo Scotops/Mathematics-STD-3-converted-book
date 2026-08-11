@@ -1,4 +1,4 @@
-"""Regenerate every Chapter Five clip containing a fraction.
+"""Regenerate every mapped book clip containing a fraction.
 
 The display keeps proper stacked MathML fractions. The recorded narration is
 made explicit as "numerator over denominator" for blind learners.
@@ -22,18 +22,20 @@ TEXTS_PATH = I18N / "texts.json"
 AUDIO_MAP_PATH = I18N / "audios.json"
 AUDIO_DIR = I18N / "audio"
 VOICE = "en-US-GuyNeural"
-SUFFIX = "fractions_v1"
-CHAPTER_ID = re.compile(r"^pg(11[6-9]|12[0-9]|13[0-5])_")
+SUFFIX = "fractions_v2"
+PAGE_ID = re.compile(r"^pg\d{3}_")
 MFRAC = re.compile(
     r"<mfrac>\s*<mn>([^<]+)</mn>\s*<mn>([^<]+)</mn>\s*</mfrac>",
     re.IGNORECASE,
 )
 NUMERIC_SLASH = re.compile(r"(?<!\d)(\d+)\s*/\s*(\d+)(?!\d)")
+DATE_SLASH = re.compile(r"\b\d{1,2}/\d{1,2}/\d{4}\b")
 TAG = re.compile(r"<[^>]+>")
 
 
 def contains_fraction(value: str) -> bool:
-    return "<mfrac>" in value or bool(NUMERIC_SLASH.search(value))
+    without_dates = DATE_SLASH.sub("", value)
+    return "<mfrac>" in value or bool(NUMERIC_SLASH.search(without_dates))
 
 
 def spoken_text(value: str) -> str:
@@ -78,7 +80,7 @@ async def main(dry_run: bool) -> None:
         (item_id, value)
         for item_id, value in texts.items()
         if item_id in audios
-        and CHAPTER_ID.match(item_id)
+        and PAGE_ID.match(item_id)
         and isinstance(value, str)
         and contains_fraction(value)
     ]
