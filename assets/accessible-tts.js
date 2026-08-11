@@ -82,8 +82,8 @@
     // MathJax converts source MathML into these CHTML elements. Preserve the
     // numerator/denominator boundary so 3/4 is never spoken as "three four".
     if (tag === 'MJX-MFRAC' || element.classList.contains('mjx-mfrac')) {
-      const numerator = element.querySelector(':scope > mjx-num, :scope > .mjx-num');
-      const denominator = element.querySelector(':scope > mjx-den, :scope > .mjx-den');
+      const numerator = element.querySelector('mjx-num, .mjx-num');
+      const denominator = element.querySelector('mjx-den, .mjx-den');
       if (numerator && denominator) return `${mathText(numerator)} over ${mathText(denominator)}`;
     }
     if (tag === 'MO') {
