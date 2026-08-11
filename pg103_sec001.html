@@ -14,6 +14,39 @@
     <style>
       .segment-visual { font-size: 1.08rem; line-height: 1.3; }
       .segment-name { display: inline-block; border-top: 2px solid currentColor; padding-top: 0.08em; font-style: italic; line-height: 1; }
+      [data-id="pg103_n0006"] math, [data-id="pg103_n0007"] math,
+      [data-id="pg103_n0008"] math, [data-id="pg103_n0009"] math,
+      [data-id="pg103_n0010"] math, [data-id="pg103_n0011"] math,
+      [data-id="pg103_n0012"] math { display: none !important; }
+      [data-id="pg103_n0006"]::before, [data-id="pg103_n0007"]::before,
+      [data-id="pg103_n0008"]::before, [data-id="pg103_n0009"]::before,
+      [data-id="pg103_n0010"]::before, [data-id="pg103_n0011"]::before,
+      [data-id="pg103_n0012"]::before {
+        display: inline-block; border-top: 2px solid currentColor; padding-top: .08em;
+        font-size: 1.08rem; font-style: italic; line-height: 1;
+      }
+      [data-id="pg103_n0006"]::before { content: "PQ"; }
+      [data-id="pg103_n0007"]::before { content: "CD"; }
+      [data-id="pg103_n0008"]::before { content: "LM"; }
+      [data-id="pg103_n0009"]::before { content: "JK"; }
+      [data-id="pg103_n0010"]::before { content: "XY"; }
+      [data-id="pg103_n0011"]::before { content: "EF"; }
+      [data-id="pg103_n0012"]::before { content: "MN"; }
+      [data-id="pg103_n0006"]::after { content: " = 4 cm"; }
+      [data-id="pg103_n0007"]::after { content: " = 5 cm"; }
+      [data-id="pg103_n0008"]::after { content: " = 6 cm"; }
+      [data-id="pg103_n0009"]::after { content: " = 7 cm"; }
+      [data-id="pg103_n0010"]::after { content: " = 8 cm"; }
+      [data-id="pg103_n0011"]::after { content: " = 9 cm"; }
+      [data-id="pg103_n0012"]::after { content: " = 10 cm"; }
+      [data-id="pg103_n0006"] + input, [data-id="pg103_n0007"] + input,
+      [data-id="pg103_n0008"] + input, [data-id="pg103_n0009"] + input,
+      [data-id="pg103_n0010"] + input, [data-id="pg103_n0011"] + input,
+      [data-id="pg103_n0012"] + input { display: none !important; }
+      .space-y-3 > div:has([data-id^="pg103_n00"]) {
+        background: transparent !important; padding: .35rem 0 !important;
+        border-radius: 0 !important; justify-content: flex-start !important;
+      }
     </style>
 </head>
 
@@ -77,11 +110,11 @@
     </main>
     <div class="relative z-50" id="interface-container"></div>
     <div class="relative z-50" id="nav-container"></div>
-    <script src="./assets/offline-preloader.js?v=56"></script>
+    <script src="./assets/offline-preloader.js?v=57"></script>
     <script src="./assets/scorm.js"></script>
     <script src="./assets/accessible-tts.js?v=10"></script>
     <script src="./assets/base.bundle.local.js"></script>
-<script src="./assets/line-segment-exercise.js?v=1"></script>
+<script src="./assets/line-segment-exercise.js?v=2"></script>
 <script src="./assets/numerical-alignment.js?v=5"></script>
 </body>
 
