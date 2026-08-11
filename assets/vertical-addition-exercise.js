@@ -50,7 +50,28 @@
     });
   }
 
+  function boldParticipantNames() {
+    const sentence = section.querySelector('[data-id="pg063_n0055"]');
+    if (!sentence || sentence.querySelector('strong')) return;
+
+    const parts = String(sentence.textContent || '').split(/\b(Ali|Rose|Dule)\b/g);
+    sentence.replaceChildren(...parts.map((part) => {
+      if (!/^(Ali|Rose|Dule)$/.test(part)) return document.createTextNode(part);
+      const strong = document.createElement('strong');
+      strong.textContent = part;
+      strong.style.fontWeight = '700';
+      return strong;
+    }));
+  }
+
   arrangeVertically();
-  window.addEventListener('load', arrangeVertically, { once: true });
-  window.setTimeout(arrangeVertically, 500);
+  boldParticipantNames();
+  window.addEventListener('load', () => {
+    arrangeVertically();
+    boldParticipantNames();
+  }, { once: true });
+  window.setTimeout(() => {
+    arrangeVertically();
+    boldParticipantNames();
+  }, 500);
 })();
