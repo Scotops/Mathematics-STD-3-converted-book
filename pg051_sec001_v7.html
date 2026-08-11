@@ -54,7 +54,7 @@
         <h3 data-id="pg051_n0021" class="text-3xl font-extrabold text-neutral-900 max-lg:text-2xl max-sm:text-xl">Adding whole numbers horizontally</h3>
       </div>
 
-      <div class="relative overflow-hidden rounded-[1.5rem] border-2 border-yellow-700 bg-white pb-6 shadow-md">
+      <div class="relative overflow-visible rounded-[1.5rem] border-2 border-yellow-700 bg-white pb-6 shadow-md">
         <img data-id="pg051_im004_crop_v1" src="images/pg051_im004_crop_v1.png" alt="Example showing horizontal addition" class="absolute inset-0 h-full w-full object-cover opacity-0" style="max-width: 100%; height: auto;">
         <div class="relative z-10 px-6 pt-0 max-sm:px-3">
           <div class="mb-4 inline-block -translate-y-1/2 rounded-tl-[1rem] rounded-tr-[1rem] rounded-br-[1rem] bg-gradient-to-b from-yellow-600 to-yellow-700 px-5 py-2 shadow-lg">
@@ -68,14 +68,18 @@
             <span data-id="pg051_n0027">This is done as follows:</span>
           </p>
 
-          <div class="overflow-x-auto">
-            <table class="border-collapse text-center text-xl text-neutral-800 max-lg:text-lg max-sm:text-sm">
-              <thead><tr><th class="border border-neutral-500 bg-sky-300 px-4 py-2">Thousands</th><th class="border border-neutral-500 bg-pink-300 px-4 py-2">Hundreds</th><th class="border border-neutral-500 bg-amber-100 px-4 py-2">Tens</th><th class="border border-neutral-500 bg-green-200 px-4 py-2">Ones</th></tr></thead>
-              <tbody>
-                <tr><td class="border border-neutral-500 bg-sky-200 px-4 py-1">3</td><td class="border border-neutral-500 bg-pink-200 px-4 py-1">2</td><td class="border border-neutral-500 bg-amber-50 px-4 py-1">4</td><td class="border border-neutral-500 bg-green-100 px-4 py-1">6</td></tr>
-                <tr><td class="border border-neutral-500 bg-sky-200 px-4 py-1">+ 2</td><td class="border border-neutral-500 bg-pink-200 px-4 py-1">3</td><td class="border border-neutral-500 bg-amber-50 px-4 py-1">1</td><td class="border border-neutral-500 bg-green-100 px-4 py-1">2</td></tr>
-              </tbody>
-            </table>
+          <div class="overflow-x-auto" data-tts-text="First number: 3 thousands, 2 hundreds, 4 tens and 6 ones. Plus. Second number: 2 thousands, 3 hundreds, 1 ten and 2 ones.">
+            <div class="flex items-center gap-3 pb-1" style="min-width: 830px;">
+              <table aria-label="Place values for 3246" class="border-collapse text-center text-xl text-neutral-800 max-lg:text-lg max-sm:text-sm">
+                <thead><tr><th class="border border-neutral-500 bg-sky-300 px-4 py-2">Thousands</th><th class="border border-neutral-500 bg-pink-300 px-4 py-2">Hundreds</th><th class="border border-neutral-500 bg-amber-100 px-4 py-2">Tens</th><th class="border border-neutral-500 bg-green-200 px-4 py-2">Ones</th></tr></thead>
+                <tbody><tr><td class="border border-neutral-500 bg-sky-200 px-4 py-1">3</td><td class="border border-neutral-500 bg-pink-200 px-4 py-1">2</td><td class="border border-neutral-500 bg-amber-50 px-4 py-1">4</td><td class="border border-neutral-500 bg-green-100 px-4 py-1">6</td></tr></tbody>
+              </table>
+              <span aria-hidden="true" class="text-3xl font-bold text-neutral-900">+</span>
+              <table aria-label="Place values for 2312" class="border-collapse text-center text-xl text-neutral-800 max-lg:text-lg max-sm:text-sm">
+                <thead><tr><th class="border border-neutral-500 bg-sky-300 px-4 py-2">Thousands</th><th class="border border-neutral-500 bg-pink-300 px-4 py-2">Hundreds</th><th class="border border-neutral-500 bg-amber-100 px-4 py-2">Tens</th><th class="border border-neutral-500 bg-green-200 px-4 py-2">Ones</th></tr></thead>
+                <tbody><tr><td class="border border-neutral-500 bg-sky-200 px-4 py-1">2</td><td class="border border-neutral-500 bg-pink-200 px-4 py-1">3</td><td class="border border-neutral-500 bg-amber-50 px-4 py-1">1</td><td class="border border-neutral-500 bg-green-100 px-4 py-1">2</td></tr></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
