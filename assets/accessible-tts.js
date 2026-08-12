@@ -199,12 +199,15 @@
         : extractPageText(element);
       const spoken = sanitizeForSpeech(raw);
       if (!spoken) continue;
+      const spokenWordCount = spoken.split(/\s+/).filter(Boolean).length;
+      const sourceMap = spokenToSourceWordMap(element, spokenWordCount);
       let wordOffset = 0;
       for (const chunk of splitIntoChunks(spoken)) {
+        const chunkWordCount = chunk === '__adt_speech_pause__' ? 0 : chunk.split(/\s+/).filter(Boolean).length;
         entries.push(chunk === '__adt_speech_pause__'
           ? { pause: true, element }
-          : { text: chunk, element, wordOffset });
-        if (chunk !== '__adt_speech_pause__') wordOffset += chunk.split(/\s+/).filter(Boolean).length;
+          : { text: chunk, element, wordOffset, wordMap: sourceMap.slice(wordOffset, wordOffset + chunkWordCount) });
+        wordOffset += chunkWordCount;
       }
     }
     if (!entries.length) {
@@ -214,6 +217,40 @@
       }
     }
     return entries;
+  }
+
+  function visibleSourceWords(element) {
+    if (!(element instanceof Element)) return [];
+    const words = [];
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const parent = node.parentElement;
+        if (!parent || !isVisible(parent) || ignoredTags.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
+        return /\S/.test(node.nodeValue || '') ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    while (walker.nextNode()) words.push(...((walker.currentNode.nodeValue || '').match(/\S+/g) || []));
+    return words;
+  }
+
+  function spokenToSourceWordMap(element, spokenWordCount) {
+    const sourceWords = visibleSourceWords(element);
+    if (!sourceWords.length) return Array.from({ length: spokenWordCount }, () => 0);
+    const map = [];
+    sourceWords.forEach((sourceWord, sourceIndex) => {
+      const expanded = sanitizeForSpeech(sourceWord).split(/\s+/).filter(Boolean);
+      const repeats = Math.max(1, expanded.length);
+      for (let index = 0; index < repeats; index += 1) map.push(sourceIndex);
+    });
+    if (map.length !== spokenWordCount) {
+      // Whole-sentence punctuation cleanup can occasionally add or remove a
+      // token. Preserve alignment across the entire sentence instead of
+      // allowing that difference to accumulate after the first mismatch.
+      return Array.from({ length: spokenWordCount }, (_, index) =>
+        Math.min(sourceWords.length - 1, Math.floor(index * sourceWords.length / Math.max(1, spokenWordCount)))
+      );
+    }
+    return map;
   }
 
   const SMALL_NUMBERS = [
@@ -509,11 +546,12 @@
     utterance.rate = speechRate;
     utterance.pitch = 1;
     utterance.volume = speechVolume;
-    showWordHighlight(entry.wordOffset || 0);
+    showWordHighlight(entry.wordMap?.[0] ?? entry.wordOffset ?? 0);
     utterance.onboundary = (event) => {
       if (generation !== playbackGeneration || event.name !== 'word') return;
       const wordsBefore = utterance.text.slice(0, event.charIndex).trim().split(/\s+/).filter(Boolean).length;
-      showWordHighlight((entry.wordOffset || 0) + wordsBefore);
+      const sourceWordIndex = entry.wordMap?.[wordsBefore];
+      showWordHighlight(Number.isInteger(sourceWordIndex) ? sourceWordIndex : (entry.wordOffset || 0) + wordsBefore);
     };
     utterance.onend = () => {
       if (generation === playbackGeneration && !cancelled) window.setTimeout(playNext, 30);
@@ -636,6 +674,7 @@
     sanitizeForSpeech,
     splitIntoChunks,
     collectNarrationQueue,
+    spokenToSourceWordMap,
     start,
     stop,
     toggle: () => (playing ? stop() : start()),
