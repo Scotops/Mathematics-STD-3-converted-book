@@ -75,6 +75,11 @@
   function mathText(element) {
     if (!(element instanceof Element)) return String(element?.textContent || '').trim();
     const tag = element.tagName.toUpperCase();
+    const explicitLabel = String(element.getAttribute('aria-label') || '').trim();
+    if (explicitLabel && (tag === 'MFRAC' || element.getAttribute('role') === 'math')) {
+      return explicitLabel;
+    }
+    if (element.getAttribute('aria-hidden') === 'true') return '';
     const children = [...element.children];
     if (tag === 'MFRAC' && children.length >= 2) {
       return `${mathText(children[0])} over ${mathText(children[1])}`;

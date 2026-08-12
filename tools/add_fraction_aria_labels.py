@@ -16,7 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TEXTS_PATH = ROOT / "content" / "i18n" / "en" / "texts.json"
 MFRAC = re.compile(
-    r"<mfrac(?![^>]*\baria-label=)([^>]*)>\s*"
+    r"<mfrac([^>]*)>\s*"
     r"(<(?:mn|mrow)\b[^>]*>.*?</(?:mn|mrow)>)\s*"
     r"(<(?:mn|mrow)\b[^>]*>.*?</(?:mn|mrow)>)\s*"
     r"</mfrac>",
@@ -49,8 +49,29 @@ def label_fractions(value: str) -> tuple[str, int]:
         attributes, numerator, denominator = match.groups()
         label = f"{component_words(numerator)} over {component_words(denominator)}"
         escaped_label = html.escape(label, quote=True)
+        attributes = re.sub(
+            r'\s+(?:aria-label|aria-roledescription|role)="[^"]*"',
+            "",
+            attributes,
+            flags=re.IGNORECASE,
+        )
+
+        def hide_component(fragment: str) -> str:
+            if re.match(r"<[^>]+\baria-hidden=", fragment, re.IGNORECASE):
+                return fragment
+            return re.sub(
+                r"^<([a-z0-9]+)([^>]*)>",
+                r'<\1 aria-hidden="true"\2>',
+                fragment,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+
+        numerator = hide_component(numerator)
+        denominator = hide_component(denominator)
         return (
-            f'<mfrac aria-label="{escaped_label}"{attributes}>'
+            f'<mfrac role="math" aria-roledescription="fraction" '
+            f'aria-label="{escaped_label}"{attributes}>'
             f"{numerator}{denominator}</mfrac>"
         )
 
@@ -90,7 +111,7 @@ def main() -> None:
     text_count = update_texts()
     page_count, html_count = update_pages()
     print(
-        f"Added {text_count} localized and {html_count} inline fraction labels "
+        f"Normalized {text_count} localized and {html_count} inline fraction labels "
         f"across {page_count} HTML files."
     )
 
