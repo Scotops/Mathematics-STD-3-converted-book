@@ -81,8 +81,58 @@
         text-align: right;
         white-space: nowrap;
       }
+      #content table.adt-currency-calculation {
+        border-collapse: separate;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+        font-variant-numeric: tabular-nums lining-nums;
+        font-feature-settings: "tnum" 1, "lnum" 1;
+        table-layout: fixed;
+      }
+      #content table.adt-currency-calculation th,
+      #content table.adt-currency-calculation td {
+        box-sizing: border-box;
+        font-variant-numeric: tabular-nums lining-nums;
+        padding-left: .35ch;
+        padding-right: .35ch;
+        text-align: right !important;
+        white-space: nowrap;
+      }
     `;
     document.head.append(style);
+  }
+
+  function alignCurrencyTables() {
+    const content = document.getElementById('content');
+    if (!content) return;
+
+    content.querySelectorAll('table').forEach((table) => {
+      if (table.classList.contains('adt-currency-calculation')) return;
+      const rows = Array.from(table.rows);
+      if (rows.length < 3 || rows.length > 8) return;
+      if (rows.some((row) => row.cells.length < 2 || row.cells.length > 3)) return;
+
+      const text = table.textContent.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+      if (!/\bshs?\b/i.test(text) || !/\bcts?\b/i.test(text)) return;
+      if (!/[+\-\u2212\u2013]/.test(text)) return;
+
+      const numericRows = rows.filter((row) => /\d/.test(row.textContent));
+      if (numericRows.length < 2) return;
+
+      table.classList.add('adt-currency-calculation');
+      const columnCount = Math.max(...rows.map((row) => row.cells.length));
+      const widths = Array.from({ length: columnCount }, (_, columnIndex) => {
+        return Math.max(3, ...rows.map((row) => {
+          const cell = row.cells[columnIndex];
+          return cell ? cell.textContent.replace(/\s+/g, ' ').trim().length : 0;
+        }));
+      });
+
+      if (!table.style.width) {
+        const total = widths.reduce((sum, width) => sum + width, 0) + columnCount * 1.2;
+        table.style.width = `${Math.max(12, total)}ch`;
+        table.style.maxWidth = '100%';
+      }
+    });
   }
 
   function rowKind(row) {
@@ -241,6 +291,7 @@
     window.setTimeout(() => {
       queued = false;
       addStyles();
+      alignCurrencyTables();
       alignCalculationBlocks();
       alignPlainMultilineCalculations();
       alignLeafMultilineCalculations();
