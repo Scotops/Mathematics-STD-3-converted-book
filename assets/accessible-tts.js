@@ -422,3 +422,15 @@
     synth.addEventListener('voiceschanged', preferredVoice);
   }
 })();
+
+// The ADT activity runtime reads fill-in answer keys from this global.
+// Keep this page-specific because other activity pages provide their own keys.
+if (document.querySelector('meta[name="title-id"]')?.content === 'pg156_sec001') {
+  window.correctAnswers = {
+    'item-1': 'April, June, September, November|April June September November|April, June, September and November',
+    'item-2': 'January, March, May, July, August, October, December|January March May July August October December|January, March, May, July, August, October and December',
+    'item-3': '4|four',
+    'item-4': 'December',
+    'item-5': '29|twenty-nine|twenty nine'
+  };
+}
