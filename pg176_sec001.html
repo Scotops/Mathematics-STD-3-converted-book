@@ -11,6 +11,44 @@
     <link href="./assets/typography-consistency.css" rel="stylesheet">
     <link href="./assets/libs/fontawesome/css/all.min.css" rel="stylesheet">
     <link href="./assets/fonts.css" rel="stylesheet">
+    <style>
+      /* Keep every written subtraction and its answer line at one compact,
+         consistent width.  The stronger selector also prevents the shared
+         alignment helper from stretching these exercise rows. */
+      [data-section-id="pg176_sec001"] > .grid > .flex > .flex-1 {
+        box-sizing: border-box;
+        flex: 0 0 15rem !important;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-variant-numeric: tabular-nums lining-nums;
+        min-width: 15rem !important;
+        width: 15rem !important;
+      }
+      [data-section-id="pg176_sec001"] > .grid > .flex > .flex-1 > div:not(:has(input)) {
+        box-sizing: border-box;
+        text-align: right;
+        width: 100% !important;
+      }
+      [data-section-id="pg176_sec001"] > .grid > .flex > .flex-1 > div.border-b-2 {
+        width: 100% !important;
+      }
+      [data-section-id="pg176_sec001"] > .grid > .flex > .flex-1 > div:has(input) {
+        box-sizing: border-box;
+        margin-top: 1.5rem !important;
+        width: 100% !important;
+      }
+      [data-section-id="pg176_sec001"] input[data-activity-item] {
+        box-sizing: border-box;
+        text-align: right;
+        width: 100% !important;
+      }
+      @media (max-width: 640px) {
+        [data-section-id="pg176_sec001"] > .grid > .flex > .flex-1 {
+          flex-basis: 13rem !important;
+          min-width: 13rem !important;
+          width: 13rem !important;
+        }
+      }
+    </style>
 </head>
 
 <body class="min-h-screen flex items-center justify-center">
