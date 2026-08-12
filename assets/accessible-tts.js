@@ -19,7 +19,90 @@
   let suppressBundledAudio = canUseWebSpeech;
   let pendingControlTimer = null;
   let sessionVoice = null;
+  let paused = false;
+  let speechRate = 0.92;
+  let speechVolume = 1;
+  let activeUtterance = null;
+  let currentChunkIndex = -1;
+  let wordHighlightMap = [];
+  let player = null;
+  let autoplayStarted = false;
   const trackedAudio = new Set();
+
+  function installPresentationStyles() {
+    if (document.getElementById('adt-accessible-tts-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'adt-accessible-tts-styles';
+    style.textContent = `
+      ::highlight(adt-tts-word) { background: #ffe45c; color: #111; }
+      .adt-accessible-tts-player {
+        position: fixed; right: 22px; bottom: 88px; z-index: 2147483000;
+        display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+        color: #fff; background: #262626; border-radius: 15px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.28); font: 600 15px/1.2 system-ui,sans-serif;
+      }
+      .adt-accessible-tts-player button,
+      .adt-accessible-tts-player select {
+        min-width: 42px; min-height: 42px; border: 1px solid #777; border-radius: 10px;
+        color: #fff; background: #333; font: inherit; cursor: pointer;
+      }
+      .adt-accessible-tts-player button:focus-visible,
+      .adt-accessible-tts-player select:focus-visible { outline: 3px solid #ffe45c; outline-offset: 2px; }
+      .adt-accessible-tts-player select { min-width: 92px; padding: 0 8px; }
+      @media (max-width: 640px) {
+        .adt-accessible-tts-player { left: 10px; right: 10px; bottom: 78px; justify-content: center; gap: 6px; }
+        .adt-accessible-tts-player button { min-width: 38px; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function ensurePlayer() {
+    if (player?.isConnected) return player;
+    installPresentationStyles();
+    player = document.createElement('div');
+    player.className = 'adt-accessible-tts-player';
+    player.setAttribute('role', 'group');
+    player.setAttribute('aria-label', 'Read aloud controls');
+    player.innerHTML = `
+      <button type="button" data-tts-command="previous" aria-label="Previous spoken part">&#9198;</button>
+      <button type="button" data-tts-command="pause" aria-label="Pause reading">&#10074;&#10074;</button>
+      <button type="button" data-tts-command="next" aria-label="Next spoken part">&#9197;</button>
+      <button type="button" data-tts-command="stop" aria-label="Stop reading">&#9632;</button>
+      <label><span class="sr-only">Reading speed</span><select data-tts-command="rate" aria-label="Reading speed">
+        <option value="0.75">Slow</option><option value="0.92" selected>Normal</option><option value="1.1">Fast</option>
+      </select></label>
+      <button type="button" data-tts-command="volume" aria-label="Mute or unmute reading">&#128266;</button>
+    `;
+    player.addEventListener('click', (event) => {
+      const command = event.target.closest('[data-tts-command]')?.dataset.ttsCommand;
+      if (!command || command === 'rate') return;
+      event.preventDefault(); event.stopPropagation();
+      if (command === 'pause') togglePause();
+      if (command === 'stop') stop();
+      if (command === 'previous') jump(-1);
+      if (command === 'next') jump(1);
+      if (command === 'volume') {
+        speechVolume = speechVolume ? 0 : 1;
+        event.target.innerHTML = speechVolume ? '&#128266;' : '&#128263;';
+        restartCurrent();
+      }
+    });
+    player.querySelector('[data-tts-command="rate"]').addEventListener('change', (event) => {
+      speechRate = Number(event.target.value) || 0.92;
+      restartCurrent();
+    });
+    document.body.appendChild(player);
+    updatePlayer();
+    return player;
+  }
+
+  function updatePlayer() {
+    if (!player) return;
+    const pauseButton = player.querySelector('[data-tts-command="pause"]');
+    pauseButton.innerHTML = !playing || paused ? '&#9654;' : '&#10074;&#10074;';
+    pauseButton.setAttribute('aria-label', !playing ? 'Start reading' : (paused ? 'Resume reading' : 'Pause reading'));
+  }
 
   const nativeMediaPlay = window.HTMLMediaElement?.prototype?.play;
   if (nativeMediaPlay) {
@@ -277,6 +360,81 @@
     return chunks;
   }
 
+  function normalizedWord(value) {
+    return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+  }
+
+  function visibleWordRanges() {
+    const root = document.querySelector('#content') || document.body;
+    const ranges = [];
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const parent = node.parentElement;
+        if (!parent || ignoredTags.has(parent.tagName) || !isVisible(parent) || !node.nodeValue.trim()) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      const matcher = /\S+/g;
+      let match;
+      while ((match = matcher.exec(node.nodeValue))) {
+        const range = document.createRange();
+        range.setStart(node, match.index);
+        range.setEnd(node, match.index + match[0].length);
+        ranges.push({ range, text: match[0] });
+      }
+    }
+    return ranges;
+  }
+
+  // Build a non-invasive map from each spoken word back to the printed word.
+  // The narration text itself is never changed: this only lets the yellow
+  // marker follow speech without wrapping or rewriting textbook content.
+  function buildWordHighlightMap(spokenText) {
+    const printed = visibleWordRanges();
+    const expandedPrinted = [];
+    printed.forEach((item, printedIndex) => {
+      sanitizeForSpeech(item.text).split(/\s+/).forEach((word) => {
+        const normalized = normalizedWord(word);
+        if (normalized) expandedPrinted.push({ normalized, printedIndex });
+      });
+    });
+    const spokenWords = String(spokenText || '').split(/\s+/).filter(Boolean);
+    const map = [];
+    let cursor = 0;
+    spokenWords.forEach((word) => {
+      const wanted = normalizedWord(word);
+      let found = -1;
+      for (let index = cursor; index < Math.min(expandedPrinted.length, cursor + 20); index += 1) {
+        if (expandedPrinted[index].normalized === wanted) { found = index; break; }
+      }
+      if (found >= 0) {
+        map.push(printed[expandedPrinted[found].printedIndex].range);
+        cursor = found + 1;
+      } else {
+        map.push(null);
+      }
+    });
+    return map;
+  }
+
+  function clearWordHighlight() {
+    if (window.CSS?.highlights) CSS.highlights.delete('adt-tts-word');
+  }
+
+  function showWordHighlight(index) {
+    const range = wordHighlightMap[index];
+    if (!range || !window.CSS?.highlights || typeof Highlight !== 'function') return;
+    CSS.highlights.set('adt-tts-word', new Highlight(range));
+    const box = range.getBoundingClientRect();
+    if (box.top < 70 || box.bottom > window.innerHeight - 120) {
+      range.startContainer.parentElement?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+  }
+
   function preferredVoice() {
     if (!canUseWebSpeech || typeof synth.getVoices !== 'function') return null;
     const voices = synth.getVoices();
@@ -299,11 +457,17 @@
     cancelled = false;
     queue = [];
     queueIndex = 0;
+    currentChunkIndex = -1;
+    activeUtterance = null;
+    paused = false;
+    wordHighlightMap = [];
+    clearWordHighlight();
     if (keepAliveTimer) {
       window.clearInterval(keepAliveTimer);
       keepAliveTimer = null;
     }
     document.documentElement.classList.remove('adt-tts-playing');
+    updatePlayer();
   }
 
   function stopBundledAudio() {
@@ -316,17 +480,26 @@
 
   function playNext() {
     if (cancelled || queueIndex >= queue.length) return finish();
+    currentChunkIndex = queueIndex;
     const nextChunk = queue[queueIndex++];
-    if (nextChunk === '__adt_speech_pause__') {
+    if (nextChunk.pause) {
       window.setTimeout(playNext, 650);
       return;
     }
-    const utterance = new Utterance(nextChunk);
+    const utterance = new Utterance(nextChunk.text);
+    activeUtterance = utterance;
     const voice = sessionVoice;
     utterance.lang = voice?.lang || ENGLISH_LANG;
     if (voice) utterance.voice = voice;
-    utterance.rate = 0.92;
+    utterance.rate = speechRate;
+    utterance.volume = speechVolume;
     utterance.pitch = 1;
+    utterance.onstart = () => showWordHighlight(nextChunk.wordOffset);
+    utterance.onboundary = (event) => {
+      if (event.name && event.name !== 'word') return;
+      const wordsBefore = utterance.text.slice(0, event.charIndex).trim().split(/\s+/).filter(Boolean).length;
+      showWordHighlight(nextChunk.wordOffset + wordsBefore);
+    };
     utterance.onend = () => window.setTimeout(playNext, 30);
     utterance.onerror = (event) => {
       // "interrupted" is expected when Stop is pressed; other failures should
@@ -345,9 +518,20 @@
     synth.cancel();
     sessionVoice = preferredVoice();
     cancelled = false;
-    queue = splitIntoChunks(text);
+    wordHighlightMap = buildWordHighlightMap(text);
+    let wordOffset = 0;
+    queue = splitIntoChunks(text).map((chunk) => {
+      if (chunk === '__adt_speech_pause__') return { pause: true, wordOffset };
+      const entry = { text: chunk, wordOffset };
+      wordOffset += chunk.split(/\s+/).filter(Boolean).length;
+      return entry;
+    });
     queueIndex = 0;
     playing = true;
+    paused = false;
+    document.documentElement.dataset.adtTtsStarted = 'true';
+    ensurePlayer();
+    updatePlayer();
     // Chromium can pause a long Web Speech API session even though it still
     // reports itself as speaking. Keeping it alive avoids a page stopping
     // after an otherwise ordinary list item such as (c).
@@ -368,6 +552,34 @@
     finish();
   }
 
+  function togglePause() {
+    if (!playing) return start();
+    if (paused) synth.resume(); else synth.pause();
+    paused = !paused;
+    updatePlayer();
+  }
+
+  function jump(delta) {
+    if (!queue.length) return;
+    const target = Math.max(0, Math.min(queue.length - 1, currentChunkIndex + delta));
+    synth.cancel();
+    cancelled = false;
+    paused = false;
+    queueIndex = target;
+    window.setTimeout(playNext, 30);
+    updatePlayer();
+  }
+
+  function restartCurrent() {
+    if (!playing || currentChunkIndex < 0) return;
+    synth.cancel();
+    cancelled = false;
+    paused = false;
+    queueIndex = currentChunkIndex;
+    window.setTimeout(playNext, 30);
+    updatePlayer();
+  }
+
   function isReadAloudControl(control) {
     if (!(control instanceof Element)) return false;
     const hint = [
@@ -381,6 +593,7 @@
   // alone while making the book's speaker control reliably narrate the page.
   window.addEventListener('pointerdown', (event) => {
     const control = event.target instanceof Element ? event.target.closest('button, [role="button"]') : null;
+    if (control?.closest('.adt-accessible-tts-player')) return;
     if (!canUseWebSpeech || !isReadAloudControl(control)) return;
     suppressBundledAudio = true;
     stopBundledAudio();
@@ -392,6 +605,7 @@
 
   window.addEventListener('click', (event) => {
     const control = event.target instanceof Element ? event.target.closest('button, [role="button"]') : null;
+    if (control?.closest('.adt-accessible-tts-player')) return;
     if (!isReadAloudControl(control)) return;
     // If a browser has no Web Speech API, preserve the ADT's bundled reader.
     if (!canUseWebSpeech) return;
@@ -414,6 +628,7 @@
     splitIntoChunks,
     start,
     stop,
+    pause: togglePause,
     toggle: () => (playing ? stop() : start()),
     get isPlaying() { return playing; }
   });
@@ -421,4 +636,26 @@
   if (canUseWebSpeech && typeof synth.addEventListener === 'function') {
     synth.addEventListener('voiceschanged', preferredVoice);
   }
+
+  // The ADT fades page content in after its interface has loaded. Start the
+  // unchanged full-page narrator as soon as that content is actually visible,
+  // while retaining the speaker button and playback panel for manual control.
+  function scheduleAutoplay(attempt = 0) {
+    if (!canUseWebSpeech || autoplayStarted || playing) return;
+    const root = document.querySelector('#content');
+    const ready = root && isVisible(root) && Number.parseFloat(getComputedStyle(root).opacity || '1') > 0.05
+      && String(root.innerText || '').trim();
+    if (ready) {
+      autoplayStarted = true;
+      ensurePlayer();
+      start();
+      return;
+    }
+    if (attempt < 60) window.setTimeout(() => scheduleAutoplay(attempt + 1), 100);
+  }
+
+  const beginAutoplay = () => window.setTimeout(() => scheduleAutoplay(), 250);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', beginAutoplay, { once: true });
+  else beginAutoplay();
+  window.addEventListener('pageshow', beginAutoplay, { once: true });
 })();
