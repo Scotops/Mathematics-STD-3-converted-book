@@ -19,6 +19,12 @@
   let suppressBundledAudio = canUseWebSpeech;
   let pendingControlTimer = null;
   let sessionVoice = null;
+  let paused = false;
+  let speechRate = 1;
+  let speechVolume = 1;
+  let playbackGeneration = 0;
+  let activeHighlight = null;
+  let player = null;
   const trackedAudio = new Set();
 
   const nativeMediaPlay = window.HTMLMediaElement?.prototype?.play;
@@ -99,8 +105,8 @@
     return children.map(mathText).filter(Boolean).join(' ');
   }
 
-  function extractPageText() {
-    const root = document.querySelector('#content') || document.body;
+  function extractPageText(rootOverride = null) {
+    const root = rootOverride || document.querySelector('#content') || document.body;
     const pieces = [];
     const add = (value) => {
       const text = String(value || '').replace(/\s+/g, ' ').trim();
@@ -174,6 +180,37 @@
 
     walk(root);
     return pieces.join(' ').replace(/\s+([,.;:?!])/g, '$1').replace(/(?:\.\s*){2,}/g, '. ').trim();
+  }
+
+  function collectNarrationQueue() {
+    const root = document.querySelector('#content') || document.body;
+    const selector = 'h1,h2,h3,h4,h5,h6,p,li,figcaption,caption,tr,img,[data-tts-text]';
+    const elements = [...root.querySelectorAll(selector)].filter((element) => {
+      if (!isVisible(element)) return false;
+      if (element.tagName === 'IMG') return !element.closest('p,li,figcaption,tr');
+      const parent = element.parentElement?.closest(selector);
+      return !parent || parent === root;
+    });
+    const entries = [];
+    for (const element of elements) {
+      const raw = element.tagName === 'IMG'
+        ? element.getAttribute('alt')
+        : extractPageText(element);
+      const spoken = sanitizeForSpeech(raw);
+      if (!spoken) continue;
+      for (const chunk of splitIntoChunks(spoken)) {
+        entries.push(chunk === '__adt_speech_pause__'
+          ? { pause: true, element }
+          : { text: chunk, element });
+      }
+    }
+    if (!entries.length) {
+      const spoken = sanitizeForSpeech(extractPageText(root));
+      for (const chunk of splitIntoChunks(spoken)) {
+        entries.push(chunk === '__adt_speech_pause__' ? { pause: true, element: root } : { text: chunk, element: root });
+      }
+    }
+    return entries;
   }
 
   const SMALL_NUMBERS = [
@@ -296,6 +333,7 @@
 
   function finish() {
     playing = false;
+    paused = false;
     cancelled = false;
     queue = [];
     queueIndex = 0;
@@ -304,6 +342,81 @@
       keepAliveTimer = null;
     }
     document.documentElement.classList.remove('adt-tts-playing');
+    setHighlight(null);
+    updatePlayer();
+  }
+
+  function setHighlight(element) {
+    if (activeHighlight === element) return;
+    activeHighlight?.classList.remove('adt-tts-highlight');
+    activeHighlight = element instanceof Element ? element : null;
+    if (activeHighlight) {
+      activeHighlight.classList.add('adt-tts-highlight');
+      activeHighlight.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }
+
+  function ensurePlayer() {
+    if (player?.isConnected) return player;
+    const style = document.createElement('style');
+    style.dataset.adtTtsStyle = '';
+    style.textContent = `
+      .adt-tts-highlight { background: #ffe45c !important; color: #111 !important; border-radius: .18em; box-shadow: 0 0 0 .16em #ffe45c; transition: background-color .18s ease; }
+      .adt-accessible-tts-player { position: fixed; z-index: 2147483646; right: 1.25rem; bottom: 5.3rem; display: flex; align-items: center; gap: .45rem; padding: .55rem .7rem; color: #fff; background: #252525; border-radius: .85rem; box-shadow: 0 .35rem 1rem #0005; font: 600 16px/1.2 system-ui, sans-serif; }
+      .adt-accessible-tts-player button, .adt-accessible-tts-player select { min-width: 2.7rem; min-height: 2.7rem; border: 0; border-radius: .7rem; color: #fff; background: transparent; font: inherit; cursor: pointer; }
+      .adt-accessible-tts-player button:hover, .adt-accessible-tts-player button:focus-visible, .adt-accessible-tts-player select:focus-visible { background: #ffffff20; outline: 3px solid #fff; outline-offset: 1px; }
+      .adt-accessible-tts-player select { min-width: 7.4rem; padding: 0 .55rem; }
+      .adt-accessible-tts-player option { color: #111; background: #fff; }
+      @media (max-width: 640px) { .adt-accessible-tts-player { left: .5rem; right: .5rem; bottom: 4.8rem; justify-content: center; gap: .15rem; } .adt-accessible-tts-player select { min-width: 6.2rem; } }
+    `;
+    document.head.append(style);
+    player = document.createElement('div');
+    player.className = 'adt-accessible-tts-player';
+    player.setAttribute('role', 'group');
+    player.setAttribute('aria-label', 'Read aloud controls');
+    player.innerHTML = `
+      <button type="button" data-tts-control="previous" aria-label="Previous spoken part">&#x23EE;</button>
+      <button type="button" data-tts-control="pause" aria-label="Pause read aloud">&#x23F8;</button>
+      <button type="button" data-tts-control="next" aria-label="Next spoken part">&#x23ED;</button>
+      <button type="button" data-tts-control="stop" aria-label="Stop read aloud">&#x23F9;</button>
+      <label class="sr-only" for="adt-tts-rate">Reading speed</label>
+      <select id="adt-tts-rate" data-tts-control="rate" aria-label="Reading speed">
+        <option value="0.75">Slow</option><option value="1" selected>Normal</option><option value="1.25">Fast</option>
+      </select>
+      <button type="button" data-tts-control="volume" aria-label="Mute read aloud">&#x1F50A;</button>`;
+    player.addEventListener('click', (event) => {
+      const control = event.target.closest('[data-tts-control]');
+      if (!control) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const action = control.dataset.ttsControl;
+      if (action === 'pause') togglePause();
+      else if (action === 'stop') stop();
+      else if (action === 'previous') jump(-1);
+      else if (action === 'next') jump(1);
+      else if (action === 'volume') {
+        speechVolume = speechVolume ? 0 : 1;
+        restartCurrent();
+      }
+    });
+    player.querySelector('[data-tts-control="rate"]').addEventListener('change', (event) => {
+      speechRate = Number(event.target.value) || 1;
+      restartCurrent();
+    });
+    document.body.append(player);
+    updatePlayer();
+    return player;
+  }
+
+  function updatePlayer() {
+    if (!player?.isConnected) return;
+    const pauseButton = player.querySelector('[data-tts-control="pause"]');
+    pauseButton.innerHTML = paused ? '&#x25B6;' : '&#x23F8;';
+    pauseButton.setAttribute('aria-label', paused ? 'Resume read aloud' : 'Pause read aloud');
+    const volumeButton = player.querySelector('[data-tts-control="volume"]');
+    volumeButton.innerHTML = speechVolume ? '&#x1F50A;' : '&#x1F507;';
+    volumeButton.setAttribute('aria-label', speechVolume ? 'Mute read aloud' : 'Unmute read aloud');
+    player.hidden = !playing;
   }
 
   function stopBundledAudio() {
@@ -316,38 +429,71 @@
 
   function playNext() {
     if (cancelled || queueIndex >= queue.length) return finish();
-    const nextChunk = queue[queueIndex++];
-    if (nextChunk === '__adt_speech_pause__') {
+    const entry = queue[queueIndex++];
+    if (entry.pause) {
       window.setTimeout(playNext, 650);
       return;
     }
-    const utterance = new Utterance(nextChunk);
+    setHighlight(entry.element);
+    const utterance = new Utterance(entry.text);
+    const generation = playbackGeneration;
     const voice = sessionVoice;
     utterance.lang = voice?.lang || ENGLISH_LANG;
     if (voice) utterance.voice = voice;
-    utterance.rate = 0.92;
+    utterance.rate = speechRate;
     utterance.pitch = 1;
-    utterance.onend = () => window.setTimeout(playNext, 30);
+    utterance.volume = speechVolume;
+    utterance.onend = () => {
+      if (generation === playbackGeneration && !cancelled) window.setTimeout(playNext, 30);
+    };
     utterance.onerror = (event) => {
       // "interrupted" is expected when Stop is pressed; other failures should
       // not prevent the rest of the page from being read.
-      if (!cancelled && event.error !== 'interrupted' && event.error !== 'canceled') window.setTimeout(playNext, 30);
+      if (generation === playbackGeneration && !cancelled && event.error !== 'interrupted' && event.error !== 'canceled') window.setTimeout(playNext, 30);
     };
     synth.speak(utterance);
   }
 
+  function restartAt(index) {
+    if (!playing || !queue.length) return;
+    playbackGeneration += 1;
+    synth.cancel();
+    paused = false;
+    queueIndex = Math.max(0, Math.min(index, queue.length - 1));
+    updatePlayer();
+    window.setTimeout(playNext, 40);
+  }
+
+  function restartCurrent() {
+    restartAt(Math.max(0, queueIndex - 1));
+  }
+
+  function jump(direction) {
+    const current = Math.max(0, queueIndex - 1);
+    restartAt(current + direction);
+  }
+
+  function togglePause() {
+    if (!playing) return;
+    if (paused) synth.resume();
+    else synth.pause();
+    paused = !paused;
+    updatePlayer();
+  }
+
   function start() {
-    const text = sanitizeForSpeech(extractPageText());
-    if (!text) return;
     if (!canUseWebSpeech) return;
     suppressBundledAudio = true;
     stopBundledAudio();
     synth.cancel();
     sessionVoice = preferredVoice();
     cancelled = false;
-    queue = splitIntoChunks(text);
+    queue = collectNarrationQueue();
+    if (!queue.length) return;
     queueIndex = 0;
     playing = true;
+    paused = false;
+    playbackGeneration += 1;
     // Chromium can pause a long Web Speech API session even though it still
     // reports itself as speaking. Keeping it alive avoids a page stopping
     // after an otherwise ordinary list item such as (c).
@@ -358,11 +504,14 @@
       }
     }, 7000);
     document.documentElement.classList.add('adt-tts-playing');
+    ensurePlayer();
+    updatePlayer();
     playNext();
   }
 
   function stop() {
     cancelled = true;
+    playbackGeneration += 1;
     if (canUseWebSpeech) synth.cancel();
     suppressBundledAudio = canUseWebSpeech;
     finish();
@@ -381,6 +530,7 @@
   // alone while making the book's speaker control reliably narrate the page.
   window.addEventListener('pointerdown', (event) => {
     const control = event.target instanceof Element ? event.target.closest('button, [role="button"]') : null;
+    if (control?.closest('.adt-accessible-tts-player')) return;
     if (!canUseWebSpeech || !isReadAloudControl(control)) return;
     suppressBundledAudio = true;
     stopBundledAudio();
@@ -392,6 +542,7 @@
 
   window.addEventListener('click', (event) => {
     const control = event.target instanceof Element ? event.target.closest('button, [role="button"]') : null;
+    if (control?.closest('.adt-accessible-tts-player')) return;
     if (!isReadAloudControl(control)) return;
     // If a browser has no Web Speech API, preserve the ADT's bundled reader.
     if (!canUseWebSpeech) return;
@@ -412,6 +563,7 @@
     mathText,
     sanitizeForSpeech,
     splitIntoChunks,
+    collectNarrationQueue,
     start,
     stop,
     toggle: () => (playing ? stop() : start()),
