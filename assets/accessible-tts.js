@@ -24,6 +24,7 @@
   let speechVolume = 1;
   let playbackGeneration = 0;
   let activeHighlight = null;
+  let activeWordRanges = [];
   let player = null;
   const trackedAudio = new Set();
 
@@ -198,10 +199,12 @@
         : extractPageText(element);
       const spoken = sanitizeForSpeech(raw);
       if (!spoken) continue;
+      let wordOffset = 0;
       for (const chunk of splitIntoChunks(spoken)) {
         entries.push(chunk === '__adt_speech_pause__'
           ? { pause: true, element }
-          : { text: chunk, element });
+          : { text: chunk, element, wordOffset });
+        if (chunk !== '__adt_speech_pause__') wordOffset += chunk.split(/\s+/).filter(Boolean).length;
       }
     }
     if (!entries.length) {
@@ -348,12 +351,74 @@
 
   function setHighlight(element) {
     if (activeHighlight === element) return;
-    activeHighlight?.classList.remove('adt-tts-highlight');
+    clearWordHighlight();
     activeHighlight = element instanceof Element ? element : null;
     if (activeHighlight) {
-      activeHighlight.classList.add('adt-tts-highlight');
+      activeWordRanges = wordRangesFor(activeHighlight);
       activeHighlight.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
+  }
+
+  function clearWordHighlight() {
+    if (window.CSS?.highlights) CSS.highlights.delete('adt-tts-word');
+    const wrappedWords = activeWordRanges.filter((item) => item instanceof Element);
+    const parents = new Set(wrappedWords.map((item) => item.parentNode).filter(Boolean));
+    wrappedWords.forEach((item) => item.replaceWith(document.createTextNode(item.textContent || '')));
+    parents.forEach((parent) => parent.normalize());
+    activeWordRanges = [];
+    activeHighlight = null;
+  }
+
+  function wordRangesFor(element) {
+    if (!(element instanceof Element)) return [];
+    const ranges = [];
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const parent = node.parentElement;
+        if (!parent || !isVisible(parent) || ignoredTags.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
+        return /\S/.test(node.nodeValue || '') ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+    const supportsCustomHighlights = Boolean(window.CSS?.highlights && typeof window.Highlight === 'function');
+    for (const node of textNodes) {
+      const value = node.nodeValue || '';
+      if (!supportsCustomHighlights) {
+        const fragment = document.createDocumentFragment();
+        let lastIndex = 0;
+        for (const match of value.matchAll(/\S+/g)) {
+          if (match.index > lastIndex) fragment.append(document.createTextNode(value.slice(lastIndex, match.index)));
+          const token = document.createElement('span');
+          token.className = 'adt-tts-word-token';
+          token.textContent = match[0];
+          fragment.append(token);
+          ranges.push(token);
+          lastIndex = match.index + match[0].length;
+        }
+        if (lastIndex < value.length) fragment.append(document.createTextNode(value.slice(lastIndex)));
+        node.replaceWith(fragment);
+        continue;
+      }
+      for (const match of value.matchAll(/\S+/g)) {
+        const range = document.createRange();
+        range.setStart(node, match.index);
+        range.setEnd(node, match.index + match[0].length);
+        ranges.push(range);
+      }
+    }
+    return ranges;
+  }
+
+  function showWordHighlight(wordIndex) {
+    if (!activeWordRanges.length) return;
+    const target = activeWordRanges[Math.min(Math.max(wordIndex, 0), activeWordRanges.length - 1)];
+    if (target instanceof Element) {
+      activeWordRanges.forEach((item) => item instanceof Element && item.classList.remove('adt-tts-current-word'));
+      target.classList.add('adt-tts-current-word');
+      return;
+    }
+    if (window.CSS?.highlights && typeof window.Highlight === 'function') CSS.highlights.set('adt-tts-word', new Highlight(target));
   }
 
   function ensurePlayer() {
@@ -361,7 +426,8 @@
     const style = document.createElement('style');
     style.dataset.adtTtsStyle = '';
     style.textContent = `
-      .adt-tts-highlight { background: #ffe45c !important; color: #111 !important; border-radius: .18em; box-shadow: 0 0 0 .16em #ffe45c; transition: background-color .18s ease; }
+      ::highlight(adt-tts-word) { background: #ffe45c; color: #111; text-decoration: underline 2px #d49400; }
+      .adt-tts-word-token.adt-tts-current-word { background: #ffe45c !important; color: #111 !important; border-radius: .14em; box-shadow: 0 0 0 .12em #ffe45c; text-decoration: underline 2px #d49400; }
       .adt-accessible-tts-player { position: fixed; z-index: 2147483646; right: 1.25rem; bottom: 5.3rem; display: flex; align-items: center; gap: .45rem; padding: .55rem .7rem; color: #fff; background: #252525; border-radius: .85rem; box-shadow: 0 .35rem 1rem #0005; font: 600 16px/1.2 system-ui, sans-serif; }
       .adt-accessible-tts-player button, .adt-accessible-tts-player select { min-width: 2.7rem; min-height: 2.7rem; border: 0; border-radius: .7rem; color: #fff; background: transparent; font: inherit; cursor: pointer; }
       .adt-accessible-tts-player button:hover, .adt-accessible-tts-player button:focus-visible, .adt-accessible-tts-player select:focus-visible { background: #ffffff20; outline: 3px solid #fff; outline-offset: 1px; }
@@ -443,6 +509,12 @@
     utterance.rate = speechRate;
     utterance.pitch = 1;
     utterance.volume = speechVolume;
+    showWordHighlight(entry.wordOffset || 0);
+    utterance.onboundary = (event) => {
+      if (generation !== playbackGeneration || event.name !== 'word') return;
+      const wordsBefore = utterance.text.slice(0, event.charIndex).trim().split(/\s+/).filter(Boolean).length;
+      showWordHighlight((entry.wordOffset || 0) + wordsBefore);
+    };
     utterance.onend = () => {
       if (generation === playbackGeneration && !cancelled) window.setTimeout(playNext, 30);
     };
