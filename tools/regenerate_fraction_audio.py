@@ -22,12 +22,10 @@ TEXTS_PATH = I18N / "texts.json"
 AUDIO_MAP_PATH = I18N / "audios.json"
 AUDIO_DIR = I18N / "audio"
 VOICE = "en-US-GuyNeural"
-SUFFIX = "fractions_v2"
+SUFFIX = "fractions_v3"
 PAGE_ID = re.compile(r"^pg\d{3}_")
-MFRAC = re.compile(
-    r"<mfrac>\s*<mn>([^<]+)</mn>\s*<mn>([^<]+)</mn>\s*</mfrac>",
-    re.IGNORECASE,
-)
+MFRAC = re.compile(r"<mfrac\b([^>]*)>.*?</mfrac>", re.IGNORECASE | re.DOTALL)
+ARIA_LABEL = re.compile(r'aria-label=["\']([^"\']+)["\']', re.IGNORECASE)
 NUMERIC_SLASH = re.compile(r"(?<!\d)(\d+)\s*/\s*(\d+)(?!\d)")
 DATE_SLASH = re.compile(r"\b\d{1,2}/\d{1,2}/\d{4}\b")
 TAG = re.compile(r"<[^>]+>")
@@ -39,7 +37,13 @@ def contains_fraction(value: str) -> bool:
 
 
 def spoken_text(value: str) -> str:
-    value = MFRAC.sub(lambda match: f" {match.group(1)} over {match.group(2)} ", value)
+    def replace_fraction(match: re.Match[str]) -> str:
+        label = ARIA_LABEL.search(match.group(1))
+        if not label:
+            raise ValueError(f"Fraction is missing an aria-label: {match.group(0)[:120]}")
+        return f" {html.unescape(label.group(1))} "
+
+    value = MFRAC.sub(replace_fraction, value)
     value = NUMERIC_SLASH.sub(lambda match: f" {match.group(1)} over {match.group(2)} ", value)
     value = TAG.sub(" ", value)
     value = html.unescape(value)
