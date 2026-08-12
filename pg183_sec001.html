@@ -11,6 +11,32 @@
     <link href="./assets/typography-consistency.css" rel="stylesheet">
     <link href="./assets/libs/fontawesome/css/all.min.css" rel="stylesheet">
     <link href="./assets/fonts.css" rel="stylesheet">
+    <style>
+      #content .currency-stacked {
+        align-items: baseline;
+        display: grid !important;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-variant-numeric: tabular-nums lining-nums;
+        grid-template-columns: 1.5ch 8ch 3ch;
+        line-height: 1.25 !important;
+        width: 13rem;
+      }
+      #content .currency-stacked .calc-sign { text-align: left; }
+      #content .currency-stacked .calc-shs,
+      #content .currency-stacked .calc-cts { text-align: right; }
+      #content .currency-stacked .calc-rule {
+        border-bottom: 2px solid #374151;
+        grid-column: 1 / -1;
+        height: .3rem;
+        width: 100%;
+      }
+      #content .currency-stacked + input {
+        box-sizing: border-box;
+        margin-top: 1.35rem !important;
+        text-align: right;
+        width: 13rem !important;
+      }
+    </style>
 </head>
 
 <body class="min-h-screen flex items-center justify-center">
@@ -29,6 +55,44 @@
     <script src="./assets/accessible-tts.js?v=10"></script>
     <script src="./assets/base.bundle.local.js"></script>
 <script src="./assets/numerical-alignment.js?v=5"></script>
+<script>
+  (() => {
+    const ids = ['0003','0005','0007','0009','0011','0013','0015','0017','0019','0021'];
+    function stackCurrencyQuestions() {
+      ids.forEach((suffix) => {
+        const el = document.querySelector(`[data-id="pg183_n${suffix}"]`);
+        if (!el || el.querySelector('.calc-rule')) return;
+        const source = (el.dataset.calculation || el.textContent).replace(/\s+/g, ' ').trim();
+        el.dataset.calculation = source;
+        let match = source.match(/^shs\s+cts\s+(\d+)\s+(\d{2})\s*([+−-])\s*(\d+)\s+(\d{2})$/i);
+        let first, firstCents = '', operation, second, secondCents = '', hasCents = false;
+        if (match) {
+          [, first, firstCents, operation, second, secondCents] = match;
+          hasCents = true;
+        } else {
+          match = source.match(/^shs\s+(\d+)\s*([+−-])\s*(?:shs\s+)?(\d+)$/i);
+          if (!match) return;
+          [, first, operation, second] = match;
+        }
+        const spokenOperation = operation === '+' ? 'plus' : 'minus';
+        el.classList.add('currency-stacked');
+        el.classList.remove('whitespace-pre-line');
+        el.setAttribute('aria-label', hasCents
+          ? `${first} shillings ${firstCents} cents ${spokenOperation} ${second} shillings ${secondCents} cents`
+          : `${first} shillings ${spokenOperation} ${second} shillings`);
+        el.innerHTML = `
+          <span class="calc-sign"></span><span class="calc-shs">shs</span><span class="calc-cts">${hasCents ? 'cts' : ''}</span>
+          <span class="calc-sign"></span><span class="calc-shs">${first}</span><span class="calc-cts">${firstCents}</span>
+          <span class="calc-sign">${operation === '+' ? '+' : '−'}</span><span class="calc-shs">${second}</span><span class="calc-cts">${secondCents}</span>
+          <span class="calc-rule" aria-hidden="true"></span>`;
+      });
+    }
+    document.addEventListener('DOMContentLoaded', stackCurrencyQuestions);
+    window.addEventListener('load', stackCurrencyQuestions);
+    window.setTimeout(stackCurrencyQuestions, 250);
+    window.setTimeout(stackCurrencyQuestions, 900);
+  })();
+</script>
 </body>
 
 </html>
