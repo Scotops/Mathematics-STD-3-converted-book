@@ -11,6 +11,13 @@
     <link href="./assets/typography-consistency.css" rel="stylesheet">
     <link href="./assets/libs/fontawesome/css/all.min.css" rel="stylesheet">
     <link href="./assets/fonts.css" rel="stylesheet">
+    <style>
+      .time-table { width: 100%; border-collapse: collapse; font-size: 1.35rem; line-height: 1.45; }
+      .time-table th, .time-table td { border: 2px solid #b89a32; padding: .75rem 1rem; text-align: center; }
+      .time-table th { background: #e9dfbd; font-weight: 700; }
+      .time-table tbody tr:nth-child(even) { background: #fffaf0; }
+      @media (max-width: 640px) { .time-table { font-size: 1rem; } .time-table th, .time-table td { padding: .55rem .35rem; } }
+    </style>
 </head>
 
 <body class="min-h-screen flex items-center justify-center">
@@ -24,8 +31,35 @@
     <p class="z-10 mb-8 text-left text-[26px] leading-[1.5] text-neutral-800 max-lg:text-[22px] max-sm:text-[18px]">
       <span data-id="pg148_n0007">The following table shows the relationship between time in 12-hour and 24-hour format.</span>
     </p>
-    <div class="relative">
-      <img data-id="pg148_im002" src="images/pg148_im002.png" alt="Table relating 12-hour and 24-hour time: 12:00 midnight is 0000; 12:01 a.m. is 0001; 1:00 a.m. is 0100; 2:00 a.m. is 0200; 3:00 a.m. is 0300; 4:00 a.m. is 0400; 5:00 a.m. is 0500; 6:00 a.m. is 0600; 7:00 a.m. is 0700; 8:00 a.m. is 0800; 9:00 a.m. is 0900; 10:00 a.m. is 1000; 11:00 a.m. is 1100; 12:00 noon is 1200; 12:01 p.m. is 1201; 1:00 p.m. is 1300; 2:00 p.m. is 1400; and 3:00 p.m. is 1500." class="mx-auto w-full max-w-4xl rounded-xl border border-[#c8b15a] bg-white shadow-sm" style="max-width: 100%; height: auto;">
+    <div class="relative overflow-x-auto rounded-xl shadow-sm">
+      <table class="time-table" aria-label="Relationship between 12-hour and 24-hour time formats">
+        <thead>
+          <tr>
+            <th scope="col"><span data-id="pg148_tbl_h1">In 12-hour format</span></th>
+            <th scope="col"><span data-id="pg148_tbl_h2">In 24-hour format</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr aria-label="12:00 midnight corresponds to zero zero zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r01"></span><span aria-hidden="true">12:00 midnight</span></td><td aria-hidden="true">0000</td></tr>
+          <tr aria-label="12:01 a.m. corresponds to zero zero zero one in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r02"></span><span aria-hidden="true">12:01 a.m.</span></td><td aria-hidden="true">0001</td></tr>
+          <tr aria-label="1:00 a.m. corresponds to zero one zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r03"></span><span aria-hidden="true">1:00 a.m.</span></td><td aria-hidden="true">0100</td></tr>
+          <tr aria-label="2:00 a.m. corresponds to zero two zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r04"></span><span aria-hidden="true">2:00 a.m.</span></td><td aria-hidden="true">0200</td></tr>
+          <tr aria-label="3:00 a.m. corresponds to zero three zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r05"></span><span aria-hidden="true">3:00 a.m.</span></td><td aria-hidden="true">0300</td></tr>
+          <tr aria-label="4:00 a.m. corresponds to zero four zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r06"></span><span aria-hidden="true">4:00 a.m.</span></td><td aria-hidden="true">0400</td></tr>
+          <tr aria-label="5:00 a.m. corresponds to zero five zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r07"></span><span aria-hidden="true">5:00 a.m.</span></td><td aria-hidden="true">0500</td></tr>
+          <tr aria-label="6:00 a.m. corresponds to zero six zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r08"></span><span aria-hidden="true">6:00 a.m.</span></td><td aria-hidden="true">0600</td></tr>
+          <tr aria-label="7:00 a.m. corresponds to zero seven zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r09"></span><span aria-hidden="true">7:00 a.m.</span></td><td aria-hidden="true">0700</td></tr>
+          <tr aria-label="8:00 a.m. corresponds to zero eight zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r10"></span><span aria-hidden="true">8:00 a.m.</span></td><td aria-hidden="true">0800</td></tr>
+          <tr aria-label="9:00 a.m. corresponds to zero nine zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r11"></span><span aria-hidden="true">9:00 a.m.</span></td><td aria-hidden="true">0900</td></tr>
+          <tr aria-label="10:00 a.m. corresponds to one zero zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r12"></span><span aria-hidden="true">10:00 a.m.</span></td><td aria-hidden="true">1000</td></tr>
+          <tr aria-label="11:00 a.m. corresponds to one one zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r13"></span><span aria-hidden="true">11:00 a.m.</span></td><td aria-hidden="true">1100</td></tr>
+          <tr aria-label="12:00 noon corresponds to one two zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r14"></span><span aria-hidden="true">12:00 noon</span></td><td aria-hidden="true">1200</td></tr>
+          <tr aria-label="12:01 p.m. corresponds to one two zero one in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r15"></span><span aria-hidden="true">12:01 p.m.</span></td><td aria-hidden="true">1201</td></tr>
+          <tr aria-label="1:00 p.m. corresponds to one three zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r16"></span><span aria-hidden="true">1:00 p.m.</span></td><td aria-hidden="true">1300</td></tr>
+          <tr aria-label="2:00 p.m. corresponds to one four zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r17"></span><span aria-hidden="true">2:00 p.m.</span></td><td aria-hidden="true">1400</td></tr>
+          <tr aria-label="3:00 p.m. corresponds to one five zero zero in 24-hour format."><td><span class="sr-only" data-id="pg148_tbl_r18"></span><span aria-hidden="true">3:00 p.m.</span></td><td aria-hidden="true">1500</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 </div>
@@ -35,11 +69,11 @@
 </div>
     <div class="relative z-50" id="nav-container">
 </div>
-    <script src="./assets/offline-preloader.js?v=56">
+    <script src="./assets/accessible-tts.js?v=25"></script>
+    <script src="./assets/offline-preloader.js?v=72">
 </script>
     <script src="./assets/scorm.js">
 </script>
-    <script src="./assets/accessible-tts.js?v=10"></script>
     <script src="./assets/base.bundle.local.js"></script>
 <script src="./assets/numerical-alignment.js?v=5">
 </script>
