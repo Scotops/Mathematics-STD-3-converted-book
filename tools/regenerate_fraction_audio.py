@@ -33,7 +33,7 @@ TAG = re.compile(r"<[^>]+>")
 
 def contains_fraction(value: str) -> bool:
     without_dates = DATE_SLASH.sub("", value)
-    return "<mfrac>" in value or bool(NUMERIC_SLASH.search(without_dates))
+    return bool(MFRAC.search(value)) or bool(NUMERIC_SLASH.search(without_dates))
 
 
 def spoken_text(value: str) -> str:
@@ -64,16 +64,16 @@ async def write_clip(item_id: str, value: str, semaphore: asyncio.Semaphore) -> 
     filename = f"tts_{item_id}_{SUFFIX}.mp3"
     destination = AUDIO_DIR / filename
     async with semaphore:
-        for attempt in range(3):
+        for attempt in range(5):
             try:
                 await edge_tts.Communicate(spoken_text(value), voice=VOICE).save(str(destination))
                 if destination.stat().st_size < 512:
                     raise RuntimeError("generated audio was unexpectedly small")
                 return item_id, filename
             except Exception:
-                if attempt == 2:
+                if attempt == 4:
                     raise
-                await asyncio.sleep(1 + attempt)
+                await asyncio.sleep(2 + (attempt * 2))
     raise RuntimeError("unreachable")
 
 
@@ -94,16 +94,39 @@ async def main(dry_run: bool) -> None:
             print(f"{item_id}: {spoken_text(value)}")
         return
 
-    print(f"Regenerating {len(candidates)} fraction clips with {VOICE}.")
-    semaphore = asyncio.Semaphore(8)
-    for item_id, filename in await asyncio.gather(
-        *(write_clip(item_id, value, semaphore) for item_id, value in candidates)
-    ):
-        audios[item_id] = filename
+    pending = [
+        (item_id, value)
+        for item_id, value in candidates
+        if not (AUDIO_DIR / f"tts_{item_id}_{SUFFIX}.mp3").exists()
+        or (AUDIO_DIR / f"tts_{item_id}_{SUFFIX}.mp3").stat().st_size < 512
+    ]
+    for item_id, _ in candidates:
+        destination = AUDIO_DIR / f"tts_{item_id}_{SUFFIX}.mp3"
+        if destination.exists() and destination.stat().st_size >= 512:
+            audios[item_id] = destination.name
+
+    print(
+        f"Validated {len(candidates) - len(pending)} existing clips and "
+        f"regenerating {len(pending)} clips with {VOICE}."
+    )
+    semaphore = asyncio.Semaphore(3)
+    results = await asyncio.gather(
+        *(write_clip(item_id, value, semaphore) for item_id, value in pending),
+        return_exceptions=True,
+    )
+    failures = []
+    for result in results:
+        if isinstance(result, Exception):
+            failures.append(result)
+        else:
+            item_id, filename = result
+            audios[item_id] = filename
     AUDIO_MAP_PATH.write_text(
         json.dumps(audios, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+    if failures:
+        raise RuntimeError(f"{len(failures)} audio clips failed; rerun to resume") from failures[0]
 
 
 if __name__ == "__main__":
