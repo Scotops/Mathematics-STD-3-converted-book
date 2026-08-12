@@ -185,18 +185,42 @@
 
   function collectNarrationQueue() {
     const root = document.querySelector('#content') || document.body;
-    const selector = 'h1,h2,h3,h4,h5,h6,p,li,figcaption,caption,tr,img,[data-tts-text]';
-    const elements = [...root.querySelectorAll(selector)].filter((element) => {
-      if (!isVisible(element)) return false;
-      if (element.tagName === 'IMG') return !element.closest('p,li,figcaption,tr');
-      const parent = element.parentElement?.closest(selector);
-      return !parent || parent === root;
-    });
+    const semanticSelector = 'h1,h2,h3,h4,h5,h6,p,li,dt,dd,figcaption,caption,tr,label';
+    const specialSelector = 'img,[data-tts-text],[aria-label],input,textarea,select,math';
+    const allElements = [...root.querySelectorAll('*')];
+    const directText = (element) => [...element.childNodes]
+      .some((node) => node.nodeType === Node.TEXT_NODE && /\S/.test(node.nodeValue || ''));
+    const isControl = (element) => element.matches('button,[role="button"],[role="navigation"],[role="toolbar"]');
+    const isCandidate = (element) => {
+      if (!isVisible(element) || isControl(element)) return false;
+      const semantic = element.matches(semanticSelector);
+      const special = element.matches(specialSelector);
+      const leafText = directText(element) && !element.matches('script,style');
+      if (!semantic && !special && !leafText) return false;
+
+      // A semantic row/paragraph or an explicit narration label owns all of
+      // its descendants. This prevents repeated speech while still allowing
+      // standalone layout divs (vertical arithmetic, diagrams and cards) to
+      // become narration items.
+      const owningAncestor = element.parentElement?.closest(`${semanticSelector},[data-tts-text],[aria-label]`);
+      if (owningAncestor && owningAncestor !== root) return false;
+      if (element.tagName === 'IMG') return !element.closest(semanticSelector);
+      return true;
+    };
+    const elements = allElements.filter(isCandidate);
     const entries = [];
     for (const element of elements) {
-      const raw = element.tagName === 'IMG'
+      const explicitLabel = String(element.dataset.ttsText || element.getAttribute('aria-label') || '').trim();
+      const isDirectTextUnit = !element.matches(`${semanticSelector},${specialSelector}`);
+      const ownText = isDirectTextUnit
+        ? [...element.childNodes]
+          .filter((node) => node.nodeType === Node.TEXT_NODE)
+          .map((node) => node.nodeValue || '')
+          .join(' ')
+        : '';
+      const raw = explicitLabel || (element.tagName === 'IMG'
         ? element.getAttribute('alt')
-        : extractPageText(element);
+        : isDirectTextUnit ? ownText : extractPageText(element));
       const spoken = sanitizeForSpeech(raw);
       if (!spoken) continue;
       const spokenWordCount = spoken.split(/\s+/).filter(Boolean).length;
