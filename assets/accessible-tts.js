@@ -26,6 +26,7 @@
   let currentChunkIndex = -1;
   let wordHighlightMap = [];
   let pendingHighlightFrame = null;
+  let wordHighlightOverlay = null;
   let player = null;
   let autoplayStarted = false;
   const trackedAudio = new Set();
@@ -36,6 +37,13 @@
     style.id = 'adt-accessible-tts-styles';
     style.textContent = `
       ::highlight(adt-tts-word) { background: #ffe45c; color: #111; }
+      .adt-tts-word-overlay {
+        position: fixed; z-index: 2147482998; display: none;
+        pointer-events: none; border-radius: 4px;
+        background: rgba(255, 228, 92, .72);
+        box-shadow: 0 0 0 2px rgba(255, 193, 7, .2);
+        mix-blend-mode: multiply;
+      }
       .adt-accessible-tts-player {
         position: fixed; right: 22px; bottom: 88px; z-index: 2147483000;
         display: flex; align-items: center; gap: 10px; padding: 10px 14px;
@@ -400,6 +408,34 @@
     return ranges;
   }
 
+  function alignTokenSequences(spokenWords, printedWords) {
+    const rows = Array.from({ length: spokenWords.length + 1 }, () => new Uint16Array(printedWords.length + 1));
+    for (let spokenIndex = 1; spokenIndex <= spokenWords.length; spokenIndex += 1) {
+      const row = rows[spokenIndex];
+      const previous = rows[spokenIndex - 1];
+      for (let printedIndex = 1; printedIndex <= printedWords.length; printedIndex += 1) {
+        row[printedIndex] = spokenWords[spokenIndex - 1] === printedWords[printedIndex - 1]
+          ? previous[printedIndex - 1] + 1
+          : Math.max(previous[printedIndex], row[printedIndex - 1]);
+      }
+    }
+    const alignment = Array(spokenWords.length).fill(-1);
+    let spokenIndex = spokenWords.length;
+    let printedIndex = printedWords.length;
+    while (spokenIndex > 0 && printedIndex > 0) {
+      if (spokenWords[spokenIndex - 1] === printedWords[printedIndex - 1]) {
+        alignment[spokenIndex - 1] = printedIndex - 1;
+        spokenIndex -= 1;
+        printedIndex -= 1;
+      } else if (rows[spokenIndex - 1][printedIndex] >= rows[spokenIndex][printedIndex - 1]) {
+        spokenIndex -= 1;
+      } else {
+        printedIndex -= 1;
+      }
+    }
+    return alignment;
+  }
+
   // Build a non-invasive map from each spoken word back to the printed word.
   // The narration text itself is never changed: this only lets the yellow
   // marker follow speech without wrapping or rewriting textbook content.
@@ -412,27 +448,43 @@
         if (normalized) expandedPrinted.push({ normalized, printedIndex });
       });
     });
-    const spokenWords = spokenTokenParts(spokenText);
-    const map = [];
-    let cursor = 0;
-    spokenWords.forEach((word) => {
-      const wanted = normalizedWord(word);
-      let found = -1;
-      for (let index = cursor; index < Math.min(expandedPrinted.length, cursor + 80); index += 1) {
-        if (expandedPrinted[index].normalized === wanted) { found = index; break; }
-      }
-      if (found >= 0) {
-        map.push(printed[expandedPrinted[found].printedIndex].range);
-        cursor = found + 1;
-      } else {
-        map.push(null);
-      }
-    });
-    return map;
+    const spokenWords = spokenTokenParts(spokenText).map(normalizedWord);
+    const printedWords = expandedPrinted.map((item) => item.normalized);
+    // Longest-common-subsequence alignment keeps the visible and spoken word
+    // streams synchronized even when narration contains image descriptions,
+    // input blanks, accessibility labels, or other words with no printed
+    // range. A greedy look-ahead loses its place after those passages.
+    return alignTokenSequences(spokenWords, printedWords).map((match) => match < 0
+      ? null
+      : printed[expandedPrinted[match].printedIndex].range);
+  }
+
+  function ensureWordHighlightOverlay() {
+    if (wordHighlightOverlay?.isConnected) return wordHighlightOverlay;
+    wordHighlightOverlay = document.createElement('div');
+    wordHighlightOverlay.className = 'adt-tts-word-overlay';
+    wordHighlightOverlay.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(wordHighlightOverlay);
+    return wordHighlightOverlay;
+  }
+
+  function positionWordHighlightOverlay(range) {
+    const overlay = ensureWordHighlightOverlay();
+    const box = range.getBoundingClientRect();
+    if (!box.width || !box.height) {
+      overlay.style.display = 'none';
+      return;
+    }
+    overlay.style.display = 'block';
+    overlay.style.left = `${Math.max(0, box.left - 2)}px`;
+    overlay.style.top = `${Math.max(0, box.top - 1)}px`;
+    overlay.style.width = `${box.width + 4}px`;
+    overlay.style.height = `${box.height + 2}px`;
   }
 
   function clearWordHighlight() {
     if (window.CSS?.highlights) CSS.highlights.delete('adt-tts-word');
+    if (wordHighlightOverlay) wordHighlightOverlay.style.display = 'none';
     if (pendingHighlightFrame) {
       window.cancelAnimationFrame(pendingHighlightFrame);
       pendingHighlightFrame = null;
@@ -470,18 +522,23 @@
       // scrolling cannot finish before the next word boundary and caused the
       // page to chase the narrator or move horizontally.
       const targetY = Math.min(window.innerHeight * 0.38, bottomLimit - 80);
-      window.scrollBy({ top: box.top - targetY, left: 0, behavior: 'auto' });
+      const scrollingElement = document.scrollingElement || document.documentElement;
+      scrollingElement.scrollTop += box.top - targetY;
     }
   }
 
   function showWordHighlight(index) {
     const range = wordHighlightMap[index];
-    if (!range || !window.CSS?.highlights || typeof Highlight !== 'function') return;
-    CSS.highlights.set('adt-tts-word', new Highlight(range));
+    if (!range) return;
+    if (window.CSS?.highlights && typeof Highlight === 'function') {
+      CSS.highlights.set('adt-tts-word', new Highlight(range));
+    }
+    positionWordHighlightOverlay(range);
     if (pendingHighlightFrame) window.cancelAnimationFrame(pendingHighlightFrame);
     pendingHighlightFrame = window.requestAnimationFrame(() => {
       pendingHighlightFrame = null;
       scrollRangeIntoReadingBand(range);
+      window.requestAnimationFrame(() => positionWordHighlightOverlay(range));
     });
   }
 
@@ -675,6 +732,7 @@
     integerToWords,
     mathText,
     sanitizeForSpeech,
+    alignTokenSequences,
     spokenTokenParts,
     splitIntoChunks,
     start,

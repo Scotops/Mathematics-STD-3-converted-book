@@ -36,5 +36,12 @@ const mathFraction = new FakeElement('MFRAC', '', [
 assert.equal(api.mathText(mathFraction), '3 over 4');
 assert.deepEqual(api.spokenTokenParts('twenty-four shillings'), ['twenty', 'four', 'shillings']);
 assert.deepEqual(api.spokenTokenParts("five o'clock"), ['five', "o'clock"]);
+assert.deepEqual(
+  api.alignTokenSequences(
+    ['one', 'image', 'description', 'then', 'two'],
+    ['one', 'then', 'two']
+  ),
+  [0, -1, -1, 1, 2]
+);
 
 console.log('Fraction narration tests passed.');
