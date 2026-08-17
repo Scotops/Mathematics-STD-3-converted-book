@@ -6,10 +6,57 @@
   <title>Example 5 - Mathematics Pupil's Book Standard Three</title>
   <meta name="title-id" content="pg009_sec001">
   <meta name="page-section-id" content="9">
-  <link href="./content/tailwind_output.css" rel="stylesheet">
-  <link href="./assets/typography-consistency.css" rel="stylesheet">
-  <link href="./assets/fonts.css" rel="stylesheet">
-  <style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="./content/tailwind_output.css" rel="stylesheet">
+<link href="./assets/typography-consistency.css" rel="stylesheet">
+<link href="./assets/fonts.css" rel="stylesheet">
+<link href="./assets/libs/fontawesome/css/all.min.css" rel="stylesheet">
+<style>
     .place-example { max-width: 1000px; margin: 2rem auto; padding: 2.5rem; border: 3px solid #9a7c00; border-radius: 1.5rem; background: #fff; color: #242424; }
     .place-example h2 { display: inline-block; margin: -4.8rem 0 2rem 2rem; padding: .75rem 2rem; border-radius: 1.25rem; background: #9a7c00; color: #fff; font: 700 2rem/1.1 Arial, sans-serif; }
     .place-example .instruction { margin: 0; font-size: 1.65rem; line-height: 1.35; }
@@ -28,10 +75,23 @@
     .place-label { margin-left: .8rem; font-weight: 600; }
     @media (max-width: 700px) { .place-example { margin: 1rem; padding: 1.25rem; } .place-example h2 { margin: -3rem 0 1.5rem .5rem; font-size: 1.55rem; } .place-example .instruction { font-size: 1.25rem; } .place-example .questions, .place-example .answers { grid-template-columns: 1fr; gap: 1rem; } .place-card { min-height: 16rem; padding: 1rem; } .place-diagram { width: 100%; max-width: 22.5rem; height: clamp(11.5rem, 58vw, 13rem); } .place-labels { gap: clamp(.35rem, 2vw, .65rem); } }
   </style>
+<style id="adt-source-page-consolidation">
+  /* One reader screen now corresponds to one physical source-PDF page. */
+  #content.adt-source-page { width: 100%; max-width: 112rem; margin: 0 auto; }
+  #content.adt-source-page > .adt-source-page-part { width: 100%; }
+  #content.adt-source-page > .adt-source-page-part + .adt-source-page-part {
+    margin-top: clamp(1rem, 2.5vw, 2.5rem);
+  }
+  #content.adt-source-page > .adt-source-page-part > section { margin-left: auto; margin-right: auto; }
+  @media (max-width: 640px) {
+    #content.adt-source-page > .adt-source-page-part + .adt-source-page-part { margin-top: 1rem; }
+  }
+</style>
 </head>
 <body class="min-h-screen bg-white">
-  <main id="content" class="opacity-0">
-    <section data-section-type="text" data-section-id="pg009_sec001" class="mx-auto max-w-6xl p-4">
+  <main id="content" class="adt-source-page opacity-0">
+<div class="adt-source-page-part adt-source-page" data-source-section="pg009_sec001">
+<section data-section-type="text" data-section-id="pg009_sec001" class="mx-auto max-w-6xl p-4">
       <h1 class="sr-only">Example 5: Place value of digits in whole numbers</h1>
       <article class="place-example">
         <h2 data-id="pg009_n0002">Example 5</h2>
@@ -44,19 +104,85 @@
         </div>
         <h3 data-id="pg009_n0008">Answer</h3>
         <div class="answers">
-          <section class="place-card"><p class="place-visual-title" aria-hidden="true">(a) 4628</p><p class="sr-only" data-id="pg009_n0009">A. 4628. Four thousands, six hundreds, two tens, and eight ones.</p><div class="place-diagram" aria-hidden="true"><svg class="place-connectors" viewBox="0 0 360 210"><path d="M150 27V38H190" stroke="#3498db" stroke-width="4" fill="none"/><path d="M105 27V82H190" stroke="#e6008d" stroke-width="4" fill="none"/><path d="M60 27V126H190" stroke="#ff9800" stroke-width="4" fill="none"/><path d="M15 27V170H190" stroke="#2f9e44" stroke-width="4" fill="none"/></svg><div class="place-digits"><span class="place-digit thousands">4</span><span class="place-digit hundreds">6</span><span class="place-digit tens">2</span><span class="place-digit ones">8</span></div><div class="place-labels"><span class="ones">Ones</span><span class="tens">Tens</span><span class="hundreds">Hundreds</span><span class="thousands">Thousands</span></div></div></section>
-          <section class="place-card"><p class="place-visual-title" aria-hidden="true">(b) 3456</p><p class="sr-only" data-id="pg009_n0015">B. 3456. Three thousands, four hundreds, five tens, and six ones.</p><div class="place-diagram" aria-hidden="true"><svg class="place-connectors" viewBox="0 0 360 210"><path d="M150 27V38H190" stroke="#3498db" stroke-width="4" fill="none"/><path d="M105 27V82H190" stroke="#e6008d" stroke-width="4" fill="none"/><path d="M60 27V126H190" stroke="#ff9800" stroke-width="4" fill="none"/><path d="M15 27V170H190" stroke="#2f9e44" stroke-width="4" fill="none"/></svg><div class="place-digits"><span class="place-digit thousands">3</span><span class="place-digit hundreds">4</span><span class="place-digit tens">5</span><span class="place-digit ones">6</span></div><div class="place-labels"><span class="ones">Ones</span><span class="tens">Tens</span><span class="hundreds">Hundreds</span><span class="thousands">Thousands</span></div></div></section>
-          <section class="place-card"><p class="place-visual-title" aria-hidden="true">(c) 7304</p><p class="sr-only" data-id="pg009_n0021">C. 7304. Seven thousands, three hundreds, zero tens, and four ones.</p><div class="place-diagram" aria-hidden="true"><svg class="place-connectors" viewBox="0 0 360 210"><path d="M150 27V38H190" stroke="#3498db" stroke-width="4" fill="none"/><path d="M105 27V82H190" stroke="#e6008d" stroke-width="4" fill="none"/><path d="M60 27V126H190" stroke="#ff9800" stroke-width="4" fill="none"/><path d="M15 27V170H190" stroke="#2f9e44" stroke-width="4" fill="none"/></svg><div class="place-digits"><span class="place-digit thousands">7</span><span class="place-digit hundreds">3</span><span class="place-digit tens">0</span><span class="place-digit ones">4</span></div><div class="place-labels"><span class="ones">Ones</span><span class="tens">Tens</span><span class="hundreds">Hundreds</span><span class="thousands">Thousands</span></div></div></section>
-          <section class="place-card"><p class="place-visual-title" aria-hidden="true">(d) 9000</p><p class="sr-only" data-id="pg009_n0027">D. 9000. Nine thousands, zero hundreds, zero tens, and zero ones.</p><div class="place-diagram" aria-hidden="true"><svg class="place-connectors" viewBox="0 0 360 210"><path d="M150 27V38H190" stroke="#3498db" stroke-width="4" fill="none"/><path d="M105 27V82H190" stroke="#e6008d" stroke-width="4" fill="none"/><path d="M60 27V126H190" stroke="#ff9800" stroke-width="4" fill="none"/><path d="M15 27V170H190" stroke="#2f9e44" stroke-width="4" fill="none"/></svg><div class="place-digits"><span class="place-digit thousands">9</span><span class="place-digit hundreds">0</span><span class="place-digit tens">0</span><span class="place-digit ones">0</span></div><div class="place-labels"><span class="ones">Ones</span><span class="tens">Tens</span><span class="hundreds">Hundreds</span><span class="thousands">Thousands</span></div></div></section>
+          <section class="place-card"><p class="place-visual-title" aria-hidden="true">(a) 4628</p><p class="sr-only" data-id="pg009_n0009">A. 4628. Four thousands, six hundreds, two tens, and eight ones.</p><div class="place-diagram" aria-hidden="true"><svg class="place-connectors" viewbox="0 0 360 210"><path d="M150 27V38H190" stroke="#3498db" stroke-width="4" fill="none"></path><path d="M105 27V82H190" stroke="#e6008d" stroke-width="4" fill="none"></path><path d="M60 27V126H190" stroke="#ff9800" stroke-width="4" fill="none"></path><path d="M15 27V170H190" stroke="#2f9e44" stroke-width="4" fill="none"></path></svg><div class="place-digits"><span class="place-digit thousands">4</span><span class="place-digit hundreds">6</span><span class="place-digit tens">2</span><span class="place-digit ones">8</span></div><div class="place-labels"><span class="ones">Ones</span><span class="tens">Tens</span><span class="hundreds">Hundreds</span><span class="thousands">Thousands</span></div></div></section>
+          <section class="place-card"><p class="place-visual-title" aria-hidden="true">(b) 3456</p><p class="sr-only" data-id="pg009_n0015">B. 3456. Three thousands, four hundreds, five tens, and six ones.</p><div class="place-diagram" aria-hidden="true"><svg class="place-connectors" viewbox="0 0 360 210"><path d="M150 27V38H190" stroke="#3498db" stroke-width="4" fill="none"></path><path d="M105 27V82H190" stroke="#e6008d" stroke-width="4" fill="none"></path><path d="M60 27V126H190" stroke="#ff9800" stroke-width="4" fill="none"></path><path d="M15 27V170H190" stroke="#2f9e44" stroke-width="4" fill="none"></path></svg><div class="place-digits"><span class="place-digit thousands">3</span><span class="place-digit hundreds">4</span><span class="place-digit tens">5</span><span class="place-digit ones">6</span></div><div class="place-labels"><span class="ones">Ones</span><span class="tens">Tens</span><span class="hundreds">Hundreds</span><span class="thousands">Thousands</span></div></div></section>
+          <section class="place-card"><p class="place-visual-title" aria-hidden="true">(c) 7304</p><p class="sr-only" data-id="pg009_n0021">C. 7304. Seven thousands, three hundreds, zero tens, and four ones.</p><div class="place-diagram" aria-hidden="true"><svg class="place-connectors" viewbox="0 0 360 210"><path d="M150 27V38H190" stroke="#3498db" stroke-width="4" fill="none"></path><path d="M105 27V82H190" stroke="#e6008d" stroke-width="4" fill="none"></path><path d="M60 27V126H190" stroke="#ff9800" stroke-width="4" fill="none"></path><path d="M15 27V170H190" stroke="#2f9e44" stroke-width="4" fill="none"></path></svg><div class="place-digits"><span class="place-digit thousands">7</span><span class="place-digit hundreds">3</span><span class="place-digit tens">0</span><span class="place-digit ones">4</span></div><div class="place-labels"><span class="ones">Ones</span><span class="tens">Tens</span><span class="hundreds">Hundreds</span><span class="thousands">Thousands</span></div></div></section>
+          <section class="place-card"><p class="place-visual-title" aria-hidden="true">(d) 9000</p><p class="sr-only" data-id="pg009_n0027">D. 9000. Nine thousands, zero hundreds, zero tens, and zero ones.</p><div class="place-diagram" aria-hidden="true"><svg class="place-connectors" viewbox="0 0 360 210"><path d="M150 27V38H190" stroke="#3498db" stroke-width="4" fill="none"></path><path d="M105 27V82H190" stroke="#e6008d" stroke-width="4" fill="none"></path><path d="M60 27V126H190" stroke="#ff9800" stroke-width="4" fill="none"></path><path d="M15 27V170H190" stroke="#2f9e44" stroke-width="4" fill="none"></path></svg><div class="place-digits"><span class="place-digit thousands">9</span><span class="place-digit hundreds">0</span><span class="place-digit tens">0</span><span class="place-digit ones">0</span></div><div class="place-labels"><span class="ones">Ones</span><span class="tens">Tens</span><span class="hundreds">Hundreds</span><span class="thousands">Thousands</span></div></div></section>
         </div>
       </article>
     </section>
-  </main>
+</div>
+<div class="adt-source-page-part bg-white rounded-lg px-24 max-lg:px-12 max-sm:px-4 pt-12 pb-12" data-source-section="pg009_sec002">
+<section data-section-type="activity_fill_in_the_blank" data-section-id="pg009_sec002" class="max-w-6xl mx-auto"><div class="overflow-hidden rounded-[1.4rem] border border-orange-200 bg-[#f5efe2] shadow-sm"><div class="bg-gradient-to-r from-[#f8c99f] to-[#fae7cc] px-8 py-3 max-lg:px-6 max-sm:px-5 max-sm:py-3"><span class="font-bold text-slate-900 text-[1.9rem] leading-none max-lg:text-[1.75rem] max-sm:text-[1.45rem]" data-id="pg009_n0034">Exercise 1</span></div><div class="px-8 py-5 max-lg:px-6 max-sm:px-4 max-sm:py-4"><div class="mb-5 flex items-center gap-4 max-sm:items-start max-sm:gap-3"><span class="flex h-12 w-12 items-center justify-center rounded-full bg-green-600 text-white text-xl font-bold shrink-0 max-sm:h-10 max-sm:w-10 max-sm:text-lg" data-id="pg009_n0035">1.</span><span class="text-[1.05rem] leading-relaxed text-slate-900 max-lg:text-[1rem] max-sm:text-[0.95rem] max-sm:max-w-[14rem]" data-id="pg009_n0036">Write the place value of each digit in 9825.</span></div><div class="space-y-4 max-sm:space-y-3"><div class="rounded-[1.8rem] border border-yellow-200 bg-white px-8 py-5 max-lg:px-7 max-sm:px-5 max-sm:py-4"><div class="fitb-sentence text-[1.02rem] leading-relaxed text-slate-900 max-lg:text-[0.98rem] max-sm:text-[0.92rem]" data-id="pg009_n0037">(a) [[blank:pg009_sec002-item-1]] is in the tens place.</div></div><div class="rounded-[1.8rem] border border-yellow-200 bg-white px-8 py-5 max-lg:px-7 max-sm:px-5 max-sm:py-4"><div class="fitb-sentence text-[1.02rem] leading-relaxed text-slate-900 max-lg:text-[0.98rem] max-sm:text-[0.92rem]" data-id="pg009_n0038">(b) [[blank:pg009_sec002-item-2]] is in the ones place.</div></div><div class="rounded-[1.8rem] border border-yellow-200 bg-white px-8 py-5 max-lg:px-7 max-sm:px-5 max-sm:py-4"><div class="fitb-sentence text-[1.02rem] leading-relaxed text-slate-900 max-lg:text-[0.98rem] max-sm:text-[0.92rem]" data-id="pg009_n0039">(c) [[blank:pg009_sec002-item-3]] is in the thousands place.</div></div><div class="rounded-[1.8rem] border border-yellow-200 bg-white px-8 py-5 max-lg:px-7 max-sm:px-5 max-sm:py-4"><div class="fitb-sentence text-[1.02rem] leading-relaxed text-slate-900 max-lg:text-[0.98rem] max-sm:text-[0.92rem]" data-id="pg009_n0040">(d) [[blank:pg009_sec002-item-4]] is in the hundreds place.</div></div></div></div></div></section>
+</div>
+</div>
+</main>
   <div id="interface-container"></div>
   <div id="nav-container"></div>
-  <script src="./assets/offline-preloader.js?v=56"></script>
-  <script src="./assets/scorm.js"></script>
-  <script src="./assets/accessible-tts.js?v=10"></script>
-    <script src="./assets/base.bundle.local.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="./assets/offline-preloader.js?v=56"></script>
+<script src="./assets/scorm.js"></script>
+<script src="./assets/accessible-tts.js?v=10"></script>
+<script src="./assets/base.bundle.local.js"></script>
+<script type="text/javascript">
+        window.correctAnswers = Object.assign(window.correctAnswers || {}, JSON.parse('{"pg009_sec002-item-1":"2","pg009_sec002-item-2":"5","pg009_sec002-item-3":"9","pg009_sec002-item-4":"8"}'));
+    </script>
+<script src="./assets/numerical-alignment.js?v=5"></script>
 </body>
 </html>
