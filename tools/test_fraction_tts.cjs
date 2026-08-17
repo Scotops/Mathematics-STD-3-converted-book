@@ -8,6 +8,7 @@ class FakeElement {
     this.classList = { contains: () => false };
   }
   querySelector() { return null; }
+  getAttribute() { return null; }
 }
 
 global.Element = FakeElement;
@@ -19,6 +20,7 @@ global.window = {
   HTMLMediaElement: null,
   Audio: null,
   addEventListener() {},
+  setTimeout() {},
 };
 global.document = {};
 
@@ -32,5 +34,7 @@ const mathFraction = new FakeElement('MFRAC', '', [
   new FakeElement('MN', '4'),
 ]);
 assert.equal(api.mathText(mathFraction), '3 over 4');
+assert.deepEqual(api.spokenTokenParts('twenty-four shillings'), ['twenty', 'four', 'shillings']);
+assert.deepEqual(api.spokenTokenParts("five o'clock"), ['five', "o'clock"]);
 
 console.log('Fraction narration tests passed.');

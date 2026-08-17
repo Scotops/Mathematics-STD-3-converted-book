@@ -25,6 +25,7 @@
   let activeUtterance = null;
   let currentChunkIndex = -1;
   let wordHighlightMap = [];
+  let pendingHighlightFrame = null;
   let player = null;
   let autoplayStarted = false;
   const trackedAudio = new Set();
@@ -364,6 +365,15 @@
     return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
   }
 
+  // SpeechSynthesis reports a boundary for each spoken component. For
+  // example, "twenty-four" produces boundaries for "twenty" and "four".
+  // Counting whitespace-separated strings made every later highlight drift
+  // by one word. Use the same boundary-sized tokens for mapping, queue
+  // offsets and boundary events.
+  function spokenTokenParts(value) {
+    return String(value || '').match(/[A-Za-z0-9]+(?:'[A-Za-z0-9]+)?/g) || [];
+  }
+
   function visibleWordRanges() {
     const root = document.querySelector('#content') || document.body;
     const ranges = [];
@@ -397,18 +407,18 @@
     const printed = visibleWordRanges();
     const expandedPrinted = [];
     printed.forEach((item, printedIndex) => {
-      sanitizeForSpeech(item.text).split(/\s+/).forEach((word) => {
+      spokenTokenParts(sanitizeForSpeech(item.text)).forEach((word) => {
         const normalized = normalizedWord(word);
         if (normalized) expandedPrinted.push({ normalized, printedIndex });
       });
     });
-    const spokenWords = String(spokenText || '').split(/\s+/).filter(Boolean);
+    const spokenWords = spokenTokenParts(spokenText);
     const map = [];
     let cursor = 0;
     spokenWords.forEach((word) => {
       const wanted = normalizedWord(word);
       let found = -1;
-      for (let index = cursor; index < Math.min(expandedPrinted.length, cursor + 20); index += 1) {
+      for (let index = cursor; index < Math.min(expandedPrinted.length, cursor + 80); index += 1) {
         if (expandedPrinted[index].normalized === wanted) { found = index; break; }
       }
       if (found >= 0) {
@@ -423,16 +433,56 @@
 
   function clearWordHighlight() {
     if (window.CSS?.highlights) CSS.highlights.delete('adt-tts-word');
+    if (pendingHighlightFrame) {
+      window.cancelAnimationFrame(pendingHighlightFrame);
+      pendingHighlightFrame = null;
+    }
+  }
+
+  function scrollRangeIntoReadingBand(range) {
+    const element = range.startContainer.parentElement;
+    if (!element) return;
+
+    let scroller = element.parentElement;
+    while (scroller && scroller !== document.body) {
+      const style = getComputedStyle(scroller);
+      if (/(auto|scroll)/.test(style.overflowY) && scroller.scrollHeight > scroller.clientHeight + 2) break;
+      scroller = scroller.parentElement;
+    }
+
+    const box = range.getBoundingClientRect();
+    const panelTop = player?.getBoundingClientRect().top || window.innerHeight;
+    if (scroller && scroller !== document.body) {
+      const viewport = scroller.getBoundingClientRect();
+      const topLimit = viewport.top + Math.min(90, viewport.height * 0.2);
+      const bottomLimit = Math.min(viewport.bottom - 40, panelTop - 24);
+      if (box.top < topLimit || box.bottom > bottomLimit) {
+        const targetY = viewport.top + Math.min(viewport.height * 0.38, Math.max(100, bottomLimit - viewport.top - 80));
+        scroller.scrollTop += box.top - targetY;
+      }
+      return;
+    }
+
+    const topLimit = 90;
+    const bottomLimit = Math.max(topLimit + 100, panelTop - 24);
+    if (box.top < topLimit || box.bottom > bottomLimit) {
+      // Scroll only on the vertical axis and do it immediately. Smooth
+      // scrolling cannot finish before the next word boundary and caused the
+      // page to chase the narrator or move horizontally.
+      const targetY = Math.min(window.innerHeight * 0.38, bottomLimit - 80);
+      window.scrollBy({ top: box.top - targetY, left: 0, behavior: 'auto' });
+    }
   }
 
   function showWordHighlight(index) {
     const range = wordHighlightMap[index];
     if (!range || !window.CSS?.highlights || typeof Highlight !== 'function') return;
     CSS.highlights.set('adt-tts-word', new Highlight(range));
-    const box = range.getBoundingClientRect();
-    if (box.top < 70 || box.bottom > window.innerHeight - 120) {
-      range.startContainer.parentElement?.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    }
+    if (pendingHighlightFrame) window.cancelAnimationFrame(pendingHighlightFrame);
+    pendingHighlightFrame = window.requestAnimationFrame(() => {
+      pendingHighlightFrame = null;
+      scrollRangeIntoReadingBand(range);
+    });
   }
 
   function preferredVoice() {
@@ -497,7 +547,7 @@
     utterance.onstart = () => showWordHighlight(nextChunk.wordOffset);
     utterance.onboundary = (event) => {
       if (event.name && event.name !== 'word') return;
-      const wordsBefore = utterance.text.slice(0, event.charIndex).trim().split(/\s+/).filter(Boolean).length;
+      const wordsBefore = spokenTokenParts(utterance.text.slice(0, event.charIndex)).length;
       showWordHighlight(nextChunk.wordOffset + wordsBefore);
     };
     utterance.onend = () => window.setTimeout(playNext, 30);
@@ -523,7 +573,7 @@
     queue = splitIntoChunks(text).map((chunk) => {
       if (chunk === '__adt_speech_pause__') return { pause: true, wordOffset };
       const entry = { text: chunk, wordOffset };
-      wordOffset += chunk.split(/\s+/).filter(Boolean).length;
+      wordOffset += spokenTokenParts(chunk).length;
       return entry;
     });
     queueIndex = 0;
@@ -625,6 +675,7 @@
     integerToWords,
     mathText,
     sanitizeForSpeech,
+    spokenTokenParts,
     splitIntoChunks,
     start,
     stop,
