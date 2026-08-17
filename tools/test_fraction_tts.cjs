@@ -5,10 +5,21 @@ class FakeElement {
     this.tagName = tagName;
     this.textContent = text;
     this.children = children;
+    this.childNodes = children;
+    this.nodeType = 1;
+    this.dataset = {};
     this.classList = { contains: () => false };
   }
+  matches() { return false; }
   querySelector() { return null; }
   getAttribute() { return null; }
+}
+
+class FakeText {
+  constructor(value) {
+    this.nodeType = 3;
+    this.nodeValue = value;
+  }
 }
 
 global.Element = FakeElement;
@@ -34,6 +45,12 @@ const mathFraction = new FakeElement('MFRAC', '', [
   new FakeElement('MN', '4'),
 ]);
 assert.equal(api.mathText(mathFraction), '3 over 4');
+const fractionSentence = new FakeElement('SPAN', '', [
+  new FakeText('The shaded part is '),
+  mathFraction,
+  new FakeText('.'),
+]);
+assert.equal(api.fractionAwareText(fractionSentence).replace(/\s+/g, ' ').trim(), 'The shaded part is 3 over 4 .');
 assert.deepEqual(api.spokenTokenParts('twenty-four shillings'), ['twenty', 'four', 'shillings']);
 assert.deepEqual(api.spokenTokenParts("five o'clock"), ['five', "o'clock"]);
 assert.deepEqual(

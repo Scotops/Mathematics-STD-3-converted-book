@@ -191,6 +191,19 @@
     return children.map(mathText).filter(Boolean).join(' ');
   }
 
+  function fractionAwareText(node) {
+    if (node?.nodeType === Node.TEXT_NODE) return String(node.nodeValue || '');
+    if (!(node instanceof Element)) return '';
+    if (node.dataset?.ttsText) return node.dataset.ttsText;
+    if (node.matches?.('input, textarea, select')) return fieldText(node);
+    if (node.tagName === 'IMG') return node.getAttribute('alt') || '';
+    if (node.tagName === 'MATH' || node.tagName === 'MFRAC'
+      || node.tagName === 'MJX-MFRAC' || node.classList.contains('mjx-mfrac')) {
+      return mathText(node);
+    }
+    return [...node.childNodes].map(fractionAwareText).filter(Boolean).join(' ');
+  }
+
   function extractPageText() {
     const root = document.querySelector('#content') || document.body;
     const pieces = [];
@@ -211,6 +224,17 @@
 
       if (element.dataset.ttsText) {
         add(element.dataset.ttsText);
+        return;
+      }
+
+      // Treat a localized text block containing MathML as one semantic unit.
+      // MathJax can visually replace or hide the source fraction, which made
+      // the ordinary DOM walk keep the surrounding sentence but omit the
+      // numerator and denominator. Reading the whole data-id block here keeps
+      // every fraction explicit: "numerator over denominator".
+      if (element.hasAttribute('data-id')
+        && element.querySelector('mfrac, [aria-roledescription="fraction"], mjx-mfrac, .mjx-mfrac')) {
+        add(fractionAwareText(element));
         return;
       }
 
@@ -731,6 +755,7 @@
     expandNumbersForSpeech,
     integerToWords,
     mathText,
+    fractionAwareText,
     sanitizeForSpeech,
     alignTokenSequences,
     spokenTokenParts,
