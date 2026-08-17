@@ -38,6 +38,7 @@ global.document = {};
 require('../assets/accessible-tts.js');
 
 const api = window.ADTAccessibleTTS;
+assert.equal(api.speechRate, 0.82);
 assert.equal(api.sanitizeForSpeech('1/3'), 'one over three');
 assert.equal(api.sanitizeForSpeech('35/40'), 'thirty-five over forty');
 const mathFraction = new FakeElement('MFRAC', '', [

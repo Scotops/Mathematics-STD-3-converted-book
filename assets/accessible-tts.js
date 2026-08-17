@@ -20,7 +20,9 @@
   let pendingControlTimer = null;
   let sessionVoice = null;
   let paused = false;
-  let speechRate = 0.92;
+  // Match the calmer pace used by the Cultural book. The learner can still
+  // change this from the playback panel without changing the page content.
+  let speechRate = 0.82;
   let speechVolume = 1;
   let activeUtterance = null;
   let currentChunkIndex = -1;
@@ -29,6 +31,8 @@
   let wordHighlightOverlay = null;
   let player = null;
   let autoplayStarted = false;
+  let manualScrollPauseUntil = 0;
+  let programmaticScrollUntil = 0;
   const trackedAudio = new Set();
 
   function installPresentationStyles() {
@@ -40,9 +44,8 @@
       .adt-tts-word-overlay {
         position: fixed; z-index: 2147482998; display: none;
         pointer-events: none; border-radius: 4px;
-        background: rgba(255, 228, 92, .72);
-        box-shadow: 0 0 0 2px rgba(255, 193, 7, .2);
-        mix-blend-mode: multiply;
+        background: rgba(255, 228, 92, .78);
+        box-shadow: 0 0 0 2px rgba(255, 193, 7, .18);
       }
       .adt-accessible-tts-player {
         position: fixed; right: 22px; bottom: 88px; z-index: 2147483000;
@@ -79,7 +82,7 @@
       <button type="button" data-tts-command="next" aria-label="Next spoken part">&#9197;</button>
       <button type="button" data-tts-command="stop" aria-label="Stop reading">&#9632;</button>
       <label><span class="sr-only">Reading speed</span><select data-tts-command="rate" aria-label="Reading speed">
-        <option value="0.75">Slow</option><option value="0.92" selected>Normal</option><option value="1.1">Fast</option>
+        <option value="0.68">Slow</option><option value="0.82" selected>Normal</option><option value="1">Fast</option>
       </select></label>
       <button type="button" data-tts-command="volume" aria-label="Mute or unmute reading">&#128266;</button>
     `;
@@ -98,7 +101,7 @@
       }
     });
     player.querySelector('[data-tts-command="rate"]').addEventListener('change', (event) => {
-      speechRate = Number(event.target.value) || 0.92;
+      speechRate = Number(event.target.value) || 0.82;
       restartCurrent();
     });
     document.body.appendChild(player);
@@ -517,7 +520,7 @@
 
   function scrollRangeIntoReadingBand(range) {
     const element = range.startContainer.parentElement;
-    if (!element) return;
+    if (!element || Date.now() < manualScrollPauseUntil) return;
 
     let scroller = element.parentElement;
     while (scroller && scroller !== document.body) {
@@ -530,23 +533,24 @@
     const panelTop = player?.getBoundingClientRect().top || window.innerHeight;
     if (scroller && scroller !== document.body) {
       const viewport = scroller.getBoundingClientRect();
-      const topLimit = viewport.top + Math.min(90, viewport.height * 0.2);
-      const bottomLimit = Math.min(viewport.bottom - 40, panelTop - 24);
-      if (box.top < topLimit || box.bottom > bottomLimit) {
-        const targetY = viewport.top + Math.min(viewport.height * 0.38, Math.max(100, bottomLimit - viewport.top - 80));
+      const topLimit = viewport.top + 12;
+      const bottomLimit = Math.min(viewport.bottom - 12, panelTop - 16);
+      // Do not chase every word. Follow only after the current word has moved
+      // completely outside the readable area, leaving manual scrolling alone.
+      if (box.bottom < topLimit || box.top > bottomLimit) {
+        const targetY = viewport.top + Math.min(viewport.height * 0.32, Math.max(80, bottomLimit - viewport.top - 90));
+        programmaticScrollUntil = Date.now() + 350;
         scroller.scrollTop += box.top - targetY;
       }
       return;
     }
 
-    const topLimit = 90;
-    const bottomLimit = Math.max(topLimit + 100, panelTop - 24);
-    if (box.top < topLimit || box.bottom > bottomLimit) {
-      // Scroll only on the vertical axis and do it immediately. Smooth
-      // scrolling cannot finish before the next word boundary and caused the
-      // page to chase the narrator or move horizontally.
-      const targetY = Math.min(window.innerHeight * 0.38, bottomLimit - 80);
+    const topLimit = 12;
+    const bottomLimit = Math.max(topLimit + 100, panelTop - 16);
+    if (box.bottom < topLimit || box.top > bottomLimit) {
+      const targetY = Math.min(window.innerHeight * 0.32, bottomLimit - 90);
       const scrollingElement = document.scrollingElement || document.documentElement;
+      programmaticScrollUntil = Date.now() + 350;
       scrollingElement.scrollTop += box.top - targetY;
     }
   }
@@ -554,17 +558,33 @@
   function showWordHighlight(index) {
     const range = wordHighlightMap[index];
     if (!range) return;
-    if (window.CSS?.highlights && typeof Highlight === 'function') {
+    const hasCssHighlight = window.CSS?.highlights && typeof Highlight === 'function';
+    if (hasCssHighlight) {
       CSS.highlights.set('adt-tts-word', new Highlight(range));
+      if (wordHighlightOverlay) wordHighlightOverlay.style.display = 'none';
+    } else {
+      positionWordHighlightOverlay(range);
     }
-    positionWordHighlightOverlay(range);
     if (pendingHighlightFrame) window.cancelAnimationFrame(pendingHighlightFrame);
     pendingHighlightFrame = window.requestAnimationFrame(() => {
       pendingHighlightFrame = null;
       scrollRangeIntoReadingBand(range);
-      window.requestAnimationFrame(() => positionWordHighlightOverlay(range));
+      if (!hasCssHighlight) window.requestAnimationFrame(() => positionWordHighlightOverlay(range));
     });
   }
+
+  // A learner must be able to move around a long page while it is being read.
+  // Pause automatic following after deliberate wheel, touch, pointer or
+  // navigation-key input; narration and word highlighting continue normally.
+  const pauseAutoFollow = () => {
+    if (Date.now() >= programmaticScrollUntil) manualScrollPauseUntil = Date.now() + 7000;
+  };
+  window.addEventListener('wheel', pauseAutoFollow, { passive: true, capture: true });
+  window.addEventListener('touchstart', pauseAutoFollow, { passive: true, capture: true });
+  window.addEventListener('pointerdown', pauseAutoFollow, { passive: true, capture: true });
+  window.addEventListener('keydown', (event) => {
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) pauseAutoFollow();
+  }, true);
 
   function preferredVoice() {
     if (!canUseWebSpeech || typeof synth.getVoices !== 'function') return null;
@@ -764,6 +784,7 @@
     stop,
     pause: togglePause,
     toggle: () => (playing ? stop() : start()),
+    get speechRate() { return speechRate; },
     get isPlaying() { return playing; }
   });
 
