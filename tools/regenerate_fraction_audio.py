@@ -22,8 +22,7 @@ TEXTS_PATH = I18N / "texts.json"
 AUDIO_MAP_PATH = I18N / "audios.json"
 AUDIO_DIR = I18N / "audio"
 VOICE = "en-US-GuyNeural"
-SUFFIX = "fractions_v3"
-PAGE_ID = re.compile(r"^pg\d{3}_")
+SUFFIX = "fractions_v4"
 MFRAC = re.compile(r"<mfrac\b([^>]*)>.*?</mfrac>", re.IGNORECASE | re.DOTALL)
 ARIA_LABEL = re.compile(r'aria-label=["\']([^"\']+)["\']', re.IGNORECASE)
 NUMERIC_SLASH = re.compile(r"(?<!\d)(\d+)\s*/\s*(\d+)(?!\d)")
@@ -84,7 +83,6 @@ async def main(dry_run: bool) -> None:
         (item_id, value)
         for item_id, value in texts.items()
         if item_id in audios
-        and PAGE_ID.match(item_id)
         and isinstance(value, str)
         and contains_fraction(value)
     ]

@@ -248,9 +248,9 @@ def create_blank_page(index: int) -> None:
   </div>
   <div id="interface-container"></div>
   <div id="nav-container"></div>
-  <script src="./assets/offline-preloader.js?v=57"></script>
+<script src="./assets/offline-preloader.js?v=64"></script>
   <script src="./assets/scorm.js"></script>
-  <script src="./assets/accessible-tts.js?v=14"></script>
+<script src="./assets/accessible-tts.js?v=15"></script>
   <script src="./assets/base.bundle.local.js"></script>
   <script src="./assets/numerical-alignment.js?v=5"></script>
 </body>
