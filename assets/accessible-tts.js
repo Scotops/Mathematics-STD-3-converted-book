@@ -22,7 +22,11 @@
   let paused = false;
   // Match the calmer pace used by the Cultural book. The learner can still
   // change this from the playback panel without changing the page content.
-  let speechRate = 0.82;
+  const SPEECH_RATES = Object.freeze({ slow: 0.5, normal: 0.9, fast: 1.5 });
+  const storedSpeechRate = Number.parseFloat(window.localStorage?.getItem('adt-reading-speed') || '');
+  let speechRate = Object.values(SPEECH_RATES).includes(storedSpeechRate)
+    ? storedSpeechRate
+    : SPEECH_RATES.normal;
   let speechVolume = 1;
   let activeUtterance = null;
   let playbackGeneration = 0;
@@ -84,7 +88,7 @@
       <button type="button" data-tts-command="next" aria-label="Next spoken part">&#9197;</button>
       <button type="button" data-tts-command="stop" aria-label="Stop reading">&#9632;</button>
       <label><span class="sr-only">Reading speed</span><select data-tts-command="rate" aria-label="Reading speed">
-        <option value="0.55">Slow</option><option value="0.82" selected>Normal</option><option value="1.25">Fast</option>
+        <option value="0.5">Slow</option><option value="0.9">Normal</option><option value="1.5">Fast</option>
       </select></label>
       <button type="button" data-tts-command="volume" aria-label="Mute or unmute reading">&#128266;</button>
     `;
@@ -109,6 +113,10 @@
     rateControl.addEventListener('input', handleRateChange);
     rateControl.addEventListener('change', handleRateChange);
     document.body.appendChild(player);
+    const selectedRate = player.querySelector('[data-tts-command="rate"]');
+    selectedRate.value = String(speechRate);
+    player.dataset.activeRate = String(speechRate);
+    document.documentElement.dataset.adtTtsRate = String(speechRate);
     updatePlayer();
     return player;
   }
@@ -122,15 +130,21 @@
 
   function setSpeechRate(value) {
     const requestedRate = Number(value);
-    const nextRate = [0.55, 0.82, 1.25].includes(requestedRate) ? requestedRate : 0.82;
-    if (nextRate === speechRate) return speechRate;
+    const nextRate = Object.values(SPEECH_RATES).includes(requestedRate)
+      ? requestedRate
+      : SPEECH_RATES.normal;
     speechRate = nextRate;
+    try { window.localStorage?.setItem('adt-reading-speed', String(speechRate)); } catch {}
     if (document.documentElement) document.documentElement.dataset.adtTtsRate = String(speechRate);
     if (player) {
       player.dataset.activeRate = String(speechRate);
       player.querySelector('[data-tts-command="rate"]').value = String(speechRate);
     }
-    restartCurrent();
+    // A speed choice must have an audible result. If narration is active,
+    // replay the current spoken part at the new rate. If it has finished (or
+    // was stopped), begin the page immediately at the selected rate.
+    if (playing) restartCurrent();
+    else if (canUseWebSpeech) start();
     return speechRate;
   }
 
