@@ -41,6 +41,12 @@ const api = window.ADTAccessibleTTS;
 assert.equal(api.speechRate, 0.82);
 assert.equal(api.sanitizeForSpeech('1/3'), 'one over three');
 assert.equal(api.sanitizeForSpeech('35/40'), 'thirty-five over forty');
+assert.equal(api.sanitizeForSpeech('36 ÷ 4'), 'thirty-six divided by four');
+assert.equal(api.sanitizeForSpeech('4 ⟌ 36'), 'thirty-six divided by four');
+assert.equal(
+  api.sanitizeForSpeech('shs 869335 30 cts − shs 427123 70 cts'),
+  'shillings eight hundred and sixty-nine thousand three hundred and thirty-five thirty cents minus shillings four hundred and twenty-seven thousand one hundred and twenty-three seventy cents'
+);
 const mathFraction = new FakeElement('MFRAC', '', [
   new FakeElement('MN', '3'),
   new FakeElement('MN', '4'),

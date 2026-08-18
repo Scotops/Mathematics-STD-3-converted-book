@@ -350,6 +350,10 @@
     const sanitized = String(text || '')
       // Item markers must be spoken as English letters, without parentheses.
       .replace(/\(\s*([a-z])\s*\)/gi, (_, letter) => ` ${letter.toUpperCase()}, `)
+      // Currency abbreviations are printed throughout the final chapter. Speak
+      // their meanings so column headings and calculations remain intelligible.
+      .replace(/\bshs?\.?\b/gi, ' shillings ')
+      .replace(/\b(?:cts?|cst)\.?\b/gi, ' cents ')
       // Underlines and empty inputs are the blanks printed in the original book.
       .replace(/\[\[\s*blank(?::[^\]]*)?\s*\]\]/gi, ' dash ')
       .replace(/__adt_empty_field__/g, ' dash ')
@@ -357,7 +361,13 @@
       .replace(/≤/g, ' less than or equal to ')
       .replace(/≥/g, ' greater than or equal to ')
       .replace(/≠/g, ' not equal to ')
-      .replace(/÷|∕/g, ' divided by ')
+      // Mathematical division must be announced as an operation. Fractions
+      // using a slash are handled separately below as numerator "over"
+      // denominator.
+      // In long-division notation the divisor is printed to the left of the
+      // bracket, so "4 ⟌ 36" is spoken as "36 divided by 4".
+      .replace(/(\d[\d,]*)\s*⟌\s*(\d[\d,]*)/g, '$2 divided by $1')
+      .replace(/÷|∕|⟌/g, ' divided by ')
       .replace(/[×✕]/g, ' times ')
       .replace(/\+/g, ' plus ')
       .replace(/=/g, ' equals ')
@@ -366,6 +376,7 @@
       .replace(/(\d[\d,]*)\s*\/\s*(\d[\d,]*)/g, '$1 over $2')
       .replace(/\//g, ' divided by ')
       .replace(/(\d)\s*[−–—-]\s*(\d)/g, '$1 minus $2')
+      .replace(/[−–—]/g, ' minus ')
       .replace(/\s*<\s*/g, ' less than ')
       .replace(/\s*>\s*/g, ' greater than ')
       .replace(/\s+/g, ' ')
