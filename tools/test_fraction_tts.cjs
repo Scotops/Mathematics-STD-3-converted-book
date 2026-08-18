@@ -39,8 +39,8 @@ require('../assets/accessible-tts.js');
 
 const api = window.ADTAccessibleTTS;
 assert.equal(api.speechRate, 0.82);
-assert.equal(api.setSpeechRate(0.68), 0.68);
-assert.equal(api.setSpeechRate(1), 1);
+assert.equal(api.setSpeechRate(0.55), 0.55);
+assert.equal(api.setSpeechRate(1.25), 1.25);
 assert.equal(api.setSpeechRate(0.82), 0.82);
 assert.equal(api.sanitizeForSpeech('1/3'), 'one over three');
 assert.equal(api.sanitizeForSpeech('35/40'), 'thirty-five over forty');

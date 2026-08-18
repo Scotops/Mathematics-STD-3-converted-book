@@ -27,6 +27,7 @@
   let activeUtterance = null;
   let playbackGeneration = 0;
   let currentChunkIndex = -1;
+  let rateRestartTimer = null;
   let wordHighlightMap = [];
   let pendingHighlightFrame = null;
   let wordHighlightOverlay = null;
@@ -83,7 +84,7 @@
       <button type="button" data-tts-command="next" aria-label="Next spoken part">&#9197;</button>
       <button type="button" data-tts-command="stop" aria-label="Stop reading">&#9632;</button>
       <label><span class="sr-only">Reading speed</span><select data-tts-command="rate" aria-label="Reading speed">
-        <option value="0.68">Slow</option><option value="0.82" selected>Normal</option><option value="1">Fast</option>
+        <option value="0.55">Slow</option><option value="0.82" selected>Normal</option><option value="1.25">Fast</option>
       </select></label>
       <button type="button" data-tts-command="volume" aria-label="Mute or unmute reading">&#128266;</button>
     `;
@@ -101,9 +102,12 @@
         restartCurrent();
       }
     });
-    player.querySelector('[data-tts-command="rate"]').addEventListener('change', (event) => {
-      setSpeechRate(event.target.value);
-    });
+    const rateControl = player.querySelector('[data-tts-command="rate"]');
+    const handleRateChange = (event) => setSpeechRate(event.target.value);
+    // `input` makes touch and keyboard changes immediate; `change` is retained
+    // for browsers that only emit it when the menu closes.
+    rateControl.addEventListener('input', handleRateChange);
+    rateControl.addEventListener('change', handleRateChange);
     document.body.appendChild(player);
     updatePlayer();
     return player;
@@ -118,7 +122,14 @@
 
   function setSpeechRate(value) {
     const requestedRate = Number(value);
-    speechRate = [0.68, 0.82, 1].includes(requestedRate) ? requestedRate : 0.82;
+    const nextRate = [0.55, 0.82, 1.25].includes(requestedRate) ? requestedRate : 0.82;
+    if (nextRate === speechRate) return speechRate;
+    speechRate = nextRate;
+    if (document.documentElement) document.documentElement.dataset.adtTtsRate = String(speechRate);
+    if (player) {
+      player.dataset.activeRate = String(speechRate);
+      player.querySelector('[data-tts-command="rate"]').value = String(speechRate);
+    }
     restartCurrent();
     return speechRate;
   }
@@ -689,6 +700,7 @@
     utterance.lang = voice?.lang || requestedLanguage;
     if (voice) utterance.voice = voice;
     utterance.rate = speechRate;
+    if (player) player.dataset.utteranceRate = String(utterance.rate);
     utterance.volume = speechVolume;
     utterance.pitch = 1;
     utterance.onstart = () => showWordHighlight(nextChunk.wordOffset);
@@ -778,13 +790,23 @@
 
   function restartCurrent() {
     if (!playing || currentChunkIndex < 0) return;
-    synth.cancel();
+    if (rateRestartTimer) window.clearTimeout(rateRestartTimer);
     playbackGeneration += 1;
+    const generation = playbackGeneration;
+    const restartIndex = currentChunkIndex;
     cancelled = false;
     paused = false;
-    queueIndex = currentChunkIndex;
-    const generation = playbackGeneration;
-    window.setTimeout(() => playNext(generation), 30);
+    activeUtterance = null;
+    synth.cancel();
+    // Chromium cancels Web Speech asynchronously. Starting the replacement
+    // utterance too soon can make it keep the old rate or silently discard it.
+    // Give cancellation time to settle, then restart the same spoken part.
+    rateRestartTimer = window.setTimeout(() => {
+      rateRestartTimer = null;
+      if (generation !== playbackGeneration || cancelled) return;
+      queueIndex = restartIndex;
+      playNext(generation);
+    }, 180);
     updatePlayer();
   }
 
