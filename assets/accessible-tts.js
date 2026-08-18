@@ -25,6 +25,7 @@
   let speechRate = 0.82;
   let speechVolume = 1;
   let activeUtterance = null;
+  let playbackGeneration = 0;
   let currentChunkIndex = -1;
   let wordHighlightMap = [];
   let pendingHighlightFrame = null;
@@ -101,8 +102,7 @@
       }
     });
     player.querySelector('[data-tts-command="rate"]').addEventListener('change', (event) => {
-      speechRate = Number(event.target.value) || 0.82;
-      restartCurrent();
+      setSpeechRate(event.target.value);
     });
     document.body.appendChild(player);
     updatePlayer();
@@ -114,6 +114,13 @@
     const pauseButton = player.querySelector('[data-tts-command="pause"]');
     pauseButton.innerHTML = !playing || paused ? '&#9654;' : '&#10074;&#10074;';
     pauseButton.setAttribute('aria-label', !playing ? 'Start reading' : (paused ? 'Resume reading' : 'Pause reading'));
+  }
+
+  function setSpeechRate(value) {
+    const requestedRate = Number(value);
+    speechRate = [0.68, 0.82, 1].includes(requestedRate) ? requestedRate : 0.82;
+    restartCurrent();
+    return speechRate;
   }
 
   const nativeMediaPlay = window.HTMLMediaElement?.prototype?.play;
@@ -227,6 +234,12 @@
 
       if (element.dataset.ttsText) {
         add(element.dataset.ttsText);
+        return;
+      }
+
+      const spokenLanguage = element.dataset.ttsLang || element.getAttribute('lang');
+      if (spokenLanguage && !/^en(?:-|$)/i.test(spokenLanguage)) {
+        add(`[[adt_lang:${spokenLanguage}]] ${fractionAwareText(element)} [[adt_lang:end]]`);
         return;
       }
 
@@ -403,6 +416,24 @@
       }
       push();
       if (sectionIndex < sections.length - 1) chunks.push('__adt_speech_pause__');
+    });
+    return chunks;
+  }
+
+  function splitIntoLanguageChunks(markedText) {
+    const chunks = [];
+    let language = ENGLISH_LANG;
+    String(markedText || '').split(/(\[\[adt_lang:[^\]]+\]\])/gi).forEach((part) => {
+      const marker = part.match(/^\[\[adt_lang:([^\]]+)\]\]$/i);
+      if (marker) {
+        language = marker[1].toLowerCase() === 'end' ? ENGLISH_LANG : marker[1];
+        return;
+      }
+      splitIntoChunks(part).forEach((chunk) => {
+        chunks.push(chunk === '__adt_speech_pause__'
+          ? { pause: true, text: '', lang: language }
+          : { pause: false, text: chunk, lang: language });
+      });
     });
     return chunks;
   }
@@ -597,11 +628,12 @@
     if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) pauseAutoFollow();
   }, true);
 
-  function preferredVoice() {
+  function preferredVoice(language = ENGLISH_LANG) {
     if (!canUseWebSpeech || typeof synth.getVoices !== 'function') return null;
     const voices = synth.getVoices();
-    const english = voices.filter((voice) => /^en([_-]|$)/i.test(voice.lang));
-    const pool = english.length ? english : voices;
+    const languageCode = String(language || ENGLISH_LANG).split(/[-_]/)[0];
+    const matching = voices.filter((voice) => new RegExp(`^${languageCode}(?:[_-]|$)`, 'i').test(voice.lang));
+    const pool = matching.length ? matching : (languageCode === 'en' ? voices : []);
     const score = (voice) => {
       const name = voice.name.toLowerCase();
       let value = 0;
@@ -615,6 +647,7 @@
   }
 
   function finish() {
+    playbackGeneration += 1;
     playing = false;
     cancelled = false;
     queue = [];
@@ -640,18 +673,20 @@
     });
   }
 
-  function playNext() {
+  function playNext(generation = playbackGeneration) {
+    if (generation !== playbackGeneration) return;
     if (cancelled || queueIndex >= queue.length) return finish();
     currentChunkIndex = queueIndex;
     const nextChunk = queue[queueIndex++];
     if (nextChunk.pause) {
-      window.setTimeout(playNext, 650);
+      window.setTimeout(() => playNext(generation), 650);
       return;
     }
     const utterance = new Utterance(nextChunk.text);
     activeUtterance = utterance;
-    const voice = sessionVoice;
-    utterance.lang = voice?.lang || ENGLISH_LANG;
+    const requestedLanguage = nextChunk.lang || ENGLISH_LANG;
+    const voice = requestedLanguage === ENGLISH_LANG ? sessionVoice : preferredVoice(requestedLanguage);
+    utterance.lang = voice?.lang || requestedLanguage;
     if (voice) utterance.voice = voice;
     utterance.rate = speechRate;
     utterance.volume = speechVolume;
@@ -662,30 +697,36 @@
       const wordsBefore = spokenTokenParts(utterance.text.slice(0, event.charIndex)).length;
       showWordHighlight(nextChunk.wordOffset + wordsBefore);
     };
-    utterance.onend = () => window.setTimeout(playNext, 30);
+    utterance.onend = () => {
+      if (generation === playbackGeneration) window.setTimeout(() => playNext(generation), 30);
+    };
     utterance.onerror = (event) => {
       // "interrupted" is expected when Stop is pressed; other failures should
       // not prevent the rest of the page from being read.
-      if (!cancelled && event.error !== 'interrupted' && event.error !== 'canceled') window.setTimeout(playNext, 30);
+      if (generation === playbackGeneration && !cancelled && event.error !== 'interrupted' && event.error !== 'canceled') {
+        window.setTimeout(() => playNext(generation), 30);
+      }
     };
     synth.speak(utterance);
   }
 
   function start() {
-    const text = sanitizeForSpeech(extractPageText());
+    const markedText = sanitizeForSpeech(extractPageText());
+    const text = markedText.replace(/\[\[adt_lang:[^\]]+\]\]/gi, ' ').replace(/\s+/g, ' ').trim();
     if (!text) return;
     if (!canUseWebSpeech) return;
     suppressBundledAudio = true;
     stopBundledAudio();
     synth.cancel();
+    playbackGeneration += 1;
     sessionVoice = preferredVoice();
     cancelled = false;
     wordHighlightMap = buildWordHighlightMap(text);
     let wordOffset = 0;
-    queue = splitIntoChunks(text).map((chunk) => {
-      if (chunk === '__adt_speech_pause__') return { pause: true, wordOffset };
-      const entry = { text: chunk, wordOffset };
-      wordOffset += spokenTokenParts(chunk).length;
+    queue = splitIntoLanguageChunks(markedText, wordOffset).map((chunk) => {
+      if (chunk.pause) return { pause: true, wordOffset, lang: chunk.lang };
+      const entry = { text: chunk.text, wordOffset, lang: chunk.lang };
+      wordOffset += spokenTokenParts(chunk.text).length;
       return entry;
     });
     queueIndex = 0;
@@ -704,11 +745,12 @@
       }
     }, 7000);
     document.documentElement.classList.add('adt-tts-playing');
-    playNext();
+    playNext(playbackGeneration);
   }
 
   function stop() {
     cancelled = true;
+    playbackGeneration += 1;
     if (canUseWebSpeech) synth.cancel();
     suppressBundledAudio = canUseWebSpeech;
     finish();
@@ -725,20 +767,24 @@
     if (!queue.length) return;
     const target = Math.max(0, Math.min(queue.length - 1, currentChunkIndex + delta));
     synth.cancel();
+    playbackGeneration += 1;
     cancelled = false;
     paused = false;
     queueIndex = target;
-    window.setTimeout(playNext, 30);
+    const generation = playbackGeneration;
+    window.setTimeout(() => playNext(generation), 30);
     updatePlayer();
   }
 
   function restartCurrent() {
     if (!playing || currentChunkIndex < 0) return;
     synth.cancel();
+    playbackGeneration += 1;
     cancelled = false;
     paused = false;
     queueIndex = currentChunkIndex;
-    window.setTimeout(playNext, 30);
+    const generation = playbackGeneration;
+    window.setTimeout(() => playNext(generation), 30);
     updatePlayer();
   }
 
@@ -791,6 +837,8 @@
     alignTokenSequences,
     spokenTokenParts,
     splitIntoChunks,
+    splitIntoLanguageChunks,
+    setSpeechRate,
     start,
     stop,
     pause: togglePause,

@@ -39,6 +39,9 @@ require('../assets/accessible-tts.js');
 
 const api = window.ADTAccessibleTTS;
 assert.equal(api.speechRate, 0.82);
+assert.equal(api.setSpeechRate(0.68), 0.68);
+assert.equal(api.setSpeechRate(1), 1);
+assert.equal(api.setSpeechRate(0.82), 0.82);
 assert.equal(api.sanitizeForSpeech('1/3'), 'one over three');
 assert.equal(api.sanitizeForSpeech('35/40'), 'thirty-five over forty');
 assert.equal(api.sanitizeForSpeech('36 ÷ 4'), 'thirty-six divided by four');
@@ -60,6 +63,11 @@ const fractionSentence = new FakeElement('SPAN', '', [
 assert.equal(api.fractionAwareText(fractionSentence).replace(/\s+/g, ' ').trim(), 'The shaded part is 3 over 4 .');
 assert.deepEqual(api.spokenTokenParts('twenty-four shillings'), ['twenty', 'four', 'shillings']);
 assert.deepEqual(api.spokenTokenParts("five o'clock"), ['five', "o'clock"]);
+assert.deepEqual(api.splitIntoLanguageChunks('Editors. [[adt_lang:sw-TZ]] Furaha Chuma [[adt_lang:end]] Designer.'), [
+  { pause: false, text: 'Editors.', lang: 'en-US' },
+  { pause: false, text: 'Furaha Chuma', lang: 'sw-TZ' },
+  { pause: false, text: 'Designer.', lang: 'en-US' },
+]);
 assert.deepEqual(
   api.alignTokenSequences(
     ['one', 'image', 'description', 'then', 'two'],
