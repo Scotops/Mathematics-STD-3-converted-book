@@ -38,10 +38,10 @@ global.document = {};
 require('../assets/accessible-tts.js');
 
 const api = window.ADTAccessibleTTS;
-assert.equal(api.speechRate, 0.9);
-assert.equal(api.setSpeechRate(0.5), 0.5);
-assert.equal(api.setSpeechRate(1.5), 1.5);
-assert.equal(api.setSpeechRate(0.9), 0.9);
+assert.equal(api.speechRate, 0.85);
+assert.equal(api.setSpeechRate(0.38), 0.38);
+assert.equal(api.setSpeechRate(1.8), 1.8);
+assert.equal(api.setSpeechRate(0.85), 0.85);
 assert.equal(api.sanitizeForSpeech('1/3'), 'one over three');
 assert.equal(api.sanitizeForSpeech('35/40'), 'thirty-five over forty');
 assert.equal(api.sanitizeForSpeech('36 ÷ 4'), 'thirty-six divided by four');

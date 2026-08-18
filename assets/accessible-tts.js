@@ -22,7 +22,9 @@
   let paused = false;
   // Match the calmer pace used by the Cultural book. The learner can still
   // change this from the playback panel without changing the page content.
-  const SPEECH_RATES = Object.freeze({ slow: 0.5, normal: 0.9, fast: 1.5 });
+  // Keep the presets deliberately far apart. Some Windows voices compress
+  // nearby Web Speech rates, which made the old choices sound identical.
+  const SPEECH_RATES = Object.freeze({ slow: 0.38, normal: 0.85, fast: 1.8 });
   const storedSpeechRate = Number.parseFloat(window.localStorage?.getItem('adt-reading-speed') || '');
   let speechRate = Object.values(SPEECH_RATES).includes(storedSpeechRate)
     ? storedSpeechRate
@@ -88,7 +90,7 @@
       <button type="button" data-tts-command="next" aria-label="Next spoken part">&#9197;</button>
       <button type="button" data-tts-command="stop" aria-label="Stop reading">&#9632;</button>
       <label><span class="sr-only">Reading speed</span><select data-tts-command="rate" aria-label="Reading speed">
-        <option value="0.5">Slow</option><option value="0.9">Normal</option><option value="1.5">Fast</option>
+        <option value="0.38">Slow</option><option value="0.85">Normal</option><option value="1.8">Fast</option>
       </select></label>
       <button type="button" data-tts-command="volume" aria-label="Mute or unmute reading">&#128266;</button>
     `;
@@ -724,7 +726,13 @@
       showWordHighlight(nextChunk.wordOffset + wordsBefore);
     };
     utterance.onend = () => {
-      if (generation === playbackGeneration) window.setTimeout(() => playNext(generation), 30);
+      // This pause is a second, engine-independent speed control. It keeps
+      // the presets distinct even when an installed voice only partially
+      // honours SpeechSynthesisUtterance.rate.
+      const transitionDelay = speechRate <= SPEECH_RATES.slow
+        ? 320
+        : (speechRate >= SPEECH_RATES.fast ? 0 : 55);
+      if (generation === playbackGeneration) window.setTimeout(() => playNext(generation), transitionDelay);
     };
     utterance.onerror = (event) => {
       // "interrupted" is expected when Stop is pressed; other failures should
@@ -820,7 +828,7 @@
       if (generation !== playbackGeneration || cancelled) return;
       queueIndex = restartIndex;
       playNext(generation);
-    }, 180);
+    }, 260);
     updatePlayer();
   }
 
