@@ -388,6 +388,16 @@
 
   function sanitizeForSpeech(text) {
     const sanitized = String(text || '')
+      // Identifiers and contact details use punctuation as separators, not as
+      // mathematical operators. Expand them before the generic maths rules.
+      .replace(/\bISBN\s*:\s*([0-9-]+)/gi, (_, value) => {
+        const spoken = [...value].map((char) => char === '-' ? ' dash ' : ` ${char} `).join('');
+        return ` ISBN, ${spoken} `;
+      })
+      .replace(/(\+?\d[\d ]{6,})\s*\/\s*(\+?\d[\d ]{6,})/g, '$1, or, $2')
+      .replace(/\b((?:https?:\/\/)?(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+)\b/gi, (_, value) => {
+        return ` ${value.replace(/\./g, ' dot ')} `;
+      })
       // Item markers must be spoken as English letters, without parentheses.
       .replace(/\(\s*([a-z])\s*\)/gi, (_, letter) => ` ${letter.toUpperCase()}, `)
       // Currency abbreviations are printed throughout the final chapter. Speak
@@ -664,10 +674,15 @@
     const score = (voice) => {
       const name = voice.name.toLowerCase();
       let value = 0;
-      if (voice.localService) value += 12;
-      if (/microsoft (david|mark|guy)|google (us|uk) english|alex|daniel|james|george|ryan|male/.test(name)) value += 10;
-      if (/natural|premium|enhanced|neural/.test(name)) value += 6;
-      if (/zira|susan|female|zira/.test(name)) value -= 2;
+      // Natural and neural voices are much warmer than the legacy desktop
+      // voices and are easier for young learners to listen to for long pages.
+      if (/natural|neural|premium|enhanced/.test(name)) value += 120;
+      if (/microsoft (jenny|aria|sonia|ava|emma|michelle|natasha|serena)/.test(name)) value += 70;
+      if (/google (us|uk) english.*female|samantha|karen|moira|tessa|victoria/.test(name)) value += 45;
+      if (/female/.test(name)) value += 20;
+      if (voice.localService) value += 8;
+      // Avoid the older voices that commonly sound clipped or robotic.
+      if (/microsoft (david|mark|zira|hazel)|desktop|legacy/.test(name)) value -= 80;
       return value;
     };
     return pool.sort((a, b) => score(b) - score(a))[0] || null;
@@ -754,6 +769,7 @@
     synth.cancel();
     playbackGeneration += 1;
     sessionVoice = preferredVoice();
+    document.documentElement.dataset.adtTtsVoice = sessionVoice?.name || 'browser default';
     cancelled = false;
     wordHighlightMap = buildWordHighlightMap(text);
     let wordOffset = 0;
@@ -900,6 +916,9 @@
   // while retaining the speaker button and playback panel for manual control.
   function scheduleAutoplay(attempt = 0) {
     if (!canUseWebSpeech || autoplayStarted || playing) return;
+    // Matrix corrections require these content pages to wait for the learner
+    // to press Play instead of beginning narration automatically.
+    if (/\/pg0(?:23|25|26)_sec001\.html$/i.test(window.location.pathname)) return;
     const root = document.querySelector('#content');
     const ready = root && isVisible(root) && Number.parseFloat(getComputedStyle(root).opacity || '1') > 0.05
       && String(root.innerText || '').trim();
