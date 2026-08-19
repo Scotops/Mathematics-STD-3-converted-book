@@ -84,3 +84,32 @@
     font-size: 16px !important;
   }
 }
+
+/* Static textbook mode: exercises are printed content, not answer forms. */
+#content input[data-activity-item],
+#content textarea[data-activity-item],
+#content select[data-activity-item],
+#content [data-activity-item] input,
+#content [data-activity-item] textarea,
+#content [data-activity-item] select {
+  pointer-events: none !important;
+  caret-color: transparent !important;
+  box-shadow: none !important;
+}
+
+#content input[data-activity-item]:not([type="radio"]):not([type="checkbox"]),
+#content [data-activity-item] input:not([type="radio"]):not([type="checkbox"]) {
+  display: none !important;
+}
+
+#content textarea[data-activity-item],
+#content [data-activity-item] textarea {
+  display: none !important;
+}
+
+#content input[type="radio"][data-activity-item],
+#content input[type="checkbox"][data-activity-item],
+#content [data-activity-item] input[type="radio"],
+#content [data-activity-item] input[type="checkbox"] {
+  display: none !important;
+}
