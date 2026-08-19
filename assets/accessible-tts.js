@@ -259,14 +259,14 @@
       const element = node;
       if (ignoredTags.has(element.tagName) || !isVisible(element)) return;
 
-      if (element.dataset.ttsText) {
-        add(element.dataset.ttsText);
-        return;
-      }
-
       const spokenLanguage = element.dataset.ttsLang || element.getAttribute('lang');
       if (spokenLanguage && !/^en(?:-|$)/i.test(spokenLanguage)) {
         add(`[[adt_lang:${spokenLanguage}]] ${fractionAwareText(element)} [[adt_lang:end]]`);
+        return;
+      }
+
+      if (element.dataset.ttsText) {
+        add(element.dataset.ttsText);
         return;
       }
 
