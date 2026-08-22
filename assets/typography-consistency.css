@@ -101,3 +101,15 @@
 #content [data-activity-item] input[type="checkbox"] {
   display: none !important;
 }
+
+/* Keep every printed page on the same centered book column.  This controls
+   the page block only; prose and mathematical content retain their own text
+   alignment from the source-book layout. */
+#content > section,
+#content > .adt-source-page-part > section {
+  box-sizing: border-box;
+  width: min(100%, 64rem) !important;
+  max-width: 64rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
