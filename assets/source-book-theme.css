@@ -23,14 +23,71 @@
   font-family: 'Sassoon Primary', sans-serif !important;
 }
 
+#content {
+  container-type: inline-size;
+}
+
+/* The source body face is set at 16 units on a 557.906-unit page. Scaling
+   that same proportion with the HTML page keeps the printed size and line
+   spacing instead of inheriting Tailwind's mixed text presets. */
+#content:not(:has([data-source-section='pg001_sec001'])) [data-id]:not(mjx-container):not(mjx-container *) {
+  font-size: clamp(1rem, 2.868cqw, 2.15rem) !important;
+  line-height: 1.25 !important;
+}
+
+/* The embedded Sassoon outlines already contain the characteristic printed
+   slant. Browser-synthesised italics distort those outlines, so disable the
+   second artificial slant everywhere in the book layer. */
+#content :is(em, i),
+#content [class*='italic'],
+#content [data-source-heading] {
+  font-style: normal !important;
+}
+
+/* Remove the conversion's app-card decoration. The printed book uses flat
+   panels, fine rules and only very small corner radii. */
+#content [class*='shadow'] {
+  box-shadow: none !important;
+}
+
+#content [class*='rounded-']:not([class*='rounded-full']) {
+  border-radius: .35rem !important;
+}
+
+/* The printed text block is centred and about 80% of the page width. */
+#content [data-source-section] > section {
+  background: #fff !important;
+}
+
+#content [data-source-section] > section > [class*='max-w-'] {
+  width: 100% !important;
+  max-width: 53.75rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Printed pages carry a pale cyan wash across the top and bottom. Recreate it
+   as CSS so the text remains selectable and the page never becomes an image. */
+#content [data-source-section]:not([data-source-section='pg001_sec001']):not([data-source-section='pg002_sec001'])::before {
+  content: '';
+  display: block;
+  width: min(calc(100% - clamp(1rem, 6.8cqw, 5rem)), 69rem);
+  height: clamp(4.5rem, 10.5cqw, 8rem);
+  margin: 0 auto;
+  background:
+    radial-gradient(ellipse at 50% 72%, rgba(255, 255, 255, .98) 0 20%, rgba(255, 255, 255, 0) 64%),
+    linear-gradient(180deg, rgba(191, 235, 248, .72), rgba(231, 248, 253, .48) 70%, rgba(255, 255, 255, 0));
+}
+
 .source-book-page-footer {
+  position: relative;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(100%, 64rem);
-  height: clamp(2.4rem, 8vw, 5rem);
-  margin: clamp(2rem, 5vw, 3.75rem) auto 0;
+  width: min(calc(100% - clamp(1rem, 6.8cqw, 5rem)), 69rem);
+  height: clamp(3.5rem, 8cqw, 5rem);
+  margin: clamp(2rem, 4cqw, 3.5rem) auto 0;
   background:
     linear-gradient(180deg,
       rgba(255, 255, 255, 0) 0%,
@@ -48,15 +105,15 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width: clamp(1.7rem, 6.5vw, 4rem);
-  height: clamp(.8rem, 2.4vw, 1.5rem);
+  width: clamp(2.5rem, 6.5cqw, 4rem);
+  height: clamp(1.25rem, 2.4cqw, 1.5rem);
   border: 1px solid rgba(116, 203, 231, .7);
   border-radius: 999px;
   background: linear-gradient(90deg, #8dd9ee 0%, #4dc1e6 48%, #92ddf0 100%);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, .78);
   color: #fff !important;
   font-family: 'Sassoon Primary', sans-serif !important;
-  font-size: clamp(.58rem, 1.35vw, .85rem) !important;
+  font-size: clamp(.72rem, 1.35cqw, .85rem) !important;
   font-style: normal !important;
   font-weight: 700 !important;
   line-height: 1 !important;
@@ -76,17 +133,42 @@
 
 #content [data-source-heading='chapter'] {
   color: var(--book-blue) !important;
-  font-style: italic !important;
+  font-size: clamp(1.6rem, 3.584cqw, 2.3rem) !important;
+  font-style: normal !important;
   font-weight: 700 !important;
+  line-height: 1.05 !important;
 }
 
 #content [data-source-heading-wrap='chapter'] {
   color: var(--book-ink) !important;
   background: #d9f2fb !important;
   border: 0 !important;
-  border-radius: .2rem !important;
-  box-shadow: none !important;
+  border-radius: 1.1rem 1.1rem .15rem .15rem !important;
+  box-shadow: 0 .55rem .45rem -.45rem rgba(80, 160, 185, .55) !important;
+  padding: .75rem 2rem !important;
   text-align: center !important;
+}
+
+#content [data-source-heading-wrap='chapter'] > [data-id]:not([data-source-heading]) {
+  margin-top: .25rem !important;
+  font-size: clamp(2rem, 4.481cqw, 2.875rem) !important;
+  line-height: 1.05 !important;
+}
+
+#content :has(> [data-source-heading-wrap='chapter']),
+#content :has(> * > [data-source-heading-wrap='chapter']) {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+#content :has(> [data-source-heading-wrap='chapter']) {
+  width: 100% !important;
+  max-width: 53.75rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* Printed examples: white card, fine olive rule, and compact olive label. */
@@ -104,7 +186,7 @@
   background: #817900 !important;
   border-radius: .2rem !important;
   box-shadow: none !important;
-  font-size: 1.05em !important;
+  font-size: clamp(1.1rem, 2.51cqw, 1.6rem) !important;
   font-style: normal !important;
   line-height: 1.1 !important;
   padding: .2rem .7rem !important;
@@ -163,7 +245,7 @@
   background: var(--book-activity-bar) !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  font-style: italic !important;
+  font-style: normal !important;
 }
 
 #content [data-source-heading-wrap='activity'] {
@@ -183,7 +265,7 @@
   color: #a54898 !important;
   background: transparent !important;
   box-shadow: none !important;
-  font-style: italic !important;
+  font-style: normal !important;
 }
 
 #content [data-source-kind='vocabulary'] {
@@ -199,7 +281,7 @@
   background: var(--book-vocabulary-bar) !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  font-style: italic !important;
+  font-style: normal !important;
 }
 
 #content [data-source-kind='revision'] {
@@ -215,7 +297,7 @@
   background: var(--book-revision-bar) !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  font-style: italic !important;
+  font-style: normal !important;
 }
 
 /* Source tables use fine olive rules.  Existing place-value cell colours are
@@ -227,29 +309,48 @@
 
 /* Front matter: exact Sassoon typography, dotted leaders, colours and flow. */
 #content [data-source-section='pg003_sec001'] > section {
-  max-width: 48rem !important;
+  max-width: 56rem !important;
   color: var(--book-ink) !important;
   font-family: 'Sassoon Primary', sans-serif !important;
+  font-size: clamp(1rem, 2.65cqw, 2rem) !important;
   line-height: 1.25 !important;
+  padding-top: 3.25rem !important;
+  padding-bottom: 1rem !important;
+  background: #fff !important;
 }
 
 #content [data-source-section='pg003_sec001'] h1 {
   color: var(--book-blue) !important;
   font-size: clamp(1.85rem, 3.2vw, 2.35rem) !important;
-  margin-bottom: 2.35rem !important;
+  margin-bottom: 3.1rem !important;
 }
 
 #content [data-source-section='pg003_sec001'] h2 {
   color: var(--book-blue) !important;
-  font-size: clamp(1.45rem, 2.6vw, 1.85rem) !important;
-  margin: 1.25rem 0 .25rem !important;
+  font-size: clamp(1.45rem, 2.8cqw, 2rem) !important;
+  margin: 2.4rem 0 .4rem !important;
   padding-top: 0 !important;
+  text-align: left !important;
+}
+
+#content [data-source-section='pg003_sec001'] > section > div {
+  background: #fff !important;
+  padding: 0 !important;
+  text-align: left !important;
 }
 
 #content [data-source-section='pg003_sec001'] p {
   align-items: baseline !important;
   gap: .55rem !important;
-  margin: 0 0 .45rem !important;
+  margin: 0 0 .65rem !important;
+}
+
+#content [data-source-section='pg003_sec001'] p:first-child {
+  margin-bottom: 1.7rem !important;
+}
+
+#content [data-source-section='pg003_sec001'] p:nth-child(2) {
+  margin-bottom: 2.2rem !important;
 }
 
 #content [data-source-section='pg003_sec001'] p > span:nth-child(2) {
@@ -265,16 +366,18 @@
 #content [data-source-section='pg003_sec001'] p:nth-child(-n+2) {
   color: var(--book-blue) !important;
   font-weight: 700 !important;
-  font-style: italic !important;
+  font-style: normal !important;
 }
 
 #content [data-source-section='pg004_sec001'] > section {
-  max-width: 49rem !important;
+  max-width: 59rem !important;
   color: var(--book-ink) !important;
   font-family: 'Sassoon Primary', sans-serif !important;
-  font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
-  line-height: 1.22 !important;
+  font-size: clamp(1rem, 2.868cqw, 2.15rem) !important;
+  line-height: 1.11 !important;
   text-align: justify !important;
+  padding-top: 3.25rem !important;
+  padding-bottom: 1rem !important;
 }
 
 #content [data-source-section='pg004_sec001'] h1 {
@@ -284,7 +387,7 @@
 
 #content [data-source-section='pg004_sec001'] p:has(> strong:first-child) {
   display: grid !important;
-  grid-template-columns: 9rem minmax(0, 1fr) !important;
+  grid-template-columns: 12.25rem minmax(0, 1fr) !important;
   column-gap: .75rem !important;
   text-align: left !important;
 }
@@ -312,5 +415,11 @@
 @media (max-width: 640px) {
   #content [data-source-section='pg004_sec001'] p:has(> strong:first-child) {
     grid-template-columns: 1fr !important;
+  }
+}
+
+@media (min-width: 641px) {
+  #content .grid:has([data-id='pg180_n0007']) {
+    grid-template-columns: 14rem minmax(0, 1fr) !important;
   }
 }

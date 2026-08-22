@@ -69,6 +69,7 @@
 body {
   font-family: 'Sassoon Primary', sans-serif;
   font-kerning: normal;
+  font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
 

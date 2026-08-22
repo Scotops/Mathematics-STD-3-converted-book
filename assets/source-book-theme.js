@@ -51,6 +51,9 @@
       const text = heading.textContent.replace(/\s+/g, ' ').trim();
       const kind = kindFor(text);
       if (!kind) return;
+      // The contents page lists the chapter names; they are entries, not the
+      // full-width chapter-title panel used at the start of each chapter.
+      if (kind === 'chapter' && heading.closest('[data-source-section="pg003_sec001"]')) return;
       heading.dataset.sourceThemeProcessed = 'true';
       heading.dataset.sourceHeading = kind;
       if (kind === 'chapter') {
