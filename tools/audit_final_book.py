@@ -8,7 +8,6 @@ import sys
 from pathlib import Path
 
 from lxml import html
-from PIL import Image
 from pypdf import PdfReader
 
 
@@ -17,6 +16,10 @@ I18N = ROOT / "content" / "i18n" / "en"
 SOURCE_PDF = Path(r"C:\Book to convert\MATHEMATICS STD III PB\MATHEMATICS STD III PB (SEPT 2025).pdf")
 NUMBER = re.compile(r"\d[\d,.:/]*")
 NARRATABLE = re.compile(r"[A-Za-z0-9]")
+WATERMARK = re.compile(
+    r"(?:for\s+online\s+reading\s+only|online\s+reading\s+only|sample\s+copy|not\s+for\s+sale|watermark)",
+    re.IGNORECASE,
+)
 
 
 def read_json(path: Path):
@@ -43,8 +46,9 @@ def main() -> int:
         "manifest_count": len(manifest),
         "missing_page_files": [],
         "meta_mismatches": [],
-        "missing_source_renders": [],
-        "bad_source_dimensions": [],
+        "unwanted_source_page_assets": [],
+        "full_page_render_elements": [],
+        "watermark_strings": [],
         "missing_fidelity_assets": [],
         "missing_text_entries": [],
         "unmapped_audio_ids": [],
@@ -76,19 +80,16 @@ def main() -> int:
                 {"page": index, "file": href, "index": actual_index, "title": actual_title}
             )
 
-        render_path = ROOT / "images" / "source-pages" / f"pg{index:03d}.png"
-        if not render_path.exists():
-            report["missing_source_renders"].append(str(render_path.relative_to(ROOT)))
-        else:
-            with Image.open(render_path) as image:
-                if image.size != (674, 957):
-                    report["bad_source_dimensions"].append(
-                        {"page": index, "size": list(image.size)}
-                    )
-
         markup = page_path.read_text(encoding="utf-8")
-        if "assets/typography-consistency.css?v=3" not in markup or "assets/offline-preloader.js?v=79" not in markup:
+        if "assets/typography-consistency.css?v=4" not in markup or "assets/offline-preloader.js?v=80" not in markup:
             report["missing_fidelity_assets"].append(href)
+        if "adt-source-page-render" in markup or "adt-print-fidelity" in markup:
+            report["full_page_render_elements"].append(href)
+        watermark = WATERMARK.search(markup)
+        if watermark:
+            report["watermark_strings"].append(
+                {"page": index, "file": href, "match": watermark.group(0)}
+            )
 
         for element in tree.xpath('//*[@data-id]'):
             item_id = (element.get("data-id") or "").strip()
@@ -158,19 +159,16 @@ def main() -> int:
         )
     else:
         for expected, item in enumerate(runtime, 1):
-            source = item.get("source") or {}
             if not item.get("ready"):
                 report["runtime_failures"].append({"page": expected, "kind": "tts_not_ready"})
             if len(str(item.get("spoken", "")).strip()) < 2:
                 report["runtime_failures"].append({"page": expected, "kind": "empty_narration"})
-            if (
-                not source.get("present")
-                or not source.get("complete")
-                or source.get("w") != 674
-                or source.get("h") != 957
-                or f"pg{expected:03d}.png" not in str(source.get("src", ""))
-            ):
-                report["runtime_failures"].append({"page": expected, "kind": "source_render"})
+            if item.get("sourceCount"):
+                report["runtime_failures"].append({"page": expected, "kind": "full_page_render"})
+            if not item.get("semanticVisible"):
+                report["runtime_failures"].append({"page": expected, "kind": "semantic_content_hidden"})
+            if item.get("watermark"):
+                report["runtime_failures"].append({"page": expected, "kind": "watermark"})
             if item.get("submitCount"):
                 report["runtime_failures"].append({"page": expected, "kind": "submit_control"})
 
@@ -191,11 +189,18 @@ def main() -> int:
                     }
                 )
 
+    source_page_dir = ROOT / "images" / "source-pages"
+    if source_page_dir.exists():
+        report["unwanted_source_page_assets"] = sorted(
+            str(path.relative_to(ROOT)) for path in source_page_dir.rglob("*") if path.is_file()
+        )
+
     critical_keys = [
         "missing_page_files",
         "meta_mismatches",
-        "missing_source_renders",
-        "bad_source_dimensions",
+        "unwanted_source_page_assets",
+        "full_page_render_elements",
+        "watermark_strings",
         "missing_fidelity_assets",
         "missing_text_entries",
         "unmapped_audio_ids",
@@ -207,7 +212,6 @@ def main() -> int:
     ]
     report["critical_failure_count"] = sum(len(report[key]) for key in critical_keys)
     report["referenced_text_ids"] = len(referenced_ids)
-    report["source_render_count"] = len(list((ROOT / "images" / "source-pages").glob("pg*.png")))
 
     destination = ROOT / "tmp" / "final-audit.json"
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -215,7 +219,7 @@ def main() -> int:
 
     summary = {
         "pages": len(manifest),
-        "source_renders": report["source_render_count"],
+        "source_page_assets": len(report["unwanted_source_page_assets"]),
         "text_ids": report["referenced_text_ids"],
         "critical_failures": report["critical_failure_count"],
         "unmapped_audio_ids": len(report["unmapped_audio_ids"]),

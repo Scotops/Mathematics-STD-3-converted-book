@@ -9,42 +9,6 @@
 })();
 
 
-/* Present the exact source-PDF page while retaining the semantic ADT layer. */
-(function () {
-  function installSourcePage() {
-    var content = document.getElementById('content');
-    var pageMeta = document.querySelector('meta[name="page-section-id"]');
-    var page = Number(pageMeta && pageMeta.content);
-    if (!content || !Number.isInteger(page) || page < 1 || page > 184) return;
-    if (content.querySelector(':scope > .adt-source-page-render')) return;
-
-    var image = document.createElement('img');
-    image.className = 'adt-source-page-render';
-    image.src = './images/source-pages/pg' + String(page).padStart(3, '0') + '.png?v=trim1';
-    image.alt = '';
-    image.decoding = 'async';
-    image.fetchPriority = page <= 2 ? 'high' : 'auto';
-    image.draggable = false;
-    image.setAttribute('aria-hidden', 'true');
-    image.setAttribute('data-tts-ignore', '');
-
-    image.addEventListener('error', function () {
-      /* Fail open: the accessible HTML remains visible if an asset is absent. */
-      content.classList.remove('adt-print-fidelity');
-      image.remove();
-    }, { once: true });
-
-    content.prepend(image);
-    content.classList.add('adt-print-fidelity');
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', installSourcePage, { once: true });
-  } else {
-    installSourcePage();
-  }
-})();
-
 /* Keep the published book in static textbook mode. */
 (function () {
   function disableExerciseControls(root) {
