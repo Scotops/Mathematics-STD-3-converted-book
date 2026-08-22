@@ -81,7 +81,7 @@ def main() -> int:
             )
 
         markup = page_path.read_text(encoding="utf-8")
-        if "assets/typography-consistency.css?v=5" not in markup or "assets/offline-preloader.js?v=81" not in markup:
+        if "assets/typography-consistency.css?v=5" not in markup or "assets/offline-preloader.js?v=82" not in markup:
             report["missing_fidelity_assets"].append(href)
         if "adt-source-page-render" in markup or "adt-print-fidelity" in markup:
             report["full_page_render_elements"].append(href)
