@@ -184,6 +184,10 @@
   function isVisible(element) {
     if (!(element instanceof Element)) return true;
     if (element.hidden || element.getAttribute('aria-hidden') === 'true' || element.dataset.ttsIgnore !== undefined) return false;
+    // In facsimile mode the original semantic page is visually clipped but
+    // remains the authoritative narration source. Allow that outer source
+    // wrapper through; clipped duplicates inside it are still rejected below.
+    if (element.classList.contains('pdf-facsimile-accessible-source')) return true;
     const style = window.getComputedStyle(element);
     // Some older pages contain a narration-only duplicate that is clipped to
     // one pixel for the old audio runtime. It is not page content and must not

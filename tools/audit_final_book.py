@@ -50,6 +50,7 @@ def main() -> int:
         "full_page_render_elements": [],
         "watermark_strings": [],
         "missing_fidelity_assets": [],
+        "missing_facsimile_assets": [],
         "missing_shared_assets": [],
         "missing_text_entries": [],
         "unmapped_audio_ids": [],
@@ -86,13 +87,22 @@ def main() -> int:
             "content/tailwind_output.css?v=12",
             "assets/fonts.css?v=4",
             "assets/typography-consistency.css?v=6",
-            "assets/source-book-theme.css?v=7",
+            "assets/source-book-theme.css?v=8",
             "assets/source-book-theme.js?v=4",
-            "assets/accessible-tts.js?v=26",
-            "assets/offline-preloader.js?v=86",
+            "assets/pdf-facsimile.js?v=1",
+            "assets/accessible-tts.js?v=27",
+            "assets/offline-preloader.js?v=87",
         )
         if any(asset not in markup for asset in required_markup_assets):
             report["missing_fidelity_assets"].append(href)
+        page_match = re.match(r"pg(\d{3})_", actual_title)
+        facsimile_path = (
+            ROOT / "images" / "pdf-pages" / f"pg-{page_match.group(1)}.jpg"
+            if page_match
+            else None
+        )
+        if facsimile_path is None or not facsimile_path.is_file():
+            report["missing_facsimile_assets"].append(href)
         if "adt-source-page-render" in markup or "adt-print-fidelity" in markup:
             report["full_page_render_elements"].append(href)
         watermark = WATERMARK.search(markup)
@@ -156,6 +166,7 @@ def main() -> int:
         ROOT / "assets" / "fonts" / "SassoonPrimary-Bold.otf",
         ROOT / "assets" / "source-book-theme.css",
         ROOT / "assets" / "source-book-theme.js",
+        ROOT / "assets" / "pdf-facsimile.js",
     )
     report["missing_shared_assets"] = [
         str(path.relative_to(ROOT)) for path in required_shared_assets if not path.exists()
@@ -228,6 +239,7 @@ def main() -> int:
         "full_page_render_elements",
         "watermark_strings",
         "missing_fidelity_assets",
+        "missing_facsimile_assets",
         "missing_shared_assets",
         "missing_text_entries",
         "unmapped_audio_ids",
@@ -247,6 +259,7 @@ def main() -> int:
     summary = {
         "pages": len(manifest),
         "source_page_assets": len(report["unwanted_source_page_assets"]),
+        "facsimile_assets": 184 - len(report["missing_facsimile_assets"]),
         "text_ids": report["referenced_text_ids"],
         "critical_failures": report["critical_failure_count"],
         "unmapped_audio_ids": len(report["unmapped_audio_ids"]),
