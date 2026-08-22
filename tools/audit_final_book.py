@@ -81,7 +81,7 @@ def main() -> int:
             )
 
         markup = page_path.read_text(encoding="utf-8")
-        if "assets/typography-consistency.css?v=4" not in markup or "assets/offline-preloader.js?v=80" not in markup:
+        if "assets/typography-consistency.css?v=4" not in markup or "assets/offline-preloader.js?v=81" not in markup:
             report["missing_fidelity_assets"].append(href)
         if "adt-source-page-render" in markup or "adt-print-fidelity" in markup:
             report["full_page_render_elements"].append(href)
@@ -159,10 +159,17 @@ def main() -> int:
         )
     else:
         for expected, item in enumerate(runtime, 1):
-            if not item.get("ready"):
-                report["runtime_failures"].append({"page": expected, "kind": "tts_not_ready"})
-            if len(str(item.get("spoken", "")).strip()) < 2:
-                report["runtime_failures"].append({"page": expected, "kind": "empty_narration"})
+            intentionally_silent = expected == 6
+            if intentionally_silent:
+                if str(item.get("spoken", "")).strip():
+                    report["runtime_failures"].append(
+                        {"page": expected, "kind": "unexpected_blank_page_narration"}
+                    )
+            else:
+                if not item.get("ready"):
+                    report["runtime_failures"].append({"page": expected, "kind": "tts_not_ready"})
+                if len(str(item.get("spoken", "")).strip()) < 2:
+                    report["runtime_failures"].append({"page": expected, "kind": "empty_narration"})
             if item.get("sourceCount"):
                 report["runtime_failures"].append({"page": expected, "kind": "full_page_render"})
             if not item.get("semanticVisible"):
