@@ -4,8 +4,12 @@ from __future__ import annotations
 
 import html
 import json
+import math
 import re
+import subprocess
+import tempfile
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont, ImageStat
@@ -14,6 +18,11 @@ from PIL import Image, ImageDraw, ImageFont, ImageStat
 ROOT = Path(__file__).resolve().parents[1]
 TEXTS_PATH = ROOT / "content" / "i18n" / "en" / "texts.json"
 FONT_PATH = ROOT / "assets" / "fonts" / "SassoonPrimary.ttf"
+CLEAN_PDF = ROOT / "tmp" / "pdfs" / "mathematics-std3-watermark-free.pdf"
+PDFTOPPM = Path(
+    r"C:\Users\SALMA\.cache\codex-runtimes\codex-primary-runtime\dependencies"
+    r"\native\poppler\Library\bin\pdftoppm.exe"
+)
 PDF_WIDTH = 557.906
 PDF_HEIGHT = 767.669
 
@@ -120,25 +129,25 @@ class Overlay:
 
 
 OVERLAYS = [
-    Overlay(9, TEXT_REPLACEMENTS["pg009_n0003"].visible, 11.0, (480, 145), ((89, 112, 485, 129), (89, 131, 485, 148))),
-    Overlay(10, TEXT_REPLACEMENTS["pg010_n0020"].visible, 11.0, (475, 650), ((101, 617, 484, 635), (101, 635, 484, 653))),
-    Overlay(17, TEXT_REPLACEMENTS["pg017_n0004"].visible, 11.0, (480, 143), ((89, 110, 484, 128), (89, 128, 484, 146))),
-    Overlay(30, TEXT_REPLACEMENTS["pg030_n0084"].visible, 9.1, (475, 615), ((101, 583, 484, 601), (101, 601, 484, 619))),
-    Overlay(32, "identify / determine / find / state the place value of each digit of a given whole number.", 10.4, (500, 143), ((72, 128, 484, 146),)),
-    Overlay(38, TEXT_REPLACEMENTS["pg038_n0019"].visible, 10.4, (500, 497), ((72, 480, 484, 499),)),
-    Overlay(39, TEXT_REPLACEMENTS["pg039_n0046"].visible, 10.0, (480, 660), ((86, 626, 484, 644), (86, 645, 484, 663))),
-    Overlay(40, TEXT_REPLACEMENTS["pg040_n0028"].visible, 10.0, (480, 336), ((72, 302, 484, 320), (72, 320, 484, 338))),
-    Overlay(80, TEXT_REPLACEMENTS["pg080_n0018"].visible, 10.3, (245, 243, 248), ((130, 236, 470, 255), (130, 255, 470, 274))),
-    Overlay(82, TEXT_REPLACEMENTS["pg082_n0026"].visible, 9.0, (500, 676), ((346, 641, 484, 660), (72, 660, 484, 679))),
-    Overlay(83, TEXT_REPLACEMENTS["pg083_n0028"].visible, 10.4, (500, 670), ((86, 635, 484, 653), (86, 654, 484, 672))),
-    Overlay(88, TEXT_REPLACEMENTS["pg088_n0003"].visible, 9.4, (500, 119), ((384, 83, 484, 102), (72, 103, 484, 122))),
-    Overlay(88, TEXT_REPLACEMENTS["pg088_n0015"].visible, 10.2, (500, 389), ((328, 353, 484, 372), (72, 372, 484, 391))),
-    Overlay(90, TEXT_REPLACEMENTS["pg090_n0031"].visible, 10.2, (500, 438), ((157, 403, 484, 422), (72, 422, 484, 441))),
-    Overlay(91, TEXT_REPLACEMENTS["pg091_n0035"].visible, 10.8, (500, 543), ((395, 488, 484, 507), (86, 507, 484, 526), (86, 526, 484, 545))),
-    Overlay(92, TEXT_REPLACEMENTS["pg092_n0037"].visible, 9.3, (239, 250, 254), ((101, 655, 470, 674),)),
-    Overlay(93, TEXT_REPLACEMENTS["pg093_n0043"].visible, 10.6, (247, 243, 231), ((115, 394, 484, 413), (115, 413, 484, 432))),
-    Overlay(94, TEXT_REPLACEMENTS["pg094_n0011"].visible, 10.5, (239, 250, 254), ((122, 172, 484, 191), (122, 191, 484, 210))),
-    Overlay(99, TEXT_REPLACEMENTS["pg099_n0025"].visible, 10.0, (500, 579), ((86, 544, 484, 563), (86, 563, 484, 582))),
+    Overlay(9, TEXT_REPLACEMENTS["pg009_n0003"].visible, 16.0, (480, 145), ((89, 112, 485, 129), (89, 131, 485, 148))),
+    Overlay(10, TEXT_REPLACEMENTS["pg010_n0020"].visible, 16.0, (475, 650), ((101, 617, 484, 635), (101, 635, 484, 653))),
+    Overlay(17, TEXT_REPLACEMENTS["pg017_n0004"].visible, 16.0, (480, 143), ((89, 110, 484, 128), (89, 128, 484, 146))),
+    Overlay(30, TEXT_REPLACEMENTS["pg030_n0084"].visible, 16.0, (475, 615), ((101, 583, 484, 601), (101, 601, 484, 619))),
+    Overlay(32, "identify / determine / find / state the place value of each digit of a given whole number.", 16.0, (500, 143), ((72, 128, 484, 146),)),
+    Overlay(38, TEXT_REPLACEMENTS["pg038_n0019"].visible, 16.0, (500, 497), ((72, 480, 484, 499),)),
+    Overlay(39, TEXT_REPLACEMENTS["pg039_n0046"].visible, 16.0, (480, 660), ((86, 626, 484, 644), (86, 645, 484, 663))),
+    Overlay(40, TEXT_REPLACEMENTS["pg040_n0028"].visible, 16.0, (480, 336), ((72, 302, 484, 320), (72, 320, 484, 338))),
+    Overlay(80, TEXT_REPLACEMENTS["pg080_n0018"].visible, 16.0, (245, 243, 248), ((130, 236, 470, 255), (130, 255, 470, 274))),
+    Overlay(82, TEXT_REPLACEMENTS["pg082_n0026"].visible, 16.0, (500, 676), ((346, 641, 484, 660), (72, 660, 484, 679))),
+    Overlay(83, TEXT_REPLACEMENTS["pg083_n0028"].visible, 16.0, (500, 670), ((86, 635, 484, 653), (86, 654, 484, 672))),
+    Overlay(88, TEXT_REPLACEMENTS["pg088_n0003"].visible, 16.0, (500, 119), ((384, 83, 484, 102), (72, 103, 484, 122))),
+    Overlay(88, TEXT_REPLACEMENTS["pg088_n0015"].visible, 16.0, (500, 389), ((328, 353, 484, 372), (72, 372, 484, 391))),
+    Overlay(90, TEXT_REPLACEMENTS["pg090_n0031"].visible, 16.0, (500, 438), ((157, 403, 484, 422), (72, 422, 484, 441))),
+    Overlay(91, TEXT_REPLACEMENTS["pg091_n0035"].visible, 16.0, (500, 543), ((395, 488, 484, 507), (86, 507, 484, 526), (86, 526, 484, 545))),
+    Overlay(92, TEXT_REPLACEMENTS["pg092_n0037"].visible, 16.0, (239, 250, 254), ((101, 655, 470, 674),)),
+    Overlay(93, TEXT_REPLACEMENTS["pg093_n0043"].visible, 16.0, (247, 243, 231), ((115, 394, 484, 413), (115, 413, 484, 432))),
+    Overlay(94, TEXT_REPLACEMENTS["pg094_n0011"].visible, 16.0, (239, 250, 254), ((122, 172, 484, 191), (122, 191, 484, 210))),
+    Overlay(99, TEXT_REPLACEMENTS["pg099_n0025"].visible, 16.0, (500, 579), ((86, 544, 484, 563), (86, 563, 484, 582))),
 ]
 
 
@@ -177,9 +186,9 @@ def update_html() -> dict[str, int]:
         for text_id, replacement in TEXT_REPLACEMENTS.items():
             updated, count = replace_element(updated, text_id, replacement)
             counts[text_id] += count
-        updated = updated.replace("?reader=15", "?reader=16")
-        updated = updated.replace("pdf-facsimile.js?v=1", "pdf-facsimile.js?v=2")
-        updated = updated.replace("offline-preloader.js?v=87", "offline-preloader.js?v=88")
+        updated = updated.replace("?reader=16", "?reader=17")
+        updated = updated.replace("pdf-facsimile.js?v=2", "pdf-facsimile.js?v=3")
+        updated = updated.replace("offline-preloader.js?v=88", "offline-preloader.js?v=89")
         if updated != source:
             path.write_text(updated, encoding="utf-8")
     # pg010_n0020 is a retained localization alias; the rendered page uses the
@@ -199,16 +208,16 @@ def update_manifests() -> None:
     for relative_path in ("content/pages.json", "content/toc.json"):
         path = ROOT / relative_path
         source = path.read_text(encoding="utf-8")
-        path.write_text(source.replace("?reader=15", "?reader=16"), encoding="utf-8")
+        path.write_text(source.replace("?reader=16", "?reader=17"), encoding="utf-8")
     config_path = ROOT / "assets" / "config.json"
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    config["bundleVersion"] = "93"
+    config["bundleVersion"] = "94"
     config_path.write_text(
         json.dumps(config, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     script_path = ROOT / "assets" / "pdf-facsimile.js"
     source = script_path.read_text(encoding="utf-8")
-    script_path.write_text(source.replace(".jpg?v=1`", ".jpg?v=2`"), encoding="utf-8")
+    script_path.write_text(source.replace(".jpg?v=2`", ".jpg?v=3`"), encoding="utf-8")
 
 
 def rebuild_offline_preloader() -> None:
@@ -256,24 +265,122 @@ def sample_background(image: Image.Image, point: tuple[float, float]) -> tuple[i
     return tuple(round(value) for value in ImageStat.Stat(crop).median[:3])
 
 
-def wrap_for_slots(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont, widths: list[int]) -> list[str]:
-    words = text.split()
-    lines: list[str] = []
-    position = 0
-    for width in widths:
-        line: list[str] = []
-        while position < len(words):
-            candidate = " ".join([*line, words[position]])
-            if draw.textlength(candidate, font=font) <= width or not line:
-                line.append(words[position])
-                position += 1
-            else:
-                break
-        lines.append(" ".join(line))
-    if position != len(words):
-        remaining = " ".join(words[position:])
-        raise ValueError(f"Inclusive overlay does not fit: {remaining}")
-    return lines
+def partition_for_slots(
+    draw: ImageDraw.ImageDraw,
+    text: str,
+    font: ImageFont.FreeTypeFont,
+    widths: list[int],
+) -> list[str]:
+    """Split text across the available source-book lines as evenly as possible.
+
+    Added alternatives make some sentences longer than the source sentence. The
+    vertical font size must remain the book's original 16 points, so line breaks
+    are selected to minimise the greatest horizontal compression instead.
+    """
+    words = tuple(text.split())
+
+    @lru_cache(maxsize=None)
+    def solve(line_index: int, word_index: int) -> tuple[float, tuple[str, ...]]:
+        lines_left = len(widths) - line_index
+        words_left = len(words) - word_index
+        if lines_left == 0:
+            return (0.0, ()) if words_left == 0 else (math.inf, ())
+        if words_left < lines_left:
+            return math.inf, ()
+
+        best_score = math.inf
+        best_lines: tuple[str, ...] = ()
+        max_end = len(words) - (lines_left - 1)
+        for end in range(word_index + 1, max_end + 1):
+            line = " ".join(words[word_index:end])
+            line_ratio = float(draw.textlength(line, font=font)) / widths[line_index]
+            tail_score, tail_lines = solve(line_index + 1, end)
+            score = max(line_ratio, tail_score)
+            if score < best_score:
+                best_score = score
+                best_lines = (line, *tail_lines)
+        return best_score, best_lines
+
+    worst_ratio, lines = solve(0, 0)
+    if not lines or not math.isfinite(worst_ratio):
+        raise ValueError(f"Could not partition inclusive overlay: {text}")
+    if worst_ratio > 2.25:
+        raise ValueError(
+            f"Inclusive overlay would require excessive horizontal fitting "
+            f"({worst_ratio:.2f}x): {text}"
+        )
+    return list(lines)
+
+
+def draw_fitted_line(
+    image: Image.Image,
+    line: str,
+    font: ImageFont.FreeTypeFont,
+    slot: tuple[int, int, int, int],
+) -> None:
+    """Draw one full-height Sassoon line, fitting its width only when needed."""
+    x, y, width, height = slot
+    measure = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+    left, top, right, bottom = measure.textbbox((0, 0), line, font=font, anchor="lt")
+    natural_width = max(1, math.ceil(right - left))
+    natural_height = max(1, math.ceil(bottom - top))
+    padding = 4
+    layer = Image.new(
+        "RGBA", (natural_width + padding * 2, natural_height + padding * 2), (0, 0, 0, 0)
+    )
+    layer_draw = ImageDraw.Draw(layer)
+    layer_draw.text(
+        (padding - left, padding - top),
+        line,
+        font=font,
+        fill=(39, 36, 36, 255),
+    )
+    alpha = layer.getchannel("A")
+    content_box = alpha.getbbox()
+    if content_box is None:
+        return
+    rendered = layer.crop(content_box)
+    if rendered.width > width:
+        fitted_width = max(1, width)
+        rendered = rendered.resize(
+            (fitted_width, rendered.height), Image.Resampling.LANCZOS
+        )
+    paste_y = y + max(0, (height - rendered.height) // 2)
+    image.paste(rendered, (x, paste_y), rendered)
+
+
+def restore_page_from_clean_pdf(page_number: int) -> Image.Image:
+    """Render a fresh watermark-free page before applying the revised wording."""
+    if not CLEAN_PDF.exists():
+        raise FileNotFoundError(f"Clean source PDF not found: {CLEAN_PDF}")
+    if not PDFTOPPM.exists():
+        raise FileNotFoundError(f"Poppler renderer not found: {PDFTOPPM}")
+    temp_root = ROOT / "tmp"
+    temp_root.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=temp_root) as temp_dir:
+        output_prefix = Path(temp_dir) / f"pg-{page_number:03d}"
+        subprocess.run(
+            [
+                str(PDFTOPPM),
+                "-f",
+                str(page_number),
+                "-l",
+                str(page_number),
+                "-singlefile",
+                "-jpeg",
+                "-r",
+                "140",
+                "-jpegopt",
+                "quality=90,optimize=y,progressive=y",
+                str(CLEAN_PDF),
+                str(output_prefix),
+            ],
+            check=True,
+            capture_output=True,
+        )
+        rendered_path = output_prefix.with_suffix(".jpg")
+        with Image.open(rendered_path) as rendered:
+            return rendered.convert("RGB")
 
 
 def render_overlays() -> list[int]:
@@ -284,8 +391,7 @@ def render_overlays() -> list[int]:
     changed_pages = []
     for page_number, overlays in sorted(by_page.items()):
         image_path = ROOT / "images" / "pdf-pages" / f"pg-{page_number:03d}.jpg"
-        with Image.open(image_path) as original:
-            image = original.convert("RGB")
+        image = restore_page_from_clean_pdf(page_number)
         draw = ImageDraw.Draw(image)
         scale_x = image.width / PDF_WIDTH
         scale_y = image.height / PDF_HEIGHT
@@ -313,17 +419,11 @@ def render_overlays() -> list[int]:
                         round((bottom - top) * scale_y),
                     )
                 )
-            lines = wrap_for_slots(draw, overlay.text, font, [slot[2] for slot in pixel_slots])
-            for line, (x, y, _, height) in zip(lines, pixel_slots, strict=True):
-                bbox = draw.textbbox((0, 0), line, font=font, anchor="lt")
-                text_height = bbox[3] - bbox[1]
-                draw.text(
-                    (x, y + max(0, (height - text_height) // 2)),
-                    line,
-                    font=font,
-                    fill=(39, 36, 36),
-                    anchor="lt",
-                )
+            lines = partition_for_slots(
+                draw, overlay.text, font, [slot[2] for slot in pixel_slots]
+            )
+            for line, slot in zip(lines, pixel_slots, strict=True):
+                draw_fitted_line(image, line, font, slot)
         image.save(image_path, format="JPEG", quality=92, optimize=True, progressive=True)
         changed_pages.append(page_number)
     return changed_pages

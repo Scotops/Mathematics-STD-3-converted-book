@@ -38,6 +38,9 @@ def main() -> int:
             failures.append(f"missing-html:{text_id}")
 
     facsimile_pages = sorted({overlay.page for overlay in OVERLAYS})
+    for overlay in OVERLAYS:
+        if overlay.font_size != 16.0:
+            failures.append(f"wrong-overlay-font-size:{overlay.page}:{overlay.font_size}")
     for page_number in facsimile_pages:
         image_path = ROOT / "images" / "pdf-pages" / f"pg-{page_number:03d}.jpg"
         with Image.open(image_path) as image:
