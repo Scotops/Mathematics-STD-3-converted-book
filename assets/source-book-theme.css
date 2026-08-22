@@ -15,17 +15,59 @@
   --book-revision-bar: #64c9e9;
 }
 
-/* The source book uses Sassoon Primary throughout.  Override legacy inline
-   Georgia/Comic Sans declarations while leaving mathematical glyph engines
-   and vertically aligned calculation columns untouched. */
+/* The source book uses Sassoon Primary throughout. Override legacy inline
+   Georgia/Comic Sans declarations while leaving MathJax glyph construction
+   untouched. */
 #content,
 #content :is(section, article, aside, div, p, span, h1, h2, h3, h4, h5, h6, li, td, th, label, strong, b, em, i):not(mjx-container):not(mjx-container *) {
-  font-family: 'Sassoon Primary', 'Comic Sans MS', sans-serif !important;
+  font-family: 'Sassoon Primary', sans-serif !important;
+}
+
+.source-book-page-footer {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 64rem);
+  height: clamp(2.4rem, 8vw, 5rem);
+  margin: clamp(2rem, 5vw, 3.75rem) auto 0;
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(235, 250, 254, .56) 27%,
+      rgba(211, 241, 250, .82) 56%,
+      rgba(238, 250, 254, .58) 78%,
+      rgba(255, 255, 255, 0) 100%);
+  color: #fff;
+  pointer-events: none;
+  user-select: none;
+}
+
+.source-book-page-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: clamp(1.7rem, 6.5vw, 4rem);
+  height: clamp(.8rem, 2.4vw, 1.5rem);
+  border: 1px solid rgba(116, 203, 231, .7);
+  border-radius: 999px;
+  background: linear-gradient(90deg, #8dd9ee 0%, #4dc1e6 48%, #92ddf0 100%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, .78);
+  color: #fff !important;
+  font-family: 'Sassoon Primary', sans-serif !important;
+  font-size: clamp(.58rem, 1.35vw, .85rem) !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  text-align: center;
 }
 
 #content :is(pre, code, kbd, samp, .font-mono, .adt-pre-calculation),
 #content :is(pre, code, kbd, samp, .font-mono, .adt-pre-calculation) * {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+  font-family: 'Sassoon Primary', sans-serif !important;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
 }
 
 #content :is(strong, b, h1, h2, h3, h4, h5, h6, .font-bold, .font-semibold, .font-extrabold) {

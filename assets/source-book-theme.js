@@ -63,6 +63,39 @@
         if (heading.parentElement !== card) heading.parentElement.dataset.sourceHeadingWrap = kind;
       }
     });
+    addPrintedPageFooter(root);
+  }
+
+  function romanNumeral(value) {
+    return ['', 'i', 'ii', 'iii', 'iv', 'v', 'vi'][value] || '';
+  }
+
+  function printedPageNumber() {
+    const sectionId = document.querySelector('meta[name="title-id"]')?.content || '';
+    const match = sectionId.match(/^pg(\d{3})_/i);
+    if (!match) return '';
+    const sourcePage = Number.parseInt(match[1], 10);
+    if (sourcePage === 1) return '';
+    if (sourcePage <= 6) return romanNumeral(sourcePage);
+    return String(sourcePage - 6);
+  }
+
+  function addPrintedPageFooter(root) {
+    if (root.querySelector('.source-book-page-footer')) return;
+    const pageNumber = printedPageNumber();
+    if (!pageNumber) return;
+
+    const footer = document.createElement('footer');
+    footer.className = 'source-book-page-footer';
+    footer.setAttribute('aria-label', `Printed page ${pageNumber}`);
+    footer.dataset.pageNumber = pageNumber;
+
+    const numeral = document.createElement('span');
+    numeral.className = 'source-book-page-number';
+    numeral.setAttribute('aria-hidden', 'true');
+    numeral.textContent = pageNumber;
+    footer.append(numeral);
+    root.append(footer);
   }
 
   if (document.readyState === 'loading') {

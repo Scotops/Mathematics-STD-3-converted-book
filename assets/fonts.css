@@ -55,7 +55,7 @@
   src: url('./fonts/SassoonPrimary.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
@@ -63,11 +63,13 @@
   src: url('./fonts/SassoonPrimary-Bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 body {
-  font-family: 'Sassoon Primary', 'Comic Sans MS', sans-serif;
+  font-family: 'Sassoon Primary', sans-serif;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
 }
 
 #nav-container, #nav-container *,

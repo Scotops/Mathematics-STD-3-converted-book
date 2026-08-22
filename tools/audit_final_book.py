@@ -83,10 +83,10 @@ def main() -> int:
 
         markup = page_path.read_text(encoding="utf-8")
         required_markup_assets = (
-            "assets/fonts.css?v=2",
+            "assets/fonts.css?v=3",
             "assets/typography-consistency.css?v=6",
-            "assets/source-book-theme.css?v=2",
-            "assets/source-book-theme.js?v=2",
+            "assets/source-book-theme.css?v=3",
+            "assets/source-book-theme.js?v=3",
             "assets/accessible-tts.js?v=26",
             "assets/offline-preloader.js?v=82",
         )
