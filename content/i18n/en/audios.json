@@ -38,6 +38,7 @@
   "pg007_n0002": "pg007_n0002.mp3",
   "pg007_im002": "pg007_im002.mp3",
   "pg005_n0013": "pg005_n0013.mp3",
+  "pg006_n0001": "pg006_n0001.mp3",
   "pg001_im001": "pg001_im001.mp3",
   "pg005_im001": "pg005_im001.mp3",
   "pg007_n0005": "pg007_n0005.mp3",
@@ -6267,5 +6268,15 @@
   "pg011_sec002_tts_a": "tts_pg011_sec002_tts_a_labels_v3.mp3",
   "pg011_sec002_tts_b": "tts_pg011_sec002_tts_b_labels_v3.mp3",
   "pg011_sec002_tts_c": "tts_pg011_sec002_tts_c_labels_v3.mp3",
-  "pg011_sec002_tts_d": "tts_pg011_sec002_tts_d_labels_v3.mp3"
+  "pg011_sec002_tts_d": "tts_pg011_sec002_tts_d_labels_v3.mp3",
+  "pg053_im005": "tts_pg053_im005_coverage_v1.mp3",
+  "pg062_sec002_addend_1": "tts_pg062_sec002_addend_1_coverage_v1.mp3",
+  "pg062_sec002_addend_2": "tts_pg062_sec002_addend_2_coverage_v1.mp3",
+  "pg062_sec002_addend_3": "tts_pg062_sec002_addend_3_coverage_v1.mp3",
+  "pg109_im001": "tts_pg109_im001_coverage_v1.mp3",
+  "pg109_im002": "tts_pg109_im002_coverage_v1.mp3",
+  "pg109_im003": "tts_pg109_im003_coverage_v1.mp3",
+  "pg109_im004": "tts_pg109_im004_coverage_v1.mp3",
+  "pg109_im005": "tts_pg109_im005_coverage_v1.mp3",
+  "pg109_im006": "tts_pg109_im006_coverage_v1.mp3"
 }

@@ -250,6 +250,21 @@
     };
     const boundary = () => pieces.push('. ');
 
+    function numberedItemKind(element) {
+      const scope = element.closest('section, article') || root;
+      const labels = scope.querySelectorAll('h1, h2, h3, h4, h5, h6, [data-id], strong');
+      let lastContext = '';
+      for (const label of labels) {
+        if (label === element || label.contains(element)) continue;
+        const position = label.compareDocumentPosition(element);
+        if (!(position & Node.DOCUMENT_POSITION_FOLLOWING)) continue;
+        const text = String(label.textContent || '').replace(/\s+/g, ' ').trim();
+        if (/^steps?:?$/i.test(text)) lastContext = 'step';
+        else if (/^(?:exercise|revision exercise|questions?|activity)\b/i.test(text)) lastContext = 'question';
+      }
+      return lastContext === 'step' ? 'Step' : 'Question';
+    }
+
     function walk(node) {
       if (node.nodeType === Node.TEXT_NODE) {
         add(node.nodeValue);
@@ -285,7 +300,7 @@
       // is handled by the playback queue and is never sent to the voice.
       const visibleText = String(element.textContent || '').trim();
       if (element.tagName === 'SPAN' && /^\d+\.$/.test(visibleText)) {
-        add(`Question ${visibleText} [[adt_pause]]`);
+        add(`${numberedItemKind(element)} ${visibleText} [[adt_pause]]`);
         return;
       }
 
