@@ -823,8 +823,32 @@
 
   function togglePause() {
     if (!playing) return start();
-    if (paused) synth.resume(); else synth.pause();
-    paused = !paused;
+    if (!paused) {
+      // Chromium's native speechSynthesis.pause() is unreliable with several
+      // Windows voices: the paused flag changes but the current utterance can
+      // continue speaking. Cancelling is immediate and dependable. Preserve
+      // the current queue position so Resume can replay that spoken part.
+      const resumeIndex = currentChunkIndex >= 0
+        ? currentChunkIndex
+        : Math.max(0, queueIndex - 1);
+      playbackGeneration += 1;
+      synth.cancel();
+      stopBundledAudio();
+      activeUtterance = null;
+      queueIndex = resumeIndex;
+      paused = true;
+      clearWordHighlight();
+    } else {
+      paused = false;
+      cancelled = false;
+      const generation = playbackGeneration;
+      // Allow Chromium's asynchronous cancellation to settle before
+      // restarting the preserved spoken part.
+      window.setTimeout(() => {
+        if (generation !== playbackGeneration || cancelled || paused) return;
+        playNext(generation);
+      }, 80);
+    }
     updatePlayer();
   }
 
@@ -919,7 +943,8 @@
     pause: togglePause,
     toggle: () => (playing ? stop() : start()),
     get speechRate() { return speechRate; },
-    get isPlaying() { return playing; }
+    get isPlaying() { return playing; },
+    get isPaused() { return paused; }
   });
 
   if (canUseWebSpeech && typeof synth.addEventListener === 'function') {
