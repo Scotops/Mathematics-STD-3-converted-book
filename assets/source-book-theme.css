@@ -35,6 +35,15 @@
   line-height: 1.25 !important;
 }
 
+/* Some converted paragraphs and table cells contain their text directly and
+   therefore have no data-id. They must use the same 16-unit source scale too,
+   instead of falling back to Tailwind's smaller text presets. */
+#content:not(:has([data-source-section='pg001_sec001'])) [data-source-section]
+  :is(p, li, td, th, label):not(:has([data-id])):not(mjx-container):not(mjx-container *) {
+  font-size: clamp(1rem, 2.868cqw, 2.15rem) !important;
+  line-height: 1.25 !important;
+}
+
 /* The embedded Sassoon outlines already contain the characteristic printed
    slant. Browser-synthesised italics distort those outlines, so disable the
    second artificial slant everywhere in the book layer. */
@@ -57,6 +66,8 @@
 /* The printed text block is centred and about 80% of the page width. */
 #content [data-source-section] > section {
   background: #fff !important;
+  font-size: clamp(1rem, 2.868cqw, 2.15rem) !important;
+  line-height: 1.25 !important;
 }
 
 #content [data-source-section] > section > [class*='max-w-'] {
@@ -64,6 +75,62 @@
   max-width: 53.75rem !important;
   margin-left: auto !important;
   margin-right: auto !important;
+}
+
+/* The copyright page contains direct text nodes rather than i18n spans. Give
+   those paragraphs the same proportional 16-unit Sassoon size used by the
+   source PDF, with the page's deliberately looser publication leading. */
+#content [data-source-section='pg002_sec001'] > section {
+  width: 100% !important;
+  max-width: 75rem !important;
+  padding-left: min(14.34cqw, 10.75rem) !important;
+  padding-right: min(14.34cqw, 10.75rem) !important;
+  font-size: clamp(1rem, 2.868cqw, 2.15rem) !important;
+}
+
+#content [data-source-section='pg002_sec001'] p {
+  font-size: inherit !important;
+  line-height: 1.38 !important;
+}
+
+#content [data-source-section='pg002_sec001'] p:nth-of-type(2) {
+  line-height: 1.55 !important;
+}
+
+#content [data-source-section='pg002_sec001'] > section > div:first-of-type {
+  margin-bottom: 1.37em !important;
+}
+
+#content [data-source-section='pg002_sec001'] p:nth-of-type(1) {
+  margin-bottom: 1.02em !important;
+}
+
+#content [data-source-section='pg002_sec001'] p:nth-of-type(2) {
+  margin-bottom: 3.26em !important;
+}
+
+#content [data-source-section='pg002_sec001'] p:nth-of-type(3) {
+  margin-bottom: 2.21em !important;
+}
+
+#content [data-source-section='pg002_sec001'] p:nth-of-type(4) {
+  margin-bottom: 2.04em !important;
+}
+
+#content [data-source-section='pg002_sec001'] p:nth-of-type(5) {
+  margin-bottom: 4.59em !important;
+}
+
+#content [data-source-section='pg002_sec001'] p:nth-of-type(6) {
+  line-height: 1.2 !important;
+}
+
+#content [data-source-section='pg002_sec001'] > section > div:last-of-type {
+  display: none !important;
+}
+
+#content:has([data-source-section='pg002_sec001']) .source-book-page-footer {
+  margin-top: max(-3.375rem, -4.5cqw) !important;
 }
 
 /* Printed pages carry a pale cyan wash across the top and bottom. Recreate it

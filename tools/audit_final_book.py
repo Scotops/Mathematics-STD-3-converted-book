@@ -83,12 +83,13 @@ def main() -> int:
 
         markup = page_path.read_text(encoding="utf-8")
         required_markup_assets = (
+            "content/tailwind_output.css?v=12",
             "assets/fonts.css?v=4",
             "assets/typography-consistency.css?v=6",
-            "assets/source-book-theme.css?v=4",
+            "assets/source-book-theme.css?v=5",
             "assets/source-book-theme.js?v=4",
             "assets/accessible-tts.js?v=26",
-            "assets/offline-preloader.js?v=83",
+            "assets/offline-preloader.js?v=84",
         )
         if any(asset not in markup for asset in required_markup_assets):
             report["missing_fidelity_assets"].append(href)
