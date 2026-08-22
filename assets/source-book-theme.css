@@ -479,9 +479,55 @@
   text-align: left !important;
 }
 
+/* Printed page 5 continues Question 6 before Questions 7 and 8. Keep those
+   sections on one flat cream field, use the source's three-column number
+   arrangement, and restore the answer rules that were lost with form inputs. */
+#content:has([data-source-section='pg011_sec001']) > .adt-source-page-part {
+  width: min(calc(100% - clamp(1rem, 6.8cqw, 5rem)), 53.75rem) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  background: var(--book-exercise) !important;
+}
+
+#content:has([data-source-section='pg011_sec001']) > .adt-source-page-part + .adt-source-page-part {
+  margin-top: 0 !important;
+}
+
+#content:has([data-source-section='pg011_sec001']) > .adt-source-page-part:first-child {
+  padding-bottom: 0 !important;
+}
+
+#content:has([data-source-section='pg011_sec001']) > .adt-source-page-part:nth-child(2) {
+  padding-top: 1rem !important;
+}
+
+#content [data-source-section='pg011_sec001'] > section,
+#content [data-source-section='pg011_sec002'] > section {
+  max-width: 53.75rem !important;
+  background: transparent !important;
+}
+
+#content [data-source-section='pg011_sec002'] > section > div {
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+#content [data-source-section='pg011_sec002'] .book-answer-line {
+  display: inline-block !important;
+  width: 6.4em !important;
+  height: .9em !important;
+  margin: 0 .2em !important;
+  border-bottom: 1.5px solid #555 !important;
+  vertical-align: baseline !important;
+}
+
 @media (max-width: 640px) {
   #content [data-source-section='pg004_sec001'] p:has(> strong:first-child) {
     grid-template-columns: 1fr !important;
+  }
+
+  #content [data-source-section='pg011_sec002'] .book-answer-line {
+    width: 4.5em !important;
   }
 }
 
