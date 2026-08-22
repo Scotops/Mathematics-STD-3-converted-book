@@ -1,0 +1,274 @@
+:root {
+  --book-blue: #00aee9;
+  --book-ink: #2d2926;
+  --book-gold: #95852e;
+  --book-exercise: #f4f0e4;
+  --book-exercise-bar-top: #ffe1ce;
+  --book-exercise-bar-bottom: #f3b183;
+  --book-activity: #eef9fc;
+  --book-activity-bar: #d8f2f6;
+  --book-summary: #f6edf5;
+  --book-summary-border: #b76ca6;
+  --book-vocabulary: #f6edf4;
+  --book-vocabulary-bar: #d9c2dc;
+  --book-revision: #e8f6fd;
+  --book-revision-bar: #64c9e9;
+}
+
+/* The source book uses Sassoon Primary throughout.  Override legacy inline
+   Georgia/Comic Sans declarations while leaving mathematical glyph engines
+   and vertically aligned calculation columns untouched. */
+#content,
+#content :is(section, article, aside, div, p, span, h1, h2, h3, h4, h5, h6, li, td, th, label, strong, b, em, i):not(mjx-container):not(mjx-container *) {
+  font-family: 'Sassoon Primary', 'Comic Sans MS', sans-serif !important;
+}
+
+#content :is(pre, code, kbd, samp, .font-mono, .adt-pre-calculation),
+#content :is(pre, code, kbd, samp, .font-mono, .adt-pre-calculation) * {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+}
+
+#content :is(strong, b, h1, h2, h3, h4, h5, h6, .font-bold, .font-semibold, .font-extrabold) {
+  font-weight: 700 !important;
+}
+
+#content [data-source-heading='chapter'] {
+  color: var(--book-blue) !important;
+  font-style: italic !important;
+  font-weight: 700 !important;
+}
+
+#content [data-source-heading-wrap='chapter'] {
+  color: var(--book-ink) !important;
+  background: #d9f2fb !important;
+  border: 0 !important;
+  border-radius: .2rem !important;
+  box-shadow: none !important;
+  text-align: center !important;
+}
+
+/* Printed examples: white card, fine olive rule, and compact olive label. */
+#content [data-source-kind='example'] {
+  background: #fff !important;
+  border: 1.5px solid var(--book-gold) !important;
+  border-radius: .45rem !important;
+  box-shadow: none !important;
+}
+
+#content [data-source-heading='example'] {
+  display: inline-block !important;
+  width: auto !important;
+  color: #fff !important;
+  background: #817900 !important;
+  border-radius: .2rem !important;
+  box-shadow: none !important;
+  font-size: 1.05em !important;
+  font-style: normal !important;
+  line-height: 1.1 !important;
+  padding: .2rem .7rem !important;
+}
+
+#content [data-source-heading-wrap='example'] {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Printed exercises: warm cream field with the peach title strip. */
+#content [data-source-kind='exercise'] {
+  background: var(--book-exercise) !important;
+  border-color: transparent !important;
+  border-radius: .35rem !important;
+  box-shadow: none !important;
+}
+
+#content [data-source-heading='exercise'] {
+  display: block !important;
+  width: 100% !important;
+  color: var(--book-ink) !important;
+  background: linear-gradient(180deg, var(--book-exercise-bar-top), var(--book-exercise-bar-bottom)) !important;
+  border-radius: .3rem .3rem 0 0 !important;
+  box-shadow: none !important;
+  font-size: 1.18em !important;
+  font-style: normal !important;
+  line-height: 1.2 !important;
+  padding: .3rem .75rem !important;
+  text-align: left !important;
+}
+
+#content [data-source-heading-wrap='exercise'] {
+  width: 100% !important;
+  margin: 0 0 .75rem !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+#content [data-source-kind='exercise'] [class*='shadow'] {
+  box-shadow: none !important;
+}
+
+/* Activities use the source book's pale cyan instructional panel. */
+#content [data-source-kind='activity'] {
+  background: var(--book-activity) !important;
+  border: 0 !important;
+  border-radius: .2rem !important;
+  box-shadow: none !important;
+}
+
+#content [data-source-heading='activity'] {
+  color: #00a6c7 !important;
+  background: var(--book-activity-bar) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-style: italic !important;
+}
+
+#content [data-source-heading-wrap='activity'] {
+  background: var(--book-activity-bar) !important;
+  box-shadow: none !important;
+}
+
+/* End-of-chapter panels retain the printed lavender and cyan system. */
+#content [data-source-kind='summary'] {
+  background: var(--book-summary) !important;
+  border: 1.5px solid var(--book-summary-border) !important;
+  border-radius: .2rem !important;
+  box-shadow: none !important;
+}
+
+#content [data-source-heading='summary'] {
+  color: #a54898 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-style: italic !important;
+}
+
+#content [data-source-kind='vocabulary'] {
+  background: var(--book-vocabulary) !important;
+  border-color: #e2cfe0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+#content [data-source-heading='vocabulary'],
+#content [data-source-heading-wrap='vocabulary'] {
+  color: #9c438f !important;
+  background: var(--book-vocabulary-bar) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-style: italic !important;
+}
+
+#content [data-source-kind='revision'] {
+  background: var(--book-revision) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+#content [data-source-heading='revision'],
+#content [data-source-heading-wrap='revision'] {
+  color: #078fbd !important;
+  background: var(--book-revision-bar) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-style: italic !important;
+}
+
+/* Source tables use fine olive rules.  Existing place-value cell colours are
+   preserved; only the rule colour and weight are normalised. */
+#content table,
+#content table :is(th, td) {
+  border-color: var(--book-gold) !important;
+}
+
+/* Front matter: exact Sassoon typography, dotted leaders, colours and flow. */
+#content [data-source-section='pg003_sec001'] > section {
+  max-width: 48rem !important;
+  color: var(--book-ink) !important;
+  font-family: 'Sassoon Primary', sans-serif !important;
+  line-height: 1.25 !important;
+}
+
+#content [data-source-section='pg003_sec001'] h1 {
+  color: var(--book-blue) !important;
+  font-size: clamp(1.85rem, 3.2vw, 2.35rem) !important;
+  margin-bottom: 2.35rem !important;
+}
+
+#content [data-source-section='pg003_sec001'] h2 {
+  color: var(--book-blue) !important;
+  font-size: clamp(1.45rem, 2.6vw, 1.85rem) !important;
+  margin: 1.25rem 0 .25rem !important;
+  padding-top: 0 !important;
+}
+
+#content [data-source-section='pg003_sec001'] p {
+  align-items: baseline !important;
+  gap: .55rem !important;
+  margin: 0 0 .45rem !important;
+}
+
+#content [data-source-section='pg003_sec001'] p > span:nth-child(2) {
+  align-self: baseline !important;
+  height: .75em !important;
+  border: 0 !important;
+  background-image: radial-gradient(circle, currentColor 1.35px, transparent 1.5px) !important;
+  background-position: left bottom .16em !important;
+  background-repeat: repeat-x !important;
+  background-size: 7px 3px !important;
+}
+
+#content [data-source-section='pg003_sec001'] p:nth-child(-n+2) {
+  color: var(--book-blue) !important;
+  font-weight: 700 !important;
+  font-style: italic !important;
+}
+
+#content [data-source-section='pg004_sec001'] > section {
+  max-width: 49rem !important;
+  color: var(--book-ink) !important;
+  font-family: 'Sassoon Primary', sans-serif !important;
+  font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
+  line-height: 1.22 !important;
+  text-align: justify !important;
+}
+
+#content [data-source-section='pg004_sec001'] h1 {
+  color: var(--book-blue) !important;
+  margin-bottom: 1rem !important;
+}
+
+#content [data-source-section='pg004_sec001'] p:has(> strong:first-child) {
+  display: grid !important;
+  grid-template-columns: 9rem minmax(0, 1fr) !important;
+  column-gap: .75rem !important;
+  text-align: left !important;
+}
+
+#content [data-source-section='pg004_sec001'] img[src*='signature'] {
+  display: block !important;
+  width: 9rem !important;
+  height: auto !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+#content [data-source-section='pg004_sec001'] div:has(> img[src*='signature']) {
+  display: block !important;
+  width: 100% !important;
+  margin: 1rem 0 0 !important;
+  text-align: left !important;
+}
+
+#content [data-source-section='pg004_sec001'] div:has(> img[src*='signature']) + p {
+  margin-top: .25rem !important;
+  text-align: left !important;
+}
+
+@media (max-width: 640px) {
+  #content [data-source-section='pg004_sec001'] p:has(> strong:first-child) {
+    grid-template-columns: 1fr !important;
+  }
+}

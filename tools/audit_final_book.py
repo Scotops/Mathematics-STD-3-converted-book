@@ -50,6 +50,7 @@ def main() -> int:
         "full_page_render_elements": [],
         "watermark_strings": [],
         "missing_fidelity_assets": [],
+        "missing_shared_assets": [],
         "missing_text_entries": [],
         "unmapped_audio_ids": [],
         "missing_audio_files": [],
@@ -81,7 +82,15 @@ def main() -> int:
             )
 
         markup = page_path.read_text(encoding="utf-8")
-        if "assets/typography-consistency.css?v=6" not in markup or "assets/offline-preloader.js?v=82" not in markup:
+        required_markup_assets = (
+            "assets/fonts.css?v=2",
+            "assets/typography-consistency.css?v=6",
+            "assets/source-book-theme.css?v=2",
+            "assets/source-book-theme.js?v=2",
+            "assets/accessible-tts.js?v=26",
+            "assets/offline-preloader.js?v=82",
+        )
+        if any(asset not in markup for asset in required_markup_assets):
             report["missing_fidelity_assets"].append(href)
         if "adt-source-page-render" in markup or "adt-print-fidelity" in markup:
             report["full_page_render_elements"].append(href)
@@ -141,6 +150,15 @@ def main() -> int:
     report["missing_text_entries"] = sorted(
         item_id for item_id in narratable_ids if item_id not in texts
     )
+    required_shared_assets = (
+        ROOT / "assets" / "fonts" / "SassoonPrimary.ttf",
+        ROOT / "assets" / "fonts" / "SassoonPrimary-Bold.otf",
+        ROOT / "assets" / "source-book-theme.css",
+        ROOT / "assets" / "source-book-theme.js",
+    )
+    report["missing_shared_assets"] = [
+        str(path.relative_to(ROOT)) for path in required_shared_assets if not path.exists()
+    ]
     narrated_ids = {
         item_id
         for item_id in narratable_ids
@@ -209,6 +227,7 @@ def main() -> int:
         "full_page_render_elements",
         "watermark_strings",
         "missing_fidelity_assets",
+        "missing_shared_assets",
         "missing_text_entries",
         "unmapped_audio_ids",
         "missing_audio_files",
