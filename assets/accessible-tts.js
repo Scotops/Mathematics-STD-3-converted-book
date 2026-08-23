@@ -10,6 +10,7 @@
   const ENGLISH_LANG = 'en-US';
   const MAJOR_PAUSE_MS = 650;
   const STRUCTURAL_PAUSE_MS = 320;
+  const ONE_SECOND_PAUSE_MS = 1000;
   const synth = window.speechSynthesis;
   const Utterance = window.SpeechSynthesisUtterance;
   const canUseWebSpeech = Boolean(synth && typeof synth.speak === 'function' && typeof Utterance === 'function');
@@ -267,7 +268,9 @@
     };
     const boundary = () => {
       const previous = pieces[pieces.length - 1];
-      if (previous !== '[[adt_pause_short]]' && previous !== '[[adt_pause]]') {
+      if (previous !== '[[adt_pause_short]]'
+        && previous !== '[[adt_pause]]'
+        && previous !== '[[adt_pause_one_second]]') {
         pieces.push('[[adt_pause_short]]');
       }
     };
@@ -380,6 +383,10 @@
       const isCell = tag === 'TD' || tag === 'TH';
       if (blockTags.has(tag) || isRow) boundary();
       for (const child of element.childNodes) walk(child);
+      // A page can request a full one-second gap between adjacent printed
+      // items without changing their visible text. This prevents values in a
+      // grid from being merged into one incorrect number by the narrator.
+      if (element.dataset.ttsPauseAfter === '1000') pieces.push('[[adt_pause_one_second]]');
       if (isCell) pieces.push(', ');
       if (tag === 'BR' || blockTags.has(tag) || isRow) boundary();
     }
@@ -389,9 +396,9 @@
       .replace(/\s+([,.;:?!])/g, '$1')
       .replace(/(?:\.\s*){2,}/g, '. ')
       .replace(/(?:\s*\[\[adt_pause_short\]\]\s*){2,}/g, ' [[adt_pause_short]] ')
-      .replace(/\[\[adt_pause_short\]\]\s*(?=\[\[adt_pause\]\])/g, '')
-      .replace(/\[\[adt_pause\]\]\s*\[\[adt_pause_short\]\]/g, '[[adt_pause]]')
-      .replace(/^\s*\[\[adt_pause(?:_short)?\]\]\s*|\s*\[\[adt_pause(?:_short)?\]\]\s*$/g, '')
+      .replace(/\[\[adt_pause_short\]\]\s*(?=\[\[adt_pause(?:_one_second)?\]\])/g, '')
+      .replace(/(\[\[adt_pause(?:_one_second)?\]\])\s*\[\[adt_pause_short\]\]/g, '$1')
+      .replace(/^\s*\[\[adt_pause(?:_short|_one_second)?\]\]\s*|\s*\[\[adt_pause(?:_short|_one_second)?\]\]\s*$/g, '')
       .trim();
   }
 
@@ -503,7 +510,7 @@
 
   function splitIntoChunks(text, maxLength = MAX_CHUNK_LENGTH) {
     const chunks = [];
-    const sections = String(text || '').split(/(\[\[adt_pause(?:_short)?\]\])/g);
+    const sections = String(text || '').split(/(\[\[adt_pause(?:_short|_one_second)?\]\])/g);
     sections.forEach((section) => {
       if (section === '[[adt_pause]]') {
         chunks.push('__adt_speech_pause__');
@@ -511,6 +518,10 @@
       }
       if (section === '[[adt_pause_short]]') {
         chunks.push('__adt_speech_pause_short__');
+        return;
+      }
+      if (section === '[[adt_pause_one_second]]') {
+        chunks.push('__adt_speech_pause_one_second__');
         return;
       }
       const sentences = section.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [section];
@@ -540,10 +551,14 @@
         return;
       }
       splitIntoChunks(part).forEach((chunk) => {
-        if (chunk === '__adt_speech_pause__' || chunk === '__adt_speech_pause_short__') {
+        if (chunk === '__adt_speech_pause__'
+          || chunk === '__adt_speech_pause_short__'
+          || chunk === '__adt_speech_pause_one_second__') {
           chunks.push({
             pause: true,
-            duration: chunk === '__adt_speech_pause_short__' ? STRUCTURAL_PAUSE_MS : MAJOR_PAUSE_MS,
+            duration: chunk === '__adt_speech_pause_short__'
+              ? STRUCTURAL_PAUSE_MS
+              : (chunk === '__adt_speech_pause_one_second__' ? ONE_SECOND_PAUSE_MS : MAJOR_PAUSE_MS),
             text: '',
             lang: language
           });

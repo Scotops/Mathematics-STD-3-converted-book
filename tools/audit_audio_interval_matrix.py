@@ -49,18 +49,18 @@ def main() -> None:
     for filename in AFFECTED_PAGES:
         source = (ROOT / filename).read_text(encoding="utf-8")
         require(
-            "assets/accessible-tts.js?v=30" in source,
-            f"{filename}: TTS v30 missing",
+            "assets/accessible-tts.js?v=31" in source,
+            f"{filename}: TTS v31 missing",
             failures,
         )
 
     for relative in ("content/pages.json", "content/toc.json"):
         manifest = (ROOT / relative).read_text(encoding="utf-8")
-        require("?reader=23" not in manifest, f"{relative}: stale reader 23 link", failures)
-        require("?reader=24" in manifest, f"{relative}: reader 24 links missing", failures)
+        require("?reader=24" not in manifest, f"{relative}: stale reader 24 link", failures)
+        require("?reader=25" in manifest, f"{relative}: reader 25 links missing", failures)
         require(
-            "assets/offline-preloader.js?v=96" in source,
-            f"{filename}: offline preloader v96 missing",
+            "assets/offline-preloader.js?v=97" in source,
+            f"{filename}: offline preloader v97 missing",
             failures,
         )
 
@@ -96,6 +96,18 @@ def main() -> None:
         failures,
     )
 
+    page23 = (ROOT / "pg023_sec001.html").read_text(encoding="utf-8")
+    page23_pause_ids = [
+        "pg023_n0005", "pg023_n0007", "pg023_n0009", "pg023_n0011",
+        "pg023_n0013", "pg023_n0015", "pg023_n0017", "pg023_n0019",
+    ]
+    require(
+        all(f'data-id="{text_id}" data-tts-pause-after="1000"' in page23 for text_id in page23_pause_ids),
+        "page 23 expanded-form items do not all have one-second narration gaps",
+        failures,
+    )
+    require("const ONE_SECOND_PAUSE_MS = 1000;" in tts, "one-second pause duration missing", failures)
+
     page10 = (ROOT / "pg010_sec001.html").read_text(encoding="utf-8")
     page10_blanks = re.findall(
         r'<label for="pg010_sec002-item-\d+" class="sr-only">'
@@ -118,7 +130,7 @@ def main() -> None:
     )
 
     config = json.loads((ROOT / "assets" / "config.json").read_text(encoding="utf-8"))
-    require(config.get("bundleVersion") == "101", "bundle version 101 missing", failures)
+    require(config.get("bundleVersion") == "102", "bundle version 102 missing", failures)
 
     print(
         json.dumps(
