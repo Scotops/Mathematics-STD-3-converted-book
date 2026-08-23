@@ -829,13 +829,13 @@
   // chunks therefore use narration generated with Microsoft Rehema (sw-TZ),
   // making their pronunciation consistent on every learner's device.
   const EMBEDDED_SWAHILI_AUDIO = new Map([
-    ['Bi Ivi P Bimbiga, Daktari Kenethi R Nzowa, na Bwana Jonathani H Paskali.', './content/i18n/en/audio/pg004_swahili_names_01.mp3'],
-    ['Daktari Mikaeli H Mkwizu, Daktari Furaha M Chuma, Daktari Augustino I Msigwa, Daktari Ahmada O Ali, Daktari Mashaka J Mkandawile, Bwana Luwilo D Sanga, Bwana Elikana E Manyilizu,', './content/i18n/en/audio/pg004_swahili_names_02.mp3'],
-    ['na Bi Skolastika A Kulanga.', './content/i18n/en/audio/pg004_swahili_names_03.mp3'],
-    ['Bi Pamela S Makusi.', './content/i18n/en/audio/pg004_swahili_names_04.mp3'],
-    ['Bwana Fikiri A Msimbe, Bi Viktoria R Mwinyi, Bwana Godwini J Chipenya, na Bwana Gwakisa U Mwandoloma.', './content/i18n/en/audio/pg004_swahili_names_05.mp3'],
-    ['Bi Ivi P Bimbiga.', './content/i18n/en/audio/pg004_swahili_names_06.mp3'],
-    ['Daktari Anethi A Komba.', './content/i18n/en/audio/pg004_swahili_names_07.mp3']
+    ['Miss Ivi P Bimbiga, Doctor Kenethi R Nzowa, and Mister Jonathani H Paskali.', './content/i18n/en/audio/pg004_swahili_names_01.mp3?v=2'],
+    ['Doctor Mikaeli H Mkwizu, Doctor Furaha M Chuma, Doctor Augustino I Msigwa, Doctor Ahmada O Ali, Doctor Mashaka J Mkandawile, Mister Luwilo D Sanga, Mister Elikana E Manyilizu, and', './content/i18n/en/audio/pg004_swahili_names_02.mp3?v=2'],
+    ['Miss Skolastika A Kulanga.', './content/i18n/en/audio/pg004_swahili_names_03.mp3?v=2'],
+    ['Miss Pamela S Makusi.', './content/i18n/en/audio/pg004_swahili_names_04.mp3?v=2'],
+    ['Mister Fikiri A Msimbe, Miss Viktoria R Mwinyi, Mister Godwini J Chipenya, and Mister Gwakisa U Mwandoloma.', './content/i18n/en/audio/pg004_swahili_names_05.mp3?v=2'],
+    ['Miss Ivi P Bimbiga.', './content/i18n/en/audio/pg004_swahili_names_06.mp3?v=2'],
+    ['Doctor Anethi A Komba.', './content/i18n/en/audio/pg004_swahili_names_07.mp3?v=2']
   ]);
 
   function embeddedAudioForChunk(chunk) {

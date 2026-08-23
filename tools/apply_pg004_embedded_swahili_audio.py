@@ -30,19 +30,19 @@ def main() -> None:
     html_files = sorted(ROOT.glob("*.html"))
     for path in html_files:
         source = path.read_text(encoding="utf-8")
-        updated = source.replace("assets/accessible-tts.js?v=35", "assets/accessible-tts.js?v=36")
-        updated = updated.replace("assets/offline-preloader.js?v=101", "assets/offline-preloader.js?v=102")
+        updated = source.replace("assets/accessible-tts.js?v=36", "assets/accessible-tts.js?v=37")
+        updated = updated.replace("assets/offline-preloader.js?v=102", "assets/offline-preloader.js?v=103")
         if updated != source:
             path.write_text(updated, encoding="utf-8")
 
     for relative in ("content/pages.json", "content/toc.json"):
-        replace_required(ROOT / relative, "?reader=29", "?reader=30")
+        replace_required(ROOT / relative, "?reader=30", "?reader=31")
 
     config_path = ROOT / "assets" / "config.json"
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    if config.get("bundleVersion") not in {"106", "107"}:
-        raise RuntimeError("Expected bundleVersion 106 or 107")
-    config["bundleVersion"] = "107"
+    if config.get("bundleVersion") not in {"107", "108"}:
+        raise RuntimeError("Expected bundleVersion 107 or 108")
+    config["bundleVersion"] = "108"
     config_path.write_text(json.dumps(config, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     manifest_path = ROOT / "imsmanifest.xml"
@@ -58,7 +58,7 @@ def main() -> None:
         manifest_path.write_text(manifest, encoding="utf-8")
 
     rebuild_offline_preloader()
-    print(f"Updated {len(html_files)} HTML files; reader=30; bundleVersion=107")
+    print(f"Updated {len(html_files)} HTML files; reader=31; bundleVersion=108")
 
 
 if __name__ == "__main__":

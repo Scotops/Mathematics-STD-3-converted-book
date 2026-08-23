@@ -13,16 +13,16 @@ OUTPUT_DIR = ROOT / "content" / "i18n" / "en" / "audio"
 VOICE = "sw-TZ-RehemaNeural"
 
 NARRATION = (
-    "Bi Ivi P Bimbiga, Daktari Kenethi R Nzowa, na Bwana Jonathani H Paskali.",
-    "Daktari Mikaeli H Mkwizu, Daktari Furaha M Chuma, Daktari Augustino I Msigwa, "
-    "Daktari Ahmada O Ali, Daktari Mashaka J Mkandawile, Bwana Luwilo D Sanga, "
-    "Bwana Elikana E Manyilizu,",
-    "na Bi Skolastika A Kulanga.",
-    "Bi Pamela S Makusi.",
-    "Bwana Fikiri A Msimbe, Bi Viktoria R Mwinyi, Bwana Godwini J Chipenya, "
-    "na Bwana Gwakisa U Mwandoloma.",
-    "Bi Ivi P Bimbiga.",
-    "Daktari Anethi A Komba.",
+    "Miss Ivi P Bimbiga, Doctor Kenethi R Nzowa, and Mister Jonathani H Paskali.",
+    "Doctor Mikaeli H Mkwizu, Doctor Furaha M Chuma, Doctor Augustino I Msigwa, "
+    "Doctor Ahmada O Ali, Doctor Mashaka J Mkandawile, Mister Luwilo D Sanga, "
+    "Mister Elikana E Manyilizu, and",
+    "Miss Skolastika A Kulanga.",
+    "Miss Pamela S Makusi.",
+    "Mister Fikiri A Msimbe, Miss Viktoria R Mwinyi, Mister Godwini J Chipenya, "
+    "and Mister Gwakisa U Mwandoloma.",
+    "Miss Ivi P Bimbiga.",
+    "Doctor Anethi A Komba.",
 )
 
 

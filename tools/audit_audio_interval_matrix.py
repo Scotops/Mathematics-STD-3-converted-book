@@ -64,28 +64,33 @@ def main() -> None:
     for filename in AFFECTED_PAGES:
         source = (ROOT / filename).read_text(encoding="utf-8")
         require(
-            "assets/accessible-tts.js?v=36" in source,
-            f"{filename}: TTS v36 missing",
+            "assets/accessible-tts.js?v=37" in source,
+            f"{filename}: TTS v37 missing",
             failures,
         )
 
     for relative in ("content/pages.json", "content/toc.json"):
         manifest = (ROOT / relative).read_text(encoding="utf-8")
-        require("?reader=29" not in manifest, f"{relative}: stale reader 29 link", failures)
-        require("?reader=30" in manifest, f"{relative}: reader 30 links missing", failures)
+        require("?reader=30" not in manifest, f"{relative}: stale reader 30 link", failures)
+        require("?reader=31" in manifest, f"{relative}: reader 31 links missing", failures)
         require(
-            "assets/offline-preloader.js?v=102" in source,
-            f"{filename}: offline preloader v102 missing",
+            "assets/offline-preloader.js?v=103" in source,
+            f"{filename}: offline preloader v103 missing",
             failures,
         )
 
     page4 = (ROOT / "pg004_sec001.html").read_text(encoding="utf-8")
     require("University of Dar es Salaam, U D S M" in page4, "page 4 institution pronunciation missing", failures)
     require(page4.count('lang="sw-TZ" data-tts-lang="sw-TZ" data-tts-text=') >= 6, "page 4 personal-name pronunciations missing", failures)
-    require("Daktari Mikaeli H Mkwizu" in page4, "page 4 editor pronunciations missing", failures)
-    require("Bwana Fikiri A Msimbe" in page4, "page 4 illustrator pronunciations missing", failures)
+    require("Doctor Mikaeli H Mkwizu" in page4, "page 4 English editor titles missing", failures)
+    require("Mister Fikiri A Msimbe" in page4, "page 4 English illustrator titles missing", failures)
+    require(not any(word in page4 for word in ("Daktari ", "Bwana ", "Bi ")), "page 4 still translates English titles into Swahili", failures)
     require("languageCode === 'sw' && /rehema|daudi|rafiki|swahili/.test(name)" in tts, "Swahili voice preference missing", failures)
     require("const EMBEDDED_SWAHILI_AUDIO = new Map([" in tts, "embedded Swahili narration map missing", failures)
+    require("Doctor Kenethi R Nzowa" in tts, "embedded narration does not retain the English Doctor title", failures)
+    require("Mister Jonathani H Paskali" in tts, "embedded narration does not retain the English Mister title", failures)
+    require("Miss Ivi P Bimbiga" in tts, "embedded narration does not retain the English Miss title", failures)
+    require(tts.count(".mp3?v=2") == 7, "revised acknowledgement audio cache keys are incomplete", failures)
     require("this.dataset.adtAccessibleTts !== 'true'" in tts, "embedded narration suppression exception missing", failures)
     require("stopActiveAudio();" in tts, "embedded narration controls missing", failures)
     for index in range(1, 8):
@@ -153,7 +158,7 @@ def main() -> None:
     )
 
     config = json.loads((ROOT / "assets" / "config.json").read_text(encoding="utf-8"))
-    require(config.get("bundleVersion") == "107", "bundle version 107 missing", failures)
+    require(config.get("bundleVersion") == "108", "bundle version 108 missing", failures)
 
     print(
         json.dumps(
