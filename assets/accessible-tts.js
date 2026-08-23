@@ -8,7 +8,7 @@
 
   const MAX_CHUNK_LENGTH = 180;
   const ENGLISH_LANG = 'en-US';
-  const MAJOR_PAUSE_MS = 650;
+  const MAJOR_PAUSE_MS = 1000;
   const STRUCTURAL_PAUSE_MS = 320;
   const ONE_SECOND_PAUSE_MS = 1000;
   const synth = window.speechSynthesis;
@@ -183,6 +183,9 @@
 
   const ignoredTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'SVG', 'PATH', 'IFRAME']);
   const blockTags = new Set(['DIV', 'P', 'LI', 'DT', 'DD', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'FIGCAPTION', 'CAPTION', 'ARTICLE', 'SECTION']);
+  const numericItemMarker = /^(?:\([a-z]\)|[a-z][.),]|\d+[.)])\s*/i;
+  const allowedNumericWords = /\b(?:shillings?|shs?|cents?|cts?|a\.?m\.?|p\.?m\.?|blank|over|plus|minus|equals|times|divided\s+by)\b/gi;
+  const numericSymbolsOnly = /^[\d\s,.:;+×✕÷∕⟌=<>≤≥/()_\-−–—]+$/;
 
   function isVisible(element) {
     if (!(element instanceof Element)) return true;
@@ -248,6 +251,16 @@
     return [...node.childNodes].map(fractionAwareText).filter(Boolean).join(' ');
   }
 
+  function isNumericNarrationUnit(value) {
+    const text = String(value || '').replace(/\s+/g, ' ').trim();
+    if (!/\d/.test(text)) return false;
+    const remaining = text
+      .replace(numericItemMarker, '')
+      .replace(allowedNumericWords, '')
+      .trim();
+    return Boolean(remaining) && numericSymbolsOnly.test(remaining);
+  }
+
   function extractPageText() {
     const root = document.querySelector('#content') || document.body;
     const pieces = [];
@@ -272,6 +285,11 @@
         && previous !== '[[adt_pause]]'
         && previous !== '[[adt_pause_one_second]]') {
         pieces.push('[[adt_pause_short]]');
+      }
+    };
+    const oneSecondBoundary = () => {
+      if (pieces[pieces.length - 1] !== '[[adt_pause_one_second]]') {
+        pieces.push('[[adt_pause_one_second]]');
       }
     };
 
@@ -310,7 +328,11 @@
       if (element.dataset.ttsText) {
         boundary();
         add(element.dataset.ttsText);
-        boundary();
+        if (element.dataset.ttsPauseAfter === '1000' || isNumericNarrationUnit(element.dataset.ttsText)) {
+          oneSecondBoundary();
+        } else {
+          boundary();
+        }
         return;
       }
 
@@ -374,6 +396,7 @@
             .map((child) => String(child.textContent || '').replace(/\s+/g, ''))
             .join('');
           add(underlined ? `${compactNumber}, underlined digit ${underlined}.` : compactNumber);
+          oneSecondBoundary();
           return;
         }
       }
@@ -386,9 +409,20 @@
       // A page can request a full one-second gap between adjacent printed
       // items without changing their visible text. This prevents values in a
       // grid from being merged into one incorrect number by the narrator.
-      if (element.dataset.ttsPauseAfter === '1000') pieces.push('[[adt_pause_one_second]]');
+      const numericUnit = !element.closest('tr')
+        && isNumericNarrationUnit(String(element.textContent || ''))
+        && (element.hasAttribute('data-id') || blockTags.has(tag));
+      if (element.dataset.ttsPauseAfter === '1000' || numericUnit) oneSecondBoundary();
       if (isCell) pieces.push(', ');
-      if (tag === 'BR' || blockTags.has(tag) || isRow) boundary();
+      if (isRow && /\d/.test(String(element.textContent || ''))) {
+        oneSecondBoundary();
+      } else if (tag === 'BR') {
+        const lastSpoken = [...pieces].reverse().find((piece) => piece.trim() && !/^\[\[adt_pause/.test(piece));
+        if (isNumericNarrationUnit(lastSpoken)) oneSecondBoundary();
+        else boundary();
+      } else if (blockTags.has(tag) || isRow) {
+        boundary();
+      }
     }
 
     walk(root);
@@ -1012,6 +1046,7 @@
     extractPageText,
     expandNumbersForSpeech,
     integerToWords,
+    isNumericNarrationUnit,
     mathText,
     fractionAwareText,
     sanitizeForSpeech,

@@ -36,7 +36,22 @@ def require(condition: bool, message: str, failures: list[str]) -> None:
 def main() -> None:
     failures: list[str] = []
     tts = (ROOT / "assets" / "accessible-tts.js").read_text(encoding="utf-8")
+    require("const MAJOR_PAUSE_MS = 1000;" in tts, "major question pause is not one second", failures)
     require("const STRUCTURAL_PAUSE_MS = 320;" in tts, "structural pause duration missing", failures)
+    require("const ONE_SECOND_PAUSE_MS = 1000;" in tts, "one-second pause duration missing", failures)
+    require("function isNumericNarrationUnit(value)" in tts, "numeric narration detector missing", failures)
+    require("    isNumericNarrationUnit," in tts, "numeric narration diagnostics missing", failures)
+    require("const oneSecondBoundary = () =>" in tts, "one-second boundary helper missing", failures)
+    require(
+        "isNumericNarrationUnit(String(element.textContent || ''))" in tts,
+        "standalone numeric units do not receive global pauses",
+        failures,
+    )
+    require(
+        "isRow && /\\d/.test(String(element.textContent || ''))" in tts,
+        "numeric table rows do not receive global pauses",
+        failures,
+    )
     require("'DIV', 'P', 'LI'" in tts, "div-based number cells are not structural blocks", failures)
     require("[[adt_pause_short]]" in tts, "short structural pause token missing", failures)
     require("nextChunk.duration || MAJOR_PAUSE_MS" in tts, "pause duration is not used in playback", failures)
@@ -49,18 +64,18 @@ def main() -> None:
     for filename in AFFECTED_PAGES:
         source = (ROOT / filename).read_text(encoding="utf-8")
         require(
-            "assets/accessible-tts.js?v=31" in source,
-            f"{filename}: TTS v31 missing",
+            "assets/accessible-tts.js?v=34" in source,
+            f"{filename}: TTS v34 missing",
             failures,
         )
 
     for relative in ("content/pages.json", "content/toc.json"):
         manifest = (ROOT / relative).read_text(encoding="utf-8")
-        require("?reader=24" not in manifest, f"{relative}: stale reader 24 link", failures)
-        require("?reader=25" in manifest, f"{relative}: reader 25 links missing", failures)
+        require("?reader=27" not in manifest, f"{relative}: stale reader 27 link", failures)
+        require("?reader=28" in manifest, f"{relative}: reader 28 links missing", failures)
         require(
-            "assets/offline-preloader.js?v=97" in source,
-            f"{filename}: offline preloader v97 missing",
+            "assets/offline-preloader.js?v=100" in source,
+            f"{filename}: offline preloader v100 missing",
             failures,
         )
 
@@ -106,7 +121,6 @@ def main() -> None:
         "page 23 expanded-form items do not all have one-second narration gaps",
         failures,
     )
-    require("const ONE_SECOND_PAUSE_MS = 1000;" in tts, "one-second pause duration missing", failures)
 
     page10 = (ROOT / "pg010_sec001.html").read_text(encoding="utf-8")
     page10_blanks = re.findall(
@@ -130,7 +144,7 @@ def main() -> None:
     )
 
     config = json.loads((ROOT / "assets" / "config.json").read_text(encoding="utf-8"))
-    require(config.get("bundleVersion") == "102", "bundle version 102 missing", failures)
+    require(config.get("bundleVersion") == "105", "bundle version 105 missing", failures)
 
     print(
         json.dumps(
