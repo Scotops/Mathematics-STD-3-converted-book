@@ -244,9 +244,10 @@ def rebuild_offline_preloader() -> None:
         else:
             inline[resource_path] = disk_path.read_text(encoding="utf-8")
     compact = json.dumps(inline, ensure_ascii=False, separators=(",", ":"))
+    replacement = f"var INLINE = {compact};\n  var BASE_DIR"
     updated, count = re.subn(
         r"var INLINE = \{.*?\};\s*var BASE_DIR",
-        f"var INLINE = {compact};\n  var BASE_DIR",
+        lambda _match: replacement,
         source,
         count=1,
         flags=re.DOTALL,

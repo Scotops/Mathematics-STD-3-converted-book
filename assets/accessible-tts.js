@@ -250,7 +250,15 @@
     const pieces = [];
     const add = (value) => {
       const text = String(value || '').replace(/\s+/g, ' ').trim();
-      if (text) pieces.push(text);
+      if (!text) return;
+      // Printed object labels often repeat an immediately adjacent image alt
+      // verbatim (for example, "Egg" beside an egg picture). Narrate that
+      // label once while retaining genuinely descriptive image alternatives.
+      const comparable = text.toLocaleLowerCase().replace(/[\s.,:;!?]+/g, '');
+      const previous = [...pieces].reverse().find((piece) => piece.trim() && piece !== '. ' && piece !== ', ');
+      const previousComparable = String(previous || '').toLocaleLowerCase().replace(/[\s.,:;!?]+/g, '');
+      if (comparable && comparable === previousComparable) return;
+      pieces.push(text);
     };
     const boundary = () => pieces.push('. ');
 
@@ -304,6 +312,16 @@
       // is handled by the playback queue and is never sent to the voice.
       const visibleText = String(element.textContent || '').trim();
       if (element.tagName === 'SPAN' && /^\d+\.$/.test(visibleText)) {
+        add(`${numberedItemKind(element)} ${visibleText} [[adt_pause]]`);
+        return;
+      }
+
+      // Some converted exercises keep the item number and its equation in a
+      // single span. End each such item with a pause so questions are read one
+      // by one instead of as one continuous string.
+      if (element.tagName === 'SPAN' && element.hasAttribute('data-id')
+        && /^\d+\.\s+\S/.test(visibleText)
+        && !element.querySelector('input, textarea, select, img, math')) {
         add(`${numberedItemKind(element)} ${visibleText} [[adt_pause]]`);
         return;
       }
@@ -407,6 +425,13 @@
 
   function sanitizeForSpeech(text) {
     const sanitized = String(text || '')
+      // Time abbreviations must be spoken as letters, never as "p dot m",
+      // "piem", or the ordinary verb "am". Dotted forms are unambiguous;
+      // undotted lower-case "am" is converted only when it follows a time.
+      .replace(/\b([ap])\s*\.\s*m\.?/gi, (_, letter) => ` ${letter.toUpperCase()} M `)
+      .replace(/\bpm\b/gi, ' P M ')
+      .replace(/\bAM\b/g, ' A M ')
+      .replace(/(\b\d{1,2}(?::\d{2})?\s*)am\b/gi, '$1 A M ')
       // Identifiers and contact details use punctuation as separators, not as
       // mathematical operators. Expand them before the generic maths rules.
       .replace(/\bISBN\s*:\s*([0-9-]+)/gi, (_, value) => {
