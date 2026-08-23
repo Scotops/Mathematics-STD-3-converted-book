@@ -34,6 +34,7 @@
     : SPEECH_RATES.normal;
   let speechVolume = 1;
   let activeUtterance = null;
+  let activeAudio = null;
   let playbackGeneration = 0;
   let currentChunkIndex = -1;
   let rateRestartTimer = null;
@@ -157,7 +158,7 @@
   if (nativeMediaPlay) {
     window.HTMLMediaElement.prototype.play = function (...args) {
       if (this instanceof HTMLAudioElement) trackedAudio.add(this);
-      if (suppressBundledAudio && this instanceof HTMLAudioElement) {
+      if (suppressBundledAudio && this instanceof HTMLAudioElement && this.dataset.adtAccessibleTts !== 'true') {
         this.pause();
         this.currentTime = 0;
         return Promise.resolve();
@@ -823,6 +824,34 @@
     return pool.sort((a, b) => score(b) - score(a))[0] || null;
   }
 
+  // Windows installations do not always include a Swahili system voice and
+  // can silently read `sw-TZ` text with an English voice. These acknowledgement
+  // chunks therefore use narration generated with Microsoft Rehema (sw-TZ),
+  // making their pronunciation consistent on every learner's device.
+  const EMBEDDED_SWAHILI_AUDIO = new Map([
+    ['Bi Ivi P Bimbiga, Daktari Kenethi R Nzowa, na Bwana Jonathani H Paskali.', './content/i18n/en/audio/pg004_swahili_names_01.mp3'],
+    ['Daktari Mikaeli H Mkwizu, Daktari Furaha M Chuma, Daktari Augustino I Msigwa, Daktari Ahmada O Ali, Daktari Mashaka J Mkandawile, Bwana Luwilo D Sanga, Bwana Elikana E Manyilizu,', './content/i18n/en/audio/pg004_swahili_names_02.mp3'],
+    ['na Bi Skolastika A Kulanga.', './content/i18n/en/audio/pg004_swahili_names_03.mp3'],
+    ['Bi Pamela S Makusi.', './content/i18n/en/audio/pg004_swahili_names_04.mp3'],
+    ['Bwana Fikiri A Msimbe, Bi Viktoria R Mwinyi, Bwana Godwini J Chipenya, na Bwana Gwakisa U Mwandoloma.', './content/i18n/en/audio/pg004_swahili_names_05.mp3'],
+    ['Bi Ivi P Bimbiga.', './content/i18n/en/audio/pg004_swahili_names_06.mp3'],
+    ['Daktari Anethi A Komba.', './content/i18n/en/audio/pg004_swahili_names_07.mp3']
+  ]);
+
+  function embeddedAudioForChunk(chunk) {
+    if (!chunk || !/^sw(?:-|$)/i.test(chunk.lang || '')) return '';
+    return EMBEDDED_SWAHILI_AUDIO.get(chunk.text) || '';
+  }
+
+  function stopActiveAudio() {
+    if (!activeAudio) return;
+    activeAudio.onended = null;
+    activeAudio.onerror = null;
+    activeAudio.pause();
+    try { activeAudio.currentTime = 0; } catch {}
+    activeAudio = null;
+  }
+
   function finish() {
     playbackGeneration += 1;
     playing = false;
@@ -831,6 +860,7 @@
     queueIndex = 0;
     currentChunkIndex = -1;
     activeUtterance = null;
+    stopActiveAudio();
     paused = false;
     wordHighlightMap = [];
     clearWordHighlight();
@@ -859,6 +889,34 @@
       window.setTimeout(() => playNext(generation), nextChunk.duration || MAJOR_PAUSE_MS);
       return;
     }
+    const embeddedSource = embeddedAudioForChunk(nextChunk);
+    if (embeddedSource) {
+      const audio = new Audio(embeddedSource);
+      audio.dataset.adtAccessibleTts = 'true';
+      activeAudio = audio;
+      audio.playbackRate = speechRate;
+      audio.volume = speechVolume;
+      if (player) player.dataset.utteranceRate = String(audio.playbackRate);
+      let fallbackStarted = false;
+      const fallbackToWebSpeech = () => {
+        if (fallbackStarted || generation !== playbackGeneration || cancelled) return;
+        fallbackStarted = true;
+        activeAudio = null;
+        speakChunk(nextChunk, generation);
+      };
+      audio.onplay = () => showWordHighlight(nextChunk.wordOffset);
+      audio.onended = () => {
+        activeAudio = null;
+        if (generation === playbackGeneration) window.setTimeout(() => playNext(generation), 55);
+      };
+      audio.onerror = fallbackToWebSpeech;
+      audio.play().catch(fallbackToWebSpeech);
+      return;
+    }
+    speakChunk(nextChunk, generation);
+  }
+
+  function speakChunk(nextChunk, generation) {
     const utterance = new Utterance(nextChunk.text);
     activeUtterance = utterance;
     const requestedLanguage = nextChunk.lang || ENGLISH_LANG;
@@ -937,6 +995,7 @@
     cancelled = true;
     playbackGeneration += 1;
     if (canUseWebSpeech) synth.cancel();
+    stopActiveAudio();
     suppressBundledAudio = canUseWebSpeech;
     finish();
   }
@@ -953,6 +1012,7 @@
         : Math.max(0, queueIndex - 1);
       playbackGeneration += 1;
       synth.cancel();
+      stopActiveAudio();
       stopBundledAudio();
       activeUtterance = null;
       queueIndex = resumeIndex;
@@ -962,6 +1022,14 @@
       paused = false;
       cancelled = false;
       const generation = playbackGeneration;
+      // Resume embedded narration inside the learner's click gesture. Waiting
+      // here can make Chromium's autoplay policy reject the recording and
+      // fall back to a system voice with the wrong accent.
+      if (embeddedAudioForChunk(queue[queueIndex])) {
+        playNext(generation);
+        updatePlayer();
+        return;
+      }
       // Allow Chromium's asynchronous cancellation to settle before
       // restarting the preserved spoken part.
       window.setTimeout(() => {
@@ -976,12 +1044,15 @@
     if (!queue.length) return;
     const target = Math.max(0, Math.min(queue.length - 1, currentChunkIndex + delta));
     synth.cancel();
+    stopActiveAudio();
+    stopBundledAudio();
     playbackGeneration += 1;
     cancelled = false;
     paused = false;
     queueIndex = target;
     const generation = playbackGeneration;
-    window.setTimeout(() => playNext(generation), 30);
+    if (embeddedAudioForChunk(queue[target])) playNext(generation);
+    else window.setTimeout(() => playNext(generation), 30);
     updatePlayer();
   }
 
@@ -995,6 +1066,14 @@
     paused = false;
     activeUtterance = null;
     synth.cancel();
+    stopActiveAudio();
+    stopBundledAudio();
+    if (embeddedAudioForChunk(queue[restartIndex])) {
+      queueIndex = restartIndex;
+      playNext(generation);
+      updatePlayer();
+      return;
+    }
     // Chromium cancels Web Speech asynchronously. Starting the replacement
     // utterance too soon can make it keep the old rate or silently discard it.
     // Give cancellation time to settle, then restart the same spoken part.
@@ -1058,6 +1137,7 @@
     spokenTokenParts,
     splitIntoChunks,
     splitIntoLanguageChunks,
+    embeddedAudioForChunk,
     setSpeechRate,
     start,
     stop,
@@ -1065,7 +1145,9 @@
     toggle: () => (playing ? stop() : start()),
     get speechRate() { return speechRate; },
     get isPlaying() { return playing; },
-    get isPaused() { return paused; }
+    get isPaused() { return paused; },
+    get activeAudioSource() { return activeAudio?.getAttribute('src') || ''; },
+    get currentChunk() { return currentChunkIndex >= 0 ? queue[currentChunkIndex] || null : null; }
   });
 
   if (canUseWebSpeech && typeof synth.addEventListener === 'function') {

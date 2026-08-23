@@ -64,18 +64,18 @@ def main() -> None:
     for filename in AFFECTED_PAGES:
         source = (ROOT / filename).read_text(encoding="utf-8")
         require(
-            "assets/accessible-tts.js?v=35" in source,
-            f"{filename}: TTS v35 missing",
+            "assets/accessible-tts.js?v=36" in source,
+            f"{filename}: TTS v36 missing",
             failures,
         )
 
     for relative in ("content/pages.json", "content/toc.json"):
         manifest = (ROOT / relative).read_text(encoding="utf-8")
-        require("?reader=28" not in manifest, f"{relative}: stale reader 28 link", failures)
-        require("?reader=29" in manifest, f"{relative}: reader 29 links missing", failures)
+        require("?reader=29" not in manifest, f"{relative}: stale reader 29 link", failures)
+        require("?reader=30" in manifest, f"{relative}: reader 30 links missing", failures)
         require(
-            "assets/offline-preloader.js?v=101" in source,
-            f"{filename}: offline preloader v101 missing",
+            "assets/offline-preloader.js?v=102" in source,
+            f"{filename}: offline preloader v102 missing",
             failures,
         )
 
@@ -85,6 +85,12 @@ def main() -> None:
     require("Daktari Mikaeli H Mkwizu" in page4, "page 4 editor pronunciations missing", failures)
     require("Bwana Fikiri A Msimbe" in page4, "page 4 illustrator pronunciations missing", failures)
     require("languageCode === 'sw' && /rehema|daudi|rafiki|swahili/.test(name)" in tts, "Swahili voice preference missing", failures)
+    require("const EMBEDDED_SWAHILI_AUDIO = new Map([" in tts, "embedded Swahili narration map missing", failures)
+    require("this.dataset.adtAccessibleTts !== 'true'" in tts, "embedded narration suppression exception missing", failures)
+    require("stopActiveAudio();" in tts, "embedded narration controls missing", failures)
+    for index in range(1, 8):
+        audio = ROOT / "content" / "i18n" / "en" / "audio" / f"pg004_swahili_names_{index:02d}.mp3"
+        require(audio.is_file() and audio.stat().st_size > 10_000, f"Swahili narration {index:02d} missing", failures)
 
     page16 = (ROOT / "pg016_sec001.html").read_text(encoding="utf-8")
     require("representing five thousand and eighty" in page16, "page 16 value 5080 narration missing", failures)
@@ -147,7 +153,7 @@ def main() -> None:
     )
 
     config = json.loads((ROOT / "assets" / "config.json").read_text(encoding="utf-8"))
-    require(config.get("bundleVersion") == "106", "bundle version 106 missing", failures)
+    require(config.get("bundleVersion") == "107", "bundle version 107 missing", failures)
 
     print(
         json.dumps(
