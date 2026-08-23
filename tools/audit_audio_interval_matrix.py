@@ -56,11 +56,11 @@ def main() -> None:
 
     for relative in ("content/pages.json", "content/toc.json"):
         manifest = (ROOT / relative).read_text(encoding="utf-8")
-        require("?reader=21" not in manifest, f"{relative}: stale reader 21 link", failures)
-        require("?reader=22" in manifest, f"{relative}: reader 22 links missing", failures)
+        require("?reader=22" not in manifest, f"{relative}: stale reader 22 link", failures)
+        require("?reader=23" in manifest, f"{relative}: reader 23 links missing", failures)
         require(
-            "assets/offline-preloader.js?v=94" in source,
-            f"{filename}: offline preloader v94 missing",
+            "assets/offline-preloader.js?v=95" in source,
+            f"{filename}: offline preloader v95 missing",
             failures,
         )
 
@@ -71,6 +71,13 @@ def main() -> None:
     page16 = (ROOT / "pg016_sec001.html").read_text(encoding="utf-8")
     require("representing five thousand and eighty" in page16, "page 16 value 5080 narration missing", failures)
     require("representing six thousand and four" in page16, "page 16 value 6004 narration missing", failures)
+
+    page20 = (ROOT / "pg020_sec001.html").read_text(encoding="utf-8")
+    require(
+        'text-[#222]">4<span style="text-decoration: underline; text-underline-offset: 0.16em;">7</span>65</span>' in page20,
+        "page 20 must underline digit 7 in 4765",
+        failures,
+    )
 
     page10 = (ROOT / "pg010_sec001.html").read_text(encoding="utf-8")
     page10_blanks = re.findall(
@@ -94,7 +101,7 @@ def main() -> None:
     )
 
     config = json.loads((ROOT / "assets" / "config.json").read_text(encoding="utf-8"))
-    require(config.get("bundleVersion") == "99", "bundle version 99 missing", failures)
+    require(config.get("bundleVersion") == "100", "bundle version 100 missing", failures)
 
     print(
         json.dumps(

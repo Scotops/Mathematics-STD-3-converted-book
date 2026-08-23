@@ -91,7 +91,7 @@ def main() -> int:
             "assets/source-book-theme.js?v=4",
             "assets/pdf-facsimile.js?v=6",
             "assets/accessible-tts.js?v=30",
-            "assets/offline-preloader.js?v=94",
+            "assets/offline-preloader.js?v=95",
         )
         if any(asset not in markup for asset in required_markup_assets):
             report["missing_fidelity_assets"].append(href)
