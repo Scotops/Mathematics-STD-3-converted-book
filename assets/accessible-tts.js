@@ -799,9 +799,12 @@
   function preferredVoice(language = ENGLISH_LANG) {
     if (!canUseWebSpeech || typeof synth.getVoices !== 'function') return null;
     const voices = synth.getVoices();
-    const languageCode = String(language || ENGLISH_LANG).split(/[-_]/)[0];
-    const matching = voices.filter((voice) => new RegExp(`^${languageCode}(?:[_-]|$)`, 'i').test(voice.lang));
-    const pool = matching.length ? matching : (languageCode === 'en' ? voices : []);
+    const requestedLanguage = String(language || ENGLISH_LANG).replace('_', '-');
+    const languageCode = requestedLanguage.split('-')[0];
+    const exact = voices.filter((voice) => String(voice.lang || '').replace('_', '-').toLowerCase() === requestedLanguage.toLowerCase());
+    const matching = voices.filter((voice) => new RegExp(`^${languageCode}(?:[_-]|$)`, 'i').test(voice.lang)
+      || (languageCode === 'sw' && /swahili|rehema|daudi|rafiki/i.test(voice.name)));
+    const pool = exact.length ? exact : (matching.length ? matching : (languageCode === 'en' ? voices : []));
     const score = (voice) => {
       const name = voice.name.toLowerCase();
       let value = 0;
@@ -811,6 +814,7 @@
       if (/microsoft (jenny|aria|sonia|ava|emma|michelle|natasha|serena)/.test(name)) value += 70;
       if (/google (us|uk) english.*female|samantha|karen|moira|tessa|victoria/.test(name)) value += 45;
       if (/female/.test(name)) value += 20;
+      if (languageCode === 'sw' && /rehema|daudi|rafiki|swahili/.test(name)) value += 180;
       if (voice.localService) value += 8;
       // Avoid the older voices that commonly sound clipped or robotic.
       if (/microsoft (david|mark|zira|hazel)|desktop|legacy/.test(name)) value -= 80;

@@ -64,24 +64,27 @@ def main() -> None:
     for filename in AFFECTED_PAGES:
         source = (ROOT / filename).read_text(encoding="utf-8")
         require(
-            "assets/accessible-tts.js?v=34" in source,
-            f"{filename}: TTS v34 missing",
+            "assets/accessible-tts.js?v=35" in source,
+            f"{filename}: TTS v35 missing",
             failures,
         )
 
     for relative in ("content/pages.json", "content/toc.json"):
         manifest = (ROOT / relative).read_text(encoding="utf-8")
-        require("?reader=27" not in manifest, f"{relative}: stale reader 27 link", failures)
-        require("?reader=28" in manifest, f"{relative}: reader 28 links missing", failures)
+        require("?reader=28" not in manifest, f"{relative}: stale reader 28 link", failures)
+        require("?reader=29" in manifest, f"{relative}: reader 29 links missing", failures)
         require(
-            "assets/offline-preloader.js?v=100" in source,
-            f"{filename}: offline preloader v100 missing",
+            "assets/offline-preloader.js?v=101" in source,
+            f"{filename}: offline preloader v101 missing",
             failures,
         )
 
     page4 = (ROOT / "pg004_sec001.html").read_text(encoding="utf-8")
     require("University of Dar es Salaam, U D S M" in page4, "page 4 institution pronunciation missing", failures)
-    require(page4.count('lang="sw-TZ" data-tts-text=') >= 6, "page 4 personal-name pronunciations missing", failures)
+    require(page4.count('lang="sw-TZ" data-tts-lang="sw-TZ" data-tts-text=') >= 6, "page 4 personal-name pronunciations missing", failures)
+    require("Daktari Mikaeli H Mkwizu" in page4, "page 4 editor pronunciations missing", failures)
+    require("Bwana Fikiri A Msimbe" in page4, "page 4 illustrator pronunciations missing", failures)
+    require("languageCode === 'sw' && /rehema|daudi|rafiki|swahili/.test(name)" in tts, "Swahili voice preference missing", failures)
 
     page16 = (ROOT / "pg016_sec001.html").read_text(encoding="utf-8")
     require("representing five thousand and eighty" in page16, "page 16 value 5080 narration missing", failures)
@@ -144,7 +147,7 @@ def main() -> None:
     )
 
     config = json.loads((ROOT / "assets" / "config.json").read_text(encoding="utf-8"))
-    require(config.get("bundleVersion") == "105", "bundle version 105 missing", failures)
+    require(config.get("bundleVersion") == "106", "bundle version 106 missing", failures)
 
     print(
         json.dumps(
