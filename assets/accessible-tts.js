@@ -666,7 +666,9 @@
     if (pendingHighlightFrame) window.cancelAnimationFrame(pendingHighlightFrame);
     pendingHighlightFrame = window.requestAnimationFrame(() => {
       pendingHighlightFrame = null;
-      scrollRangeIntoReadingBand(range);
+      // Keep the learner's viewport exactly where they placed it. Narration
+      // and word highlighting continue, but read-aloud must never move the
+      // page automatically.
       if (!hasCssHighlight) window.requestAnimationFrame(() => positionWordHighlightOverlay(range));
     });
   }
