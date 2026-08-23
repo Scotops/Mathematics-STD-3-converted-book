@@ -21,7 +21,7 @@
 
   const image = document.createElement('img');
   image.className = 'pdf-page-facsimile';
-  image.src = `images/pdf-pages/pg-${String(pageNumber).padStart(3, '0')}.jpg?v=3`;
+  image.src = `images/pdf-pages/pg-${String(pageNumber).padStart(3, '0')}.jpg?v=4`;
   image.alt = '';
   image.setAttribute('aria-hidden', 'true');
   image.decoding = 'async';

@@ -9,20 +9,31 @@ from lxml import html
 from PIL import Image
 
 from apply_inclusivity_matrix import OVERLAYS, TEXT_REPLACEMENTS
+from apply_accessible_tools_matrix import REPLACEMENTS as ACCESSIBLE_TOOLS_REPLACEMENTS
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def main() -> int:
+    expected_replacements = dict(TEXT_REPLACEMENTS)
+    # The later accessible-tools matrix intentionally adds a prefix to two
+    # earlier inclusive-language sentences while preserving their alternatives.
+    expected_replacements.update(
+        {
+            text_id: replacement
+            for text_id, replacement in ACCESSIBLE_TOOLS_REPLACEMENTS.items()
+            if text_id in expected_replacements
+        }
+    )
     texts = json.loads(
         (ROOT / "content" / "i18n" / "en" / "texts.json").read_text(encoding="utf-8")
     )
     failures = []
-    html_counts = {text_id: 0 for text_id in TEXT_REPLACEMENTS}
+    html_counts = {text_id: 0 for text_id in expected_replacements}
     for page_path in ROOT.glob("*.html"):
         tree = html.fromstring(page_path.read_text(encoding="utf-8"))
-        for text_id, expected in TEXT_REPLACEMENTS.items():
+        for text_id, expected in expected_replacements.items():
             for element in tree.xpath(f'//*[@data-id="{text_id}"]'):
                 html_counts[text_id] += 1
                 visible = " ".join("".join(element.itertext()).split())
@@ -31,7 +42,7 @@ def main() -> int:
                 if element.get("data-tts-text") != expected.spoken:
                     failures.append(f"{page_path.name}:{text_id}:spoken")
 
-    for text_id, expected in TEXT_REPLACEMENTS.items():
+    for text_id, expected in expected_replacements.items():
         if texts.get(text_id) != expected.visible:
             failures.append(f"texts.json:{text_id}")
         if not html_counts[text_id] and text_id != "pg010_n0020":
