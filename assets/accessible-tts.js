@@ -8,6 +8,8 @@
 
   const MAX_CHUNK_LENGTH = 180;
   const ENGLISH_LANG = 'en-US';
+  const MAJOR_PAUSE_MS = 650;
+  const STRUCTURAL_PAUSE_MS = 320;
   const synth = window.speechSynthesis;
   const Utterance = window.SpeechSynthesisUtterance;
   const canUseWebSpeech = Boolean(synth && typeof synth.speak === 'function' && typeof Utterance === 'function');
@@ -179,7 +181,7 @@
   }
 
   const ignoredTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'SVG', 'PATH', 'IFRAME']);
-  const blockTags = new Set(['P', 'LI', 'DT', 'DD', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'FIGCAPTION', 'CAPTION', 'ARTICLE', 'SECTION']);
+  const blockTags = new Set(['DIV', 'P', 'LI', 'DT', 'DD', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'FIGCAPTION', 'CAPTION', 'ARTICLE', 'SECTION']);
 
   function isVisible(element) {
     if (!(element instanceof Element)) return true;
@@ -255,12 +257,20 @@
       // verbatim (for example, "Egg" beside an egg picture). Narrate that
       // label once while retaining genuinely descriptive image alternatives.
       const comparable = text.toLocaleLowerCase().replace(/[\s.,:;!?]+/g, '');
-      const previous = [...pieces].reverse().find((piece) => piece.trim() && piece !== '. ' && piece !== ', ');
+      const previous = [...pieces].reverse().find((piece) => piece.trim()
+        && piece !== '. '
+        && piece !== ', '
+        && !/^\[\[adt_pause/.test(piece));
       const previousComparable = String(previous || '').toLocaleLowerCase().replace(/[\s.,:;!?]+/g, '');
       if (comparable && comparable === previousComparable) return;
       pieces.push(text);
     };
-    const boundary = () => pieces.push('. ');
+    const boundary = () => {
+      const previous = pieces[pieces.length - 1];
+      if (previous !== '[[adt_pause_short]]' && previous !== '[[adt_pause]]') {
+        pieces.push('[[adt_pause_short]]');
+      }
+    };
 
     function numberedItemKind(element) {
       const scope = element.closest('section, article') || root;
@@ -288,12 +298,16 @@
 
       const spokenLanguage = element.dataset.ttsLang || element.getAttribute('lang');
       if (spokenLanguage && !/^en(?:-|$)/i.test(spokenLanguage)) {
+        boundary();
         add(`[[adt_lang:${spokenLanguage}]] ${fractionAwareText(element)} [[adt_lang:end]]`);
+        boundary();
         return;
       }
 
       if (element.dataset.ttsText) {
+        boundary();
         add(element.dataset.ttsText);
+        boundary();
         return;
       }
 
@@ -304,7 +318,9 @@
       // every fraction explicit: "numerator over denominator".
       if (element.hasAttribute('data-id')
         && element.querySelector('mfrac, [aria-roledescription="fraction"], mjx-mfrac, .mjx-mfrac')) {
+        boundary();
         add(fractionAwareText(element));
+        boundary();
         return;
       }
 
@@ -312,7 +328,7 @@
       // is handled by the playback queue and is never sent to the voice.
       const visibleText = String(element.textContent || '').trim();
       if (element.tagName === 'SPAN' && /^\d+\.$/.test(visibleText)) {
-        add(`${numberedItemKind(element)} ${visibleText} [[adt_pause]]`);
+        add(`[[adt_pause]] ${numberedItemKind(element)} ${visibleText} [[adt_pause]]`);
         return;
       }
 
@@ -322,7 +338,7 @@
       if (element.tagName === 'SPAN' && element.hasAttribute('data-id')
         && /^\d+\.\s+\S/.test(visibleText)
         && !element.querySelector('input, textarea, select, img, math')) {
-        add(`${numberedItemKind(element)} ${visibleText} [[adt_pause]]`);
+        add(`[[adt_pause]] ${numberedItemKind(element)} ${visibleText} [[adt_pause]]`);
         return;
       }
 
@@ -369,7 +385,14 @@
     }
 
     walk(root);
-    return pieces.join(' ').replace(/\s+([,.;:?!])/g, '$1').replace(/(?:\.\s*){2,}/g, '. ').trim();
+    return pieces.join(' ')
+      .replace(/\s+([,.;:?!])/g, '$1')
+      .replace(/(?:\.\s*){2,}/g, '. ')
+      .replace(/(?:\s*\[\[adt_pause_short\]\]\s*){2,}/g, ' [[adt_pause_short]] ')
+      .replace(/\[\[adt_pause_short\]\]\s*(?=\[\[adt_pause\]\])/g, '')
+      .replace(/\[\[adt_pause\]\]\s*\[\[adt_pause_short\]\]/g, '[[adt_pause]]')
+      .replace(/^\s*\[\[adt_pause(?:_short)?\]\]\s*|\s*\[\[adt_pause(?:_short)?\]\]\s*$/g, '')
+      .trim();
   }
 
   const SMALL_NUMBERS = [
@@ -479,10 +502,17 @@
   }
 
   function splitIntoChunks(text, maxLength = MAX_CHUNK_LENGTH) {
-    const pauseToken = '[[adt_pause]]';
-    const sections = String(text || '').split(pauseToken);
     const chunks = [];
-    sections.forEach((section, sectionIndex) => {
+    const sections = String(text || '').split(/(\[\[adt_pause(?:_short)?\]\])/g);
+    sections.forEach((section) => {
+      if (section === '[[adt_pause]]') {
+        chunks.push('__adt_speech_pause__');
+        return;
+      }
+      if (section === '[[adt_pause_short]]') {
+        chunks.push('__adt_speech_pause_short__');
+        return;
+      }
       const sentences = section.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [section];
       let current = '';
       const push = () => { if (current.trim()) chunks.push(current.trim()); current = ''; };
@@ -496,7 +526,6 @@
         if (current.length >= Math.floor(maxLength * 0.65)) push();
       }
       push();
-      if (sectionIndex < sections.length - 1) chunks.push('__adt_speech_pause__');
     });
     return chunks;
   }
@@ -511,9 +540,16 @@
         return;
       }
       splitIntoChunks(part).forEach((chunk) => {
-        chunks.push(chunk === '__adt_speech_pause__'
-          ? { pause: true, text: '', lang: language }
-          : { pause: false, text: chunk, lang: language });
+        if (chunk === '__adt_speech_pause__' || chunk === '__adt_speech_pause_short__') {
+          chunks.push({
+            pause: true,
+            duration: chunk === '__adt_speech_pause_short__' ? STRUCTURAL_PAUSE_MS : MAJOR_PAUSE_MS,
+            text: '',
+            lang: language
+          });
+        } else {
+          chunks.push({ pause: false, text: chunk, lang: language });
+        }
       });
     });
     return chunks;
@@ -767,7 +803,7 @@
     currentChunkIndex = queueIndex;
     const nextChunk = queue[queueIndex++];
     if (nextChunk.pause) {
-      window.setTimeout(() => playNext(generation), 650);
+      window.setTimeout(() => playNext(generation), nextChunk.duration || MAJOR_PAUSE_MS);
       return;
     }
     const utterance = new Utterance(nextChunk.text);
@@ -820,7 +856,7 @@
     wordHighlightMap = buildWordHighlightMap(text);
     let wordOffset = 0;
     queue = splitIntoLanguageChunks(markedText, wordOffset).map((chunk) => {
-      if (chunk.pause) return { pause: true, wordOffset, lang: chunk.lang };
+      if (chunk.pause) return { pause: true, duration: chunk.duration, wordOffset, lang: chunk.lang };
       const entry = { text: chunk.text, wordOffset, lang: chunk.lang };
       wordOffset += spokenTokenParts(chunk.text).length;
       return entry;
