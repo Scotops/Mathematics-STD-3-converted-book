@@ -56,11 +56,11 @@ def main() -> None:
 
     for relative in ("content/pages.json", "content/toc.json"):
         manifest = (ROOT / relative).read_text(encoding="utf-8")
-        require("?reader=22" not in manifest, f"{relative}: stale reader 22 link", failures)
-        require("?reader=23" in manifest, f"{relative}: reader 23 links missing", failures)
+        require("?reader=23" not in manifest, f"{relative}: stale reader 23 link", failures)
+        require("?reader=24" in manifest, f"{relative}: reader 24 links missing", failures)
         require(
-            "assets/offline-preloader.js?v=95" in source,
-            f"{filename}: offline preloader v95 missing",
+            "assets/offline-preloader.js?v=96" in source,
+            f"{filename}: offline preloader v96 missing",
             failures,
         )
 
@@ -76,6 +76,23 @@ def main() -> None:
     require(
         'text-[#222]">4<span style="text-decoration: underline; text-underline-offset: 0.16em;">7</span>65</span>' in page20,
         "page 20 must underline digit 7 in 4765",
+        failures,
+    )
+
+    page21 = (ROOT / "pg021_sec001.html").read_text(encoding="utf-8")
+    exact_example2 = [
+        "(a) 4000 + 500 + 30 + 1 = blank.",
+        "(b) 4000 + 800 + 40 + 2 = blank.",
+        "(c) 9000 + 700 + 0 + 2 = blank.",
+        "(d) 5000 + 0 + 0 + 1 = blank.",
+        "(a) 4000 + 500 + 30 + 1 = 4531.",
+        "(b) 4000 + 800 + 40 + 2 = 4842.",
+        "(c) 9000 + 700 + 0 + 2 = 9702.",
+        "(d) 5000 + 0 + 0 + 1 = 5001.",
+    ]
+    require(
+        all(f'data-tts-text="{spoken}"' in page21 for spoken in exact_example2),
+        "page 21 Example 2 exact narration is incomplete",
         failures,
     )
 
@@ -101,7 +118,7 @@ def main() -> None:
     )
 
     config = json.loads((ROOT / "assets" / "config.json").read_text(encoding="utf-8"))
-    require(config.get("bundleVersion") == "100", "bundle version 100 missing", failures)
+    require(config.get("bundleVersion") == "101", "bundle version 101 missing", failures)
 
     print(
         json.dumps(
