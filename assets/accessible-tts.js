@@ -65,6 +65,7 @@
         color: #fff; background: #262626; border-radius: 15px;
         box-shadow: 0 8px 24px rgba(0,0,0,.28); font: 600 15px/1.2 system-ui,sans-serif;
       }
+      .adt-accessible-tts-player[hidden] { display: none !important; }
       .adt-accessible-tts-player button,
       .adt-accessible-tts-player select {
         min-width: 42px; min-height: 42px; border: 1px solid #777; border-radius: 10px;
@@ -125,6 +126,19 @@
     document.documentElement.dataset.adtTtsRate = String(speechRate);
     updatePlayer();
     return player;
+  }
+
+  function setPlayerVisible(visible) {
+    if (!player?.isConnected) return false;
+    player.hidden = !visible;
+    player.setAttribute('aria-hidden', String(!visible));
+    document.documentElement.dataset.adtTtsPanelVisible = String(visible);
+    return visible;
+  }
+
+  function togglePlayerVisibility() {
+    if (!player?.isConnected) return false;
+    return setPlayerVisible(player.hidden);
   }
 
   function updatePlayer() {
@@ -977,6 +991,7 @@
     paused = false;
     document.documentElement.dataset.adtTtsStarted = 'true';
     ensurePlayer();
+    setPlayerVisible(true);
     updatePlayer();
     // Chromium can pause a long Web Speech API session even though it still
     // reports itself as speaking. Keeping it alive avoids a page stopping
@@ -1101,6 +1116,9 @@
     const control = event.target instanceof Element ? event.target.closest('button, [role="button"]') : null;
     if (control?.closest('.adt-accessible-tts-player')) return;
     if (!canUseWebSpeech || !isReadAloudControl(control)) return;
+    // Once the custom controls exist, the dock voice button only shows or
+    // hides them. Do not interrupt the narration during that pointer gesture.
+    if (player?.isConnected) return;
     suppressBundledAudio = true;
     stopBundledAudio();
     if (pendingControlTimer) window.clearTimeout(pendingControlTimer);
@@ -1121,7 +1139,13 @@
       window.clearTimeout(pendingControlTimer);
       pendingControlTimer = null;
     }
-    playing ? stop() : start();
+    if (player?.isConnected) {
+      const visible = togglePlayerVisibility();
+      control.setAttribute('aria-expanded', String(visible));
+    } else {
+      start();
+      control.setAttribute('aria-expanded', 'true');
+    }
   }, true);
 
   // Exposed for the existing audio-button event handler and for testing.
@@ -1142,10 +1166,14 @@
     start,
     stop,
     pause: togglePause,
+    showPanel: () => setPlayerVisible(true),
+    hidePanel: () => setPlayerVisible(false),
+    togglePanel: togglePlayerVisibility,
     toggle: () => (playing ? stop() : start()),
     get speechRate() { return speechRate; },
     get isPlaying() { return playing; },
     get isPaused() { return paused; },
+    get isPanelVisible() { return Boolean(player?.isConnected && !player.hidden); },
     get activeAudioSource() { return activeAudio?.getAttribute('src') || ''; },
     get currentChunk() { return currentChunkIndex >= 0 ? queue[currentChunkIndex] || null : null; }
   });

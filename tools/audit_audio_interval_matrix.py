@@ -64,18 +64,18 @@ def main() -> None:
     for filename in AFFECTED_PAGES:
         source = (ROOT / filename).read_text(encoding="utf-8")
         require(
-            "assets/accessible-tts.js?v=37" in source,
-            f"{filename}: TTS v37 missing",
+            "assets/accessible-tts.js?v=38" in source,
+            f"{filename}: TTS v38 missing",
             failures,
         )
 
     for relative in ("content/pages.json", "content/toc.json"):
         manifest = (ROOT / relative).read_text(encoding="utf-8")
-        require("?reader=30" not in manifest, f"{relative}: stale reader 30 link", failures)
-        require("?reader=31" in manifest, f"{relative}: reader 31 links missing", failures)
+        require("?reader=31" not in manifest, f"{relative}: stale reader 31 link", failures)
+        require("?reader=32" in manifest, f"{relative}: reader 32 links missing", failures)
         require(
-            "assets/offline-preloader.js?v=103" in source,
-            f"{filename}: offline preloader v103 missing",
+            "assets/offline-preloader.js?v=104" in source,
+            f"{filename}: offline preloader v104 missing",
             failures,
         )
 
@@ -93,6 +93,9 @@ def main() -> None:
     require(tts.count(".mp3?v=2") == 7, "revised acknowledgement audio cache keys are incomplete", failures)
     require("this.dataset.adtAccessibleTts !== 'true'" in tts, "embedded narration suppression exception missing", failures)
     require("stopActiveAudio();" in tts, "embedded narration controls missing", failures)
+    require("function togglePlayerVisibility()" in tts, "voice-button panel toggle missing", failures)
+    require("if (player?.isConnected) return;" in tts, "voice-button pointerdown still interrupts narration", failures)
+    require("get isPanelVisible()" in tts, "panel visibility diagnostics missing", failures)
     for index in range(1, 8):
         audio = ROOT / "content" / "i18n" / "en" / "audio" / f"pg004_swahili_names_{index:02d}.mp3"
         require(audio.is_file() and audio.stat().st_size > 10_000, f"Swahili narration {index:02d} missing", failures)
@@ -158,7 +161,7 @@ def main() -> None:
     )
 
     config = json.loads((ROOT / "assets" / "config.json").read_text(encoding="utf-8"))
-    require(config.get("bundleVersion") == "108", "bundle version 108 missing", failures)
+    require(config.get("bundleVersion") == "109", "bundle version 109 missing", failures)
 
     print(
         json.dumps(
