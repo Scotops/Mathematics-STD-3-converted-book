@@ -54,27 +54,17 @@
 
 <link href="./content/tailwind_output.css?v=12" rel="stylesheet">
 <link href="./assets/typography-consistency.css?v=6" rel="stylesheet">
-<link href="./assets/source-book-theme.css?v=8" rel="stylesheet">
+<link href="./assets/source-book-theme.css?v=164" rel="stylesheet">
 <link href="./assets/fonts.css?v=4" rel="stylesheet">
+<link href="./assets/hisabati-parity.css?v=285" rel="stylesheet">
 <link href="./assets/libs/fontawesome/css/all.min.css" rel="stylesheet">
 <style>
-    .place-example { max-width: 1000px; margin: 2rem auto; padding: 2.5rem; border: 3px solid #9a7c00; border-radius: 1.5rem; background: #fff; color: #242424; }
-    .place-example h2 { display: inline-block; margin: -4.8rem 0 2rem 2rem; padding: .75rem 2rem; border-radius: 1.25rem; background: #9a7c00; color: #fff; font: 700 2rem/1.1 Arial, sans-serif; }
-    .place-example .instruction { margin: 0; font-size: 1.65rem; line-height: 1.35; }
-    .place-example .instruction-continuation { margin: 0 0 1.6rem; }
-    .place-example .questions, .place-example .answers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.6rem 3rem; }
-    .place-example .question { font-size: 1.5rem; font-weight: 600; }
-    .place-example h3 { margin: 2rem 0 1.25rem; font-size: 1.85rem; font-weight: 700; }
-    .place-card { min-height: 18rem; border: 1px solid #d7c069; border-radius: 1rem; padding: 1.25rem; background: #fffdf7; }
-    .place-card > p { margin: 0 0 .9rem; font-size: 1.35rem; font-weight: 600; }
-    .place-diagram { position: relative; width: min(100%, 22.5rem); height: 13rem; margin: 0 auto; }
-    .place-connectors { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-    .place-digits { position: absolute; top: 2%; left: 4%; width: 45%; display: grid; grid-template-columns: repeat(4, 1fr); font-size: clamp(1.15rem, 5.5vw, 1.35rem); }
-    .place-digit { text-align: center; font-weight: 700; }
-    .place-labels { position: absolute; top: 6%; left: 53%; display: grid; gap: .65rem; font-size: clamp(1.05rem, 5vw, 1.25rem); }
-    .ones { color: #3498db; } .tens { color: #e6008d; } .hundreds { color: #ff9800; } .thousands { color: #2f9e44; }
-    .place-label { margin-left: .8rem; font-weight: 600; }
-    @media (max-width: 700px) { .place-example { margin: 1rem; padding: 1.25rem; } .place-example h2 { margin: -3rem 0 1.5rem .5rem; font-size: 1.55rem; } .place-example .instruction { font-size: 1.25rem; } .place-example .questions, .place-example .answers { grid-template-columns: 1fr; gap: 1rem; } .place-card { min-height: 16rem; padding: 1rem; } .place-diagram { width: 100%; max-width: 22.5rem; height: clamp(11.5rem, 58vw, 13rem); } .place-labels { gap: clamp(.35rem, 2vw, .65rem); } }
+    .place-example .instruction { margin: 0; }
+    .place-example .questions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin-top: .65rem; }
+    .place-example .question { margin: 0; white-space: nowrap; }
+    .place-example h3 { margin: 1rem 0 .35rem; }
+    .place-example .source-diagrams { display: block; width: 100%; height: auto; margin: 0 auto; border: 0; background: transparent; box-shadow: none; }
+    @media (max-width: 700px) { .place-example .questions { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   </style>
 <style id="adt-source-page-consolidation">
   /* One reader screen now corresponds to one physical source-PDF page. */
@@ -96,7 +86,7 @@
 <section data-section-type="text" data-section-id="pg009_sec001" class="mx-auto max-w-6xl p-4">
       <h1 class="sr-only">Example 5: Place value of digits in whole numbers</h1>
       <article class="place-example">
-        <h2 data-id="pg009_n0002">Example 5</h2>
+        <div><h2 data-id="pg009_n0002">Example 5</h2></div>
         <p class="instruction" data-id="pg009_n0003" data-tts-text="Identify, determine, find, or state the place value of each digit in the following whole numbers.">Identify / determine / find / state the place value of each digit in the following whole numbers:</p>
         <div class="questions" aria-label="Numbers to identify">
           <p class="question" data-id="pg009_n0004">(a) 4628</p>
@@ -105,12 +95,8 @@
           <p class="question" data-id="pg009_n0007">(d) 9000</p>
         </div>
         <h3 data-id="pg009_n0008">Answer</h3>
-        <div class="answers">
-          <section class="place-card"><p class="place-visual-title" aria-hidden="true">(a) 4628</p><p class="sr-only" data-id="pg009_n0009">A. 4628. Four thousands, six hundreds, two tens, and eight ones.</p><div class="place-diagram" aria-hidden="true"><svg class="place-connectors" viewbox="0 0 360 210"><path d="M150 27V38H190" stroke="#3498db" stroke-width="4" fill="none"></path><path d="M105 27V82H190" stroke="#e6008d" stroke-width="4" fill="none"></path><path d="M60 27V126H190" stroke="#ff9800" stroke-width="4" fill="none"></path><path d="M15 27V170H190" stroke="#2f9e44" stroke-width="4" fill="none"></path></svg><div class="place-digits"><span class="place-digit thousands">4</span><span class="place-digit hundreds">6</span><span class="place-digit tens">2</span><span class="place-digit ones">8</span></div><div class="place-labels"><span class="ones">Ones</span><span class="tens">Tens</span><span class="hundreds">Hundreds</span><span class="thousands">Thousands</span></div></div></section>
-          <section class="place-card"><p class="place-visual-title" aria-hidden="true">(b) 3456</p><p class="sr-only" data-id="pg009_n0015">B. 3456. Three thousands, four hundreds, five tens, and six ones.</p><div class="place-diagram" aria-hidden="true"><svg class="place-connectors" viewbox="0 0 360 210"><path d="M150 27V38H190" stroke="#3498db" stroke-width="4" fill="none"></path><path d="M105 27V82H190" stroke="#e6008d" stroke-width="4" fill="none"></path><path d="M60 27V126H190" stroke="#ff9800" stroke-width="4" fill="none"></path><path d="M15 27V170H190" stroke="#2f9e44" stroke-width="4" fill="none"></path></svg><div class="place-digits"><span class="place-digit thousands">3</span><span class="place-digit hundreds">4</span><span class="place-digit tens">5</span><span class="place-digit ones">6</span></div><div class="place-labels"><span class="ones">Ones</span><span class="tens">Tens</span><span class="hundreds">Hundreds</span><span class="thousands">Thousands</span></div></div></section>
-          <section class="place-card"><p class="place-visual-title" aria-hidden="true">(c) 7304</p><p class="sr-only" data-id="pg009_n0021">C. 7304. Seven thousands, three hundreds, zero tens, and four ones.</p><div class="place-diagram" aria-hidden="true"><svg class="place-connectors" viewbox="0 0 360 210"><path d="M150 27V38H190" stroke="#3498db" stroke-width="4" fill="none"></path><path d="M105 27V82H190" stroke="#e6008d" stroke-width="4" fill="none"></path><path d="M60 27V126H190" stroke="#ff9800" stroke-width="4" fill="none"></path><path d="M15 27V170H190" stroke="#2f9e44" stroke-width="4" fill="none"></path></svg><div class="place-digits"><span class="place-digit thousands">7</span><span class="place-digit hundreds">3</span><span class="place-digit tens">0</span><span class="place-digit ones">4</span></div><div class="place-labels"><span class="ones">Ones</span><span class="tens">Tens</span><span class="hundreds">Hundreds</span><span class="thousands">Thousands</span></div></div></section>
-          <section class="place-card"><p class="place-visual-title" aria-hidden="true">(d) 9000</p><p class="sr-only" data-id="pg009_n0027">D. 9000. Nine thousands, zero hundreds, zero tens, and zero ones.</p><div class="place-diagram" aria-hidden="true"><svg class="place-connectors" viewbox="0 0 360 210"><path d="M150 27V38H190" stroke="#3498db" stroke-width="4" fill="none"></path><path d="M105 27V82H190" stroke="#e6008d" stroke-width="4" fill="none"></path><path d="M60 27V126H190" stroke="#ff9800" stroke-width="4" fill="none"></path><path d="M15 27V170H190" stroke="#2f9e44" stroke-width="4" fill="none"></path></svg><div class="place-digits"><span class="place-digit thousands">9</span><span class="place-digit hundreds">0</span><span class="place-digit tens">0</span><span class="place-digit ones">0</span></div><div class="place-labels"><span class="ones">Ones</span><span class="tens">Tens</span><span class="hundreds">Hundreds</span><span class="thousands">Thousands</span></div></div></section>
-        </div>
+        <img src="images/pg009_place_value_diagrams_en_v2.png" data-id="pg009_im002" alt="Place-value diagrams for 4628, 3456, 7304 and 9000" class="source-diagrams">
+        <div class="sr-only"><span data-id="pg009_n0009">A. 4628. Four thousands, six hundreds, two tens, and eight ones.</span><span data-id="pg009_n0015">B. 3456. Three thousands, four hundreds, five tens, and six ones.</span><span data-id="pg009_n0021">C. 7304. Seven thousands, three hundreds, zero tens, and four ones.</span><span data-id="pg009_n0027">D. 9000. Nine thousands, zero hundreds, zero tens, and zero ones.</span></div>
       </article>
     </section>
 </div>
@@ -178,11 +164,11 @@
 
 
 
-<script src="./assets/offline-preloader.js?v=110"></script>
+<script src="./assets/offline-preloader.js?v=111"></script>
 <script src="./assets/scorm.js"></script>
-<script src="./assets/source-book-theme.js?v=4"></script>
+<script src="./assets/source-book-theme.js?v=76"></script>
 <script src="./assets/pdf-facsimile.js?v=6"></script>
-<script src="./assets/accessible-tts.js?v=38"></script>
+<script src="./assets/accessible-tts.js?v=41"></script>
 <script src="./assets/media-playback-independence.js"></script>
 <script src="./assets/base.bundle.local.js?v=110"></script>
 <script src="./assets/sign-language-video.js"></script>

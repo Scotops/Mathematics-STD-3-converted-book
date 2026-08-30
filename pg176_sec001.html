@@ -56,20 +56,27 @@
 
 <link href="./content/tailwind_output.css?v=12" rel="stylesheet">
 <link href="./assets/typography-consistency.css?v=6" rel="stylesheet">
-<link href="./assets/source-book-theme.css?v=8" rel="stylesheet">
+<link href="./assets/source-book-theme.css?v=164" rel="stylesheet">
 <link href="./assets/libs/fontawesome/css/all.min.css" rel="stylesheet">
 <link href="./assets/fonts.css?v=4" rel="stylesheet">
+<link href="./assets/hisabati-parity.css?v=285" rel="stylesheet">
 <style>
       /* Keep every written subtraction and its answer line at one compact,
          consistent width.  The stronger selector also prevents the shared
          alignment helper from stretching these exercise rows. */
       [data-section-id="pg176_sec001"] > .grid > .flex > .flex-1 {
         box-sizing: border-box;
-        flex: 0 0 15rem !important;
+        flex: 0 0 9.5rem !important;
         font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
         font-variant-numeric: tabular-nums lining-nums;
-        min-width: 15rem !important;
-        width: 15rem !important;
+        min-width: 9.5rem !important;
+        width: 9.5rem !important;
+      }
+      #content [data-source-section="pg176_sec001"] > section[data-section-id="pg176_sec001"] {
+        background: #f7f3e6 !important;
+      }
+      [data-section-id="pg176_sec001"] > .grid {
+        row-gap: 1.25rem !important;
       }
       [data-section-id="pg176_sec001"] > .grid > .flex > .flex-1 > div:not(:has(input)) {
         box-sizing: border-box;
@@ -84,6 +91,21 @@
         margin-top: 1.5rem !important;
         width: 100% !important;
       }
+      [data-section-id="pg176_sec001"] > .grid > .flex > .flex-1 > div:last-child {
+        box-sizing: border-box;
+        width: 100% !important;
+        height: 0 !important;
+        margin-top: 1.75rem !important;
+        border-bottom: 2px solid #111 !important;
+      }
+      [data-section-id="pg176_sec001"] > .grid > .flex > .flex-1:has(
+        [data-id="pg176_n0043"], [data-id="pg176_n0049"],
+        [data-id="pg176_n0055"], [data-id="pg176_n0061"]
+      ) {
+        flex-basis: 10.75rem !important;
+        min-width: 10.75rem !important;
+        width: 10.75rem !important;
+      }
       [data-section-id="pg176_sec001"] input[data-activity-item] {
         box-sizing: border-box;
         text-align: right;
@@ -91,9 +113,9 @@
       }
       @media (max-width: 640px) {
         [data-section-id="pg176_sec001"] > .grid > .flex > .flex-1 {
-          flex-basis: 13rem !important;
-          min-width: 13rem !important;
-          width: 13rem !important;
+          flex-basis: 9.5rem !important;
+          min-width: 9.5rem !important;
+          width: 9.5rem !important;
         }
       }
     </style>
@@ -309,11 +331,11 @@
 <script type="text/javascript">
         window.correctAnswers = Object.assign(window.correctAnswers || {}, JSON.parse('{"pg176_sec001-item-1":"3115","pg176_sec001-item-2":"2654","pg176_sec001-item-3":"19970","pg176_sec001-item-4":"33400","pg176_sec001-item-5":"49830","pg176_sec001-item-6":"14910","pg176_sec001-item-7":"6450","pg176_sec001-item-8":"23500","pg176_sec001-item-9":"410221 25","pg176_sec001-item-10":"545014 50","pg176_sec001-item-11":"414441 10","pg176_sec001-item-12":"414441 10"}'));
     </script>
-<script src="./assets/offline-preloader.js?v=110"></script>
+<script src="./assets/offline-preloader.js?v=111"></script>
 <script src="./assets/scorm.js"></script>
-<script src="./assets/source-book-theme.js?v=4"></script>
+<script src="./assets/source-book-theme.js?v=76"></script>
 <script src="./assets/pdf-facsimile.js?v=6"></script>
-<script src="./assets/accessible-tts.js?v=38"></script>
+<script src="./assets/accessible-tts.js?v=41"></script>
 <script src="./assets/media-playback-independence.js"></script>
 <script src="./assets/base.bundle.local.js?v=110"></script>
 <script src="./assets/sign-language-video.js"></script>

@@ -5,8 +5,8 @@
   if (!section) return;
 
   function arrangeVertically() {
-    section.querySelectorAll('input[data-activity-item]').forEach((input) => {
-      const exercise = input.closest('span.fitb-sentence') || input.closest('.fitb-sentence');
+    section.querySelectorAll('.grid > div').forEach((item) => {
+      const exercise = item.querySelector('span.fitb-sentence') || item.querySelector('.fitb-sentence');
       if (!exercise) return;
 
       const expression = exercise.querySelector('span[data-id]');
@@ -46,11 +46,24 @@
       subtrahend.style.paddingRight = '8px';
       subtrahend.style.borderBottom = '2px solid #111';
       subtrahend.style.textAlign = 'right';
-      input.before(subtrahend);
+      expression.after(subtrahend);
 
-      input.style.display = 'block';
-      input.style.width = '100%';
-      input.style.marginTop = '12px';
+      const input = exercise.querySelector('input[data-activity-item]');
+      if (input) {
+        input.style.display = 'block';
+        input.style.width = '100%';
+        input.style.marginTop = '12px';
+      } else {
+        const answer = document.createElement('span');
+        answer.dataset.verticalAnswerSpace = 'true';
+        answer.setAttribute('aria-hidden', 'true');
+        answer.style.display = 'block';
+        answer.style.width = '100%';
+        answer.style.height = '38px';
+        answer.style.marginTop = '10px';
+        answer.style.borderBottom = '2px solid #111';
+        exercise.appendChild(answer);
+      }
     });
   }
 

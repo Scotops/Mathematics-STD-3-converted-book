@@ -187,6 +187,44 @@
   text-align: center;
 }
 
+/* Printed page 16 continues Exercise 4 from page 15.  The PDF presents both
+   source sections as one uninterrupted cream exercise field, with ordinary
+   ochre question numbers (not an app-style green number badge). */
+#content.adt-source-page [data-section-id='pg022_sec001'],
+#content.adt-source-page [data-section-id='pg022_sec002'] {
+  border-radius: 0 !important;
+  background: #f7f2e8 !important;
+  box-shadow: none !important;
+}
+
+#content.adt-source-page [data-section-id='pg022_sec001'] {
+  padding-top: 18px !important;
+  padding-bottom: 8px !important;
+}
+
+#content.adt-source-page [data-section-id='pg022_sec002'] {
+  padding-top: 8px !important;
+  padding-bottom: 18px !important;
+}
+
+#content.adt-source-page [data-section-id='pg022_sec002']
+  > div:first-child > div:first-child {
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 .85rem 0 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #9a7600 !important;
+  font-size: clamp(1rem, 2.868cqw, 2.15rem) !important;
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
+}
+
+#content.adt-source-page [data-section-id='pg022_sec002'] > div:first-child {
+  margin-bottom: 10px !important;
+}
+
 #content :is(pre, code, kbd, samp, .font-mono, .adt-pre-calculation),
 #content :is(pre, code, kbd, samp, .font-mono, .adt-pre-calculation) * {
   font-family: 'Sassoon Primary', sans-serif !important;
@@ -238,57 +276,997 @@
   margin-right: auto !important;
 }
 
-/* Printed examples: white card, fine olive rule, and compact olive label. */
-#content [data-source-kind='example'] {
+/* Canonical worked-example component, shared with Hisabati Standard Three. */
+#content.adt-source-page [data-source-kind='example'] {
   background: #fff !important;
-  border: 1.5px solid var(--book-gold) !important;
-  border-radius: .45rem !important;
-  box-shadow: none !important;
+  border: 2px solid var(--book-gold) !important;
+  border-radius: 0 28px 0 28px !important;
+  box-shadow: 0 3px 7px rgba(75, 65, 15, .14) !important;
+  margin-top: 3rem !important;
+  margin-bottom: 2.25rem !important;
+  padding: 0 2.5rem 2rem !important;
+  overflow: visible !important;
 }
 
-#content [data-source-heading='example'] {
+/* Converter sections often carried application-card spacing (2–3rem per
+   card) in addition to the printed label clearance. The source pages use a
+   compact repeated rhythm so several examples fit on one physical page. */
+#content section:has(> [data-source-kind='example']) > [data-source-kind='example']
+  + [data-source-kind='example'] {
+  margin-top: 2.5rem !important;
+}
+
+#content .adt-source-page-part:has([data-source-kind])
+  + .adt-source-page-part:has([data-source-kind]) {
+  padding-top: 2.5rem !important;
+}
+
+#content.adt-source-page [data-source-heading='example'] {
   display: inline-block !important;
   width: auto !important;
   color: #fff !important;
-  background: #817900 !important;
-  border-radius: .2rem !important;
-  box-shadow: none !important;
-  font-size: clamp(1.1rem, 2.51cqw, 1.6rem) !important;
+  background: linear-gradient(180deg, #d5b72d, #897400) !important;
+  border-radius: 0 18px 0 18px !important;
+  box-shadow: 0 4px 8px rgba(83, 69, 0, .22) !important;
+  font-size: clamp(1.25rem, 2.7cqw, 1.75rem) !important;
   font-style: normal !important;
   line-height: 1.1 !important;
-  padding: .2rem .7rem !important;
+  padding: .65rem 1.5rem !important;
 }
 
-#content [data-source-heading-wrap='example'] {
+#content.adt-source-page [data-source-heading-wrap='example'] {
+  position: static !important;
+  inset: auto !important;
+  display: block !important;
+  width: max-content !important;
+  margin: -1.25rem 0 1rem !important;
+  padding: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
 }
 
-/* Printed exercises: warm cream field with the peach title strip. */
-#content [data-source-kind='exercise'] {
-  background: var(--book-exercise) !important;
+#content.adt-source-page :is([data-source-kind='example'], [data-source-kind='exercise'])
+  [data-converter-inner-shell='true'] {
   border-color: transparent !important;
-  border-radius: .35rem !important;
+  border-radius: 0 !important;
+  background: transparent !important;
   box-shadow: none !important;
 }
 
-#content [data-source-heading='exercise'] {
+#content.adt-source-page .book-minus-sign {
+  display: inline !important;
+  margin: 0 .12em !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 1em !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: inherit !important;
+}
+
+#content.adt-source-page [data-section-id='pg071_sec001'] .grid { row-gap: 2.35rem !important; }
+#content.adt-source-page [data-section-id='pg071_sec001'] .grid > .flex {
+  display: grid !important;
+  grid-template-columns: 2.45rem minmax(0, 1fr) !important;
+  gap: .55rem !important;
+  align-items: start !important;
+}
+#content.adt-source-page [data-section-id='pg071_sec001'] .fitb-sentence,
+#content.adt-source-page [data-section-id='pg071_sec001'] .fitb-sentence > span {
+  display: block !important;
+  overflow: visible !important;
+}
+#content.adt-source-page [data-section-id='pg071_sec001'] .fitb-sentence > span.book-vertical-problem {
+  display: grid !important;
+  grid-template-columns: 1.15rem max-content !important;
+  justify-items: end !important;
+  align-items: end !important;
+  min-width: 6.2rem;
+  font-size: 1.08rem !important;
+  line-height: 1.22 !important;
+  white-space: nowrap !important;
+  height: 5.9rem !important;
+  overflow: visible !important;
+}
+#content.adt-source-page [data-section-id='pg071_sec001'] .book-vertical-problem > span:first-child { grid-column: 2; }
+#content.adt-source-page [data-section-id='pg071_sec001'] .book-vertical-problem > span:nth-child(2) { grid-column: 1 / -1; }
+#content.adt-source-page [data-section-id='pg071_sec001'] .book-vertical-problem > i {
+  grid-column: 1 / -1;
+  display: block;
+  width: 100%;
+  height: .9rem;
+  border-top: 1.5px solid #262626;
+}
+
+#content.adt-source-page [data-section-id='pg075_sec001'] > div:first-child {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+#content.adt-source-page [data-section-id='pg075_sec001'] table { table-layout: fixed !important; width: 100% !important; }
+#content.adt-source-page [data-section-id='pg075_sec001'] :is(table, td) { border-color: #9d8500 !important; }
+#content.adt-source-page [data-section-id='pg075_sec001'] td:last-child { width: 24% !important; overflow: hidden !important; }
+
+/* Fractions, printed pages 111–112: the PDF places figures and fraction
+   choices directly on the parent field, without app-style inset tiles. */
+#content.adt-source-page [data-section-id='pg117_sec001'] .grid.grid-cols-3 > div,
+#content.adt-source-page [data-section-id='pg117_sec001'] [data-id^='pg117_n002'] {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+#content.adt-source-page [data-section-id='pg117_sec001'] .grid.grid-cols-3 {
+  gap: .8rem 1.35rem !important;
+}
+#content.adt-source-page [data-section-id='pg117_sec001'] .grid.grid-cols-3 > div { padding: 0 !important; }
+#content.adt-source-page [data-section-id='pg118_sec001'] .grid.grid-cols-3 > div {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: .2rem .4rem !important;
+}
+
+/* Multi-page Exercise continuations retain the same warm field as the titled
+   opening page. */
+#content.adt-source-page :is(
+  [data-section-id='pg122_sec001'],
+  [data-section-id='pg123_sec001'],
+  [data-section-id='pg125_sec001'],
+  [data-section-id='pg131_sec001']
+) > div:first-child {
+  background: #f3eee2 !important;
+}
+
+/* Continued Examples keep the olive rule, never the converter's orange one. */
+#content.adt-source-page :is(
+  [data-section-id='pg126_sec001'],
+  [data-section-id='pg127_sec001'],
+  [data-section-id='pg130_sec001']
+) > div:first-child {
+  border-color: #9d8500 !important;
+}
+
+#content.adt-source-page [data-section-id='pg127_sec001'] img {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#content.adt-source-page [data-section-id='pg128_sec001'] .grid > div {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#content.adt-source-page [data-section-id='pg129_sec001'] .book-example-card {
+  margin-top: 3.25rem !important;
+}
+
+/* Exercise 4 is split into two source sections on printed page 160; present it
+   as one uninterrupted Exercise field. */
+#content.adt-source-page [data-source-section='pg166_sec002'] {
+  padding-top: 0 !important;
+  background: #f3eee2 !important;
+}
+#content.adt-source-page [data-section-id='pg166_sec002'] {
+  margin-top: -1rem !important;
+  background: #f3eee2 !important;
+  border-radius: 0 0 1.25rem 1.25rem !important;
+  box-shadow: none !important;
+}
+#content.adt-source-page [data-section-id='pg166_sec002'] > div:first-child {
+  display: none !important;
+}
+
+#content.adt-source-page [data-section-id='pg170_sec001'] .grid > div,
+#content.adt-source-page [data-section-id='pg170_sec001'] [class*='bg-white'] {
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Printed page 165: full-width example/exercise alignment and source rhythm. */
+#content.adt-source-page [data-section-id='pg171_sec001'] > div:first-child {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+#content.adt-source-page [data-section-id='pg171_sec001'] > div:first-child > div:first-of-type {
+  left: 3.5rem !important;
+}
+#content.adt-source-page [data-section-id='pg171_sec001'] [data-id='pg171_n0003'] {
+  padding: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-size: 2rem !important;
+  line-height: 1 !important;
+}
+#content.adt-source-page [data-section-id='pg171_sec001'] :is(
+  p, p span, [data-id='pg171_n0007'], [role='group'], [role='group'] span
+) {
+  font-size: 1.5rem !important;
+  line-height: 1.42 !important;
+}
+#content.adt-source-page [data-section-id='pg171_sec001'] [data-id='pg171_n0007'] {
+  font-size: 1.75rem !important;
+  font-weight: 800 !important;
+}
+#content.adt-source-page [data-section-id='pg171_sec001'] [role='group'] {
+  margin-left: 2.7rem !important;
+}
+#content.adt-source-page [data-section-id='pg171_sec001'] [role='group'] > div {
+  width: 14rem !important;
+  font-size: 1.5rem !important;
+}
+#content.adt-source-page [data-section-id='pg171_sec002'] > div:first-child {
+  width: 100% !important;
+  margin: 0 !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+#content.adt-source-page [data-section-id='pg171_sec002'] > div:nth-child(2) {
+  padding: 1.1rem .75rem 1.4rem !important;
+}
+#content.adt-source-page [data-section-id='pg171_sec002'] li {
+  gap: 1rem !important;
+}
+#content.adt-source-page [data-section-id='pg171_sec002'] li > div:first-child {
+  width: 2.75rem !important;
+  font-size: 1.5rem !important;
+}
+#content.adt-source-page [data-section-id='pg171_sec002'] li p,
+#content.adt-source-page [data-section-id='pg171_sec002'] li p span {
+  font-size: 1.5rem !important;
+  line-height: 1.42 !important;
+}
+
+#content.adt-source-page .book-page165 {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+#content.adt-source-page .book-page165-example {
+  position: relative !important;
+  width: 100% !important;
+  margin: 2rem 0 3rem !important;
+  border: 1px solid #9d8500 !important;
+  border-radius: 0 1.45rem 0 1.45rem !important;
+  background: #fff !important;
+  box-shadow: 0 4px 8px rgba(73,62,16,.13) !important;
+}
+#content.adt-source-page .book-page165-chip {
+  position: absolute !important;
+  top: -1.65rem !important;
+  left: 4rem !important;
+  min-width: 13rem !important;
+  padding: .65rem 1.4rem .7rem !important;
+  border-radius: 0 1.2rem 0 1.2rem !important;
+  background: linear-gradient(#bca817,#8d7100) !important;
+  box-shadow: 0 5px 8px rgba(56,48,10,.24) !important;
+  color: #fff !important;
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  font-style: italic !important;
+  line-height: 1 !important;
+}
+#content.adt-source-page .book-page165-example-body {
+  padding: 3rem .75rem 1rem !important;
+  color: #282828 !important;
+}
+#content.adt-source-page .book-page165-example-body p {
+  margin: 0 0 .8rem !important;
+  font-size: 1.5rem !important;
+  line-height: 1.42 !important;
+}
+#content.adt-source-page .book-page165-example-body h2 {
+  margin: .6rem 0 .5rem !important;
+  font-size: 1.75rem !important;
+  font-weight: 800 !important;
+  font-style: italic !important;
+}
+#content.adt-source-page .book-page165-sum {
+  width: 14rem !important;
+  margin: .2rem 0 .8rem 2.7rem !important;
+  font-size: 1.5rem !important;
+  line-height: 1.35 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+#content.adt-source-page .book-page165-sum > div {
+  display: grid !important;
+  grid-template-columns: 1.6rem 3.2rem 1fr !important;
+  text-align: right !important;
+}
+#content.adt-source-page .book-page165-sum > i {
+  display: block !important;
+  border-bottom: 2px solid #222 !important;
+}
+#content.adt-source-page .book-page165-sum > i:first-of-type { margin: .1rem 0 .25rem !important; }
+#content.adt-source-page .book-page165-sum > i:last-of-type { margin-top: .2rem !important; }
+#content.adt-source-page .book-page165-exercise {
+  width: 100% !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  border-radius: 0 1.25rem 0 1.25rem !important;
+  background: #f6f1e4 !important;
+  box-shadow: none !important;
+}
+#content.adt-source-page .book-page165-exercise-title {
+  width: 100% !important;
+  padding: .65rem 1rem .7rem !important;
+  background: linear-gradient(#ffd9b8,#f7c99c) !important;
+  box-shadow: 0 4px 6px rgba(75,65,15,.16) !important;
+  color: #222 !important;
+  font-size: 1.75rem !important;
+  font-weight: 800 !important;
+  font-style: italic !important;
+  line-height: 1 !important;
+}
+#content.adt-source-page .book-page165-questions {
+  padding: 1rem .75rem 1.35rem !important;
+}
+#content.adt-source-page .book-page165-questions > div {
+  display: grid !important;
+  grid-template-columns: 2.75rem 1fr !important;
+  column-gap: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+#content.adt-source-page .book-page165-questions > div:last-child { margin-bottom: 0 !important; }
+#content.adt-source-page .book-page165-questions :is(b,p) {
+  margin: 0 !important;
+  color: #282828 !important;
+  font-size: 1.5rem !important;
+  font-weight: 400 !important;
+  line-height: 1.42 !important;
+}
+#content.adt-source-page .book-page165-questions b { color: #927700 !important; }
+
+/* Printed page 164. */
+#content.adt-source-page .book-page164 {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding-top: 1rem !important;
+}
+#content.adt-source-page .book-page164-continuation {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 2rem 4.25rem !important;
+  min-height: 20.875rem !important;
+  padding: 1.25rem .75rem 1.6rem !important;
+  border-radius: 0 1.2rem 0 1.2rem !important;
+  background: #f2ecd0 !important;
+}
+#content.adt-source-page .book-page164-problem {
+  display: grid !important;
+  grid-template-columns: 3.1rem 1fr !important;
+  align-items: start !important;
+}
+#content.adt-source-page .book-page164-problem:last-child { grid-column: 1 !important; }
+#content.adt-source-page .book-page164-problem > b {
+  color: #927700 !important;
+  font-size: 1.6491rem !important;
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
+}
+#content.adt-source-page .book-page164-addition {
+  width: 12.5rem !important;
+  font-size: 1.6491rem !important;
+  line-height: 1.35 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+#content.adt-source-page .book-page164-addition > div {
+  display: grid !important;
+  grid-template-columns: 1fr 3.4rem !important;
+  text-align: right !important;
+}
+#content.adt-source-page .book-page164-addition .is-plus { position: relative !important; }
+#content.adt-source-page .book-page164-addition .is-plus::before {
+  content: "+" !important;
+  position: absolute !important;
+  left: -.05rem !important;
+}
+#content.adt-source-page .book-page164-addition.is-simple > div { grid-template-columns: 4rem 1fr !important; }
+#content.adt-source-page .book-page164-addition > i {
+  display: block !important;
+  border-bottom: 2px solid #222 !important;
+}
+#content.adt-source-page .book-page164-addition > i:first-of-type { margin-top: .15rem !important; }
+#content.adt-source-page .book-page164-addition > i + i { margin-top: 1.8rem !important; }
+#content.adt-source-page .book-page164-topic {
+  width: 100% !important;
+  max-width: 44rem !important;
+  margin: 2rem 0 2.75rem !important;
+  color: #08a6e8 !important;
+  font-size: 1.85rem !important;
+  font-weight: 800 !important;
+  font-style: italic !important;
+  line-height: 1.25 !important;
+  text-align: left !important;
+}
+#content.adt-source-page .book-page164-example {
+  position: relative !important;
+  width: 100% !important;
+  margin: 0 !important;
+  border: 1px solid #9d8500 !important;
+  border-radius: 0 1.4rem 0 1.4rem !important;
+  background: #fff !important;
+  box-shadow: 0 4px 8px rgba(73,62,16,.13) !important;
+}
+#content.adt-source-page .book-page164-chip {
+  position: absolute !important;
+  top: -1.65rem !important;
+  left: 4rem !important;
+  min-width: 13rem !important;
+  padding: .65rem 1.4rem .7rem !important;
+  border-radius: 0 1.2rem 0 1.2rem !important;
+  background: linear-gradient(#bca817,#8d7100) !important;
+  box-shadow: 0 5px 8px rgba(56,48,10,.24) !important;
+  color: #fff !important;
+  font-size: 1.6491rem !important;
+  font-weight: 800 !important;
+  font-style: italic !important;
+  line-height: 1 !important;
+}
+#content.adt-source-page .book-page164-example-body { padding: 3rem .75rem 1rem !important; }
+#content.adt-source-page .book-page164-example-body p {
+  margin: 0 0 .8rem !important;
+  color: #282828 !important;
+  font-size: 1.6491rem !important;
+  line-height: 1.25 !important;
+}
+#content.adt-source-page .book-page164-example-body h2 {
+  margin: .65rem 0 .55rem !important;
+  font-size: 1.6491rem !important;
+  font-weight: 800 !important;
+  font-style: italic !important;
+}
+#content.adt-source-page .book-page164-solution {
+  width: 12rem !important;
+  margin: 0 0 .8rem 2.7rem !important;
+  font-size: 1.6491rem !important;
+  line-height: 1.35 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+#content.adt-source-page .book-page164-solution > div {
+  display: grid !important;
+  grid-template-columns: 1.5rem 3.2rem 1fr !important;
+  text-align: right !important;
+}
+#content.adt-source-page .book-page164-solution > i { display:block !important; border-bottom:2px solid #222 !important; }
+#content.adt-source-page .book-page164-solution > i:first-of-type { margin: .1rem 0 .2rem !important; }
+#content.adt-source-page .book-page164-solution > i:last-of-type { margin-top: .2rem !important; }
+
+/* Printed page 163: Exercise 5 is a plain cream field, not a titled peach strip. */
+#content.adt-source-page [data-section-id='pg169_sec001'] {
+  padding: 1rem .75rem 1.5rem !important;
+  border-radius: 0 1.2rem 0 1.2rem !important;
+  background: #f2ecd0 !important;
+}
+#content.adt-source-page [data-section-id='pg169_sec001'] [data-source-heading-wrap='exercise'] {
+  width: 100% !important;
+  margin: 0 0 1.2rem !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+#content.adt-source-page [data-section-id='pg169_sec001'] [data-id='pg169_n0003'] {
+  width: auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #927700 !important;
+  font-size: 1.6491rem !important;
+  font-weight: 800 !important;
+  font-style: italic !important;
+  line-height: 1.25 !important;
+}
+#content.adt-source-page [data-section-id='pg169_sec001'] [data-tts-text] {
+  width: 12.5rem !important;
+  font-size: 1.6491rem !important;
+  line-height: 1.3 !important;
+}
+#content.adt-source-page [data-section-id='pg169_sec001'] [data-tts-text] > div[aria-hidden='true'] {
+  width: 100% !important;
+  font-size: inherit !important;
+}
+#content.adt-source-page [data-section-id='pg169_sec001'] [data-tts-text] > div.h-\[2px\] {
+  margin-top: .15rem !important;
+}
+#content.adt-source-page .book-page163-answer-rule {
+  display: block !important;
+  width: 100% !important;
+  margin-top: 1.7rem !important;
+  border-bottom: 2px solid #222 !important;
+}
+
+/* Printed page 160: Exercise 4 is one continuous cream panel in the source. */
+#content.adt-source-page:has([data-section-id="pg166_sec001"]) > .adt-source-page-part {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  background: transparent !important;
+}
+#content.adt-source-page:has([data-section-id="pg166_sec001"]) > .adt-source-page-part:first-child {
+  padding-top: 8rem !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec001"] {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec001"] > div:first-child {
+  margin-bottom: 0 !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec001"] > div:nth-child(2) {
+  background: #f7f3e7 !important;
+  padding: .7rem 1rem .35rem !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec002"] {
+  border-radius: 0 0 1.4rem 1.4rem !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec002"] > div:first-child {
+  display: none !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec002"] > div:nth-child(2) {
+  padding: .15rem 1rem .75rem !important;
+}
+#content.adt-source-page [data-section-id^="pg166_sec"] [data-id],
+#content.adt-source-page [data-section-id^="pg166_sec"] p,
+#content.adt-source-page [data-section-id^="pg166_sec"] th,
+#content.adt-source-page [data-section-id^="pg166_sec"] td {
+  font-size: 21px !important;
+  line-height: 1.25 !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec002"] table th,
+#content.adt-source-page [data-section-id="pg166_sec002"] table td {
+  padding: .28rem .55rem !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec002"] .mb-8 {
+  margin-bottom: .65rem !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec002"] .mb-4 {
+  margin-bottom: .4rem !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec002"] .mb-2,
+#content.adt-source-page [data-section-id="pg166_sec002"] .mb-1 {
+  margin-bottom: .15rem !important;
+}
+#content.adt-source-page [data-section-id='pg172_sec001'] > div:first-child {
+  background: #f3eee2 !important;
+}
+#content.adt-source-page [data-section-id='pg172_sec001'] {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  overflow-wrap: anywhere !important;
+}
+#content.adt-source-page [data-section-id='pg172_sec002'] {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+#content.adt-source-page [data-section-id='pg172_sec002'] > div,
+#content.adt-source-page [data-section-id='pg172_sec002'] > div > div {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+#content.adt-source-page [data-section-id='pg172_sec002'] :is(h1, p) {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  text-align: left !important;
+}
+#content.adt-source-page [data-section-id='pg173_sec001'] .book-example-card {
+  padding-top: 3.75rem !important;
+}
+
+/* Printed page 167: two source-faithful currency subtraction examples. */
+#content.adt-source-page .book-page167 { width: 100% !important; max-width: 100% !important; }
+#content.adt-source-page .book-page167-card {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 2rem 0 3.6rem !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border: 1px solid #9d8500 !important;
+  border-radius: 0 1.45rem 0 1.45rem !important;
+  background: #fff !important;
+  box-shadow: 0 4px 8px rgba(73, 62, 16, .13) !important;
+}
+#content.adt-source-page .book-page167-card-two { margin-bottom: 1.5rem !important; }
+#content.adt-source-page .book-page167-chip {
+  position: absolute !important;
+  top: -1.65rem !important;
+  left: 4rem !important;
+  right: auto !important;
+  width: max-content !important;
+  min-width: 13rem !important;
+  padding: .65rem 1.4rem .7rem !important;
+  border-radius: 0 1.2rem 0 1.2rem !important;
+  background: linear-gradient(#bca817, #8d7100) !important;
+  box-shadow: 0 5px 8px rgba(56, 48, 10, .24) !important;
+  z-index: 2 !important;
+}
+#content.adt-source-page .book-page167-chip h1 {
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #fff !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  font-style: italic !important;
+  line-height: 1 !important;
+}
+#content.adt-source-page .book-page167 :is(.book-page167-simple,.book-page167-second) {
+  padding: 3.2rem 1rem 1.1rem !important;
+  color: #282828 !important;
+  font-size: 1.5rem !important;
+  line-height: 1.42 !important;
+}
+#content.adt-source-page .book-page167 :is(
+  .book-page167-simple,
+  .book-page167-second,
+  .book-page167-prompt,
+  .book-page167-simple p,
+  .book-page167-simple span,
+  .book-page167-simple-steps,
+  .book-page167-simple-steps b,
+  .book-page167-step-copy,
+  .book-page167-step-copy p,
+  .book-page167-step-copy span,
+  .book-page167-step-copy b,
+  .book-page167-answer,
+  .book-page167-money,
+  .book-page167-money span
+) {
+  font-size: 1.5rem !important;
+  line-height: 1.42 !important;
+}
+#content.adt-source-page .book-page167 h2 {
+  margin: 1.1rem 0 .55rem !important;
+  font-size: 1.75rem !important;
+  font-weight: 800 !important;
+  font-style: italic !important;
+}
+#content.adt-source-page .book-page167-prompt { margin: 0 0 .7rem !important; }
+#content.adt-source-page .book-page167-simple-steps { margin: 0 0 .45rem !important; }
+#content.adt-source-page .book-page167-simple-steps > div {
+  display: grid !important;
+  grid-template-columns: 3rem 1fr !important;
+  margin-bottom: .35rem !important;
+}
+#content.adt-source-page .book-page167-simple-steps b,
+#content.adt-source-page .book-page167-inline-minus { font-weight: 400 !important; }
+#content.adt-source-page .book-page167-simple p:last-child { margin: .25rem 0 0 !important; }
+#content.adt-source-page .book-page167-money {
+  width: 14rem !important;
+  color: #222 !important;
+  font-size: 1.5rem !important;
+  line-height: 1.42 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+#content.adt-source-page .book-page167-second > .book-page167-money { margin: 0 0 2.25rem 3.4rem !important; }
+#content.adt-source-page .book-page167-money > div {
+  display: grid !important;
+  grid-template-columns: 1fr 3.3rem !important;
+  text-align: right !important;
+}
+#content.adt-source-page .book-page167-money-head { margin-bottom: .4rem !important; }
+#content.adt-source-page .book-page167-minus {
+  padding-bottom: .3rem !important;
+  border-bottom: 2px solid #222 !important;
+}
+#content.adt-source-page .book-page167-minus > span:first-child {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: baseline !important;
+  gap: .45rem !important;
+}
+#content.adt-source-page .book-page167-minus > span:first-child::before { content: "−" !important; font-family: Arial, sans-serif !important; }
+#content.adt-source-page .book-page167-money > i {
+  display: block !important;
+  margin-top: 1.8rem !important;
+  border-bottom: 2px solid #222 !important;
+}
+#content.adt-source-page .book-page167-result {
+  margin-top: .4rem !important;
+  padding-bottom: .28rem !important;
+  border-bottom: 2px solid #222 !important;
+}
+#content.adt-source-page .book-page167-step-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 15rem !important;
+  column-gap: 2rem !important;
+  row-gap: 2.1rem !important;
+  align-items: start !important;
+}
+#content.adt-source-page .book-page167-step-copy {
+  display: grid !important;
+  grid-template-columns: 2.6rem 1fr !important;
+}
+#content.adt-source-page .book-page167-step-copy b { font-weight: 400 !important; }
+#content.adt-source-page .book-page167-step-copy p { margin: 0 0 .35rem !important; }
+#content.adt-source-page .book-page167-step-grid > .book-page167-money { justify-self: end !important; margin-right: .15rem !important; }
+#content.adt-source-page .book-page167-answer { margin: 1.25rem 0 .1rem 2.6rem !important; }
+@media (max-width: 700px) {
+  #content.adt-source-page .book-page167-chip { left: 1rem !important; }
+  #content.adt-source-page .book-page167-step-grid { grid-template-columns: 1fr !important; }
+  #content.adt-source-page .book-page167-step-grid > .book-page167-money { justify-self: start !important; margin-left: 2.6rem !important; }
+}
+#content.adt-source-page [data-section-id='pg174_sec001'] table {
+  table-layout: fixed !important;
+  width: 100% !important;
+}
+
+/* Printed page 168: preserve the source book's large worked-example layout. */
+#content.adt-source-page .book-page168-example {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 2rem 0 1.5rem !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border: 1px solid #9d8500 !important;
+  border-radius: 0 1.55rem 0 1.55rem !important;
+  background: #fff !important;
+  box-shadow: 0 4px 8px rgba(73, 62, 16, .13) !important;
+}
+#content.adt-source-page .book-page168-title {
+  position: absolute !important;
+  top: -1.75rem !important;
+  left: 4.5rem !important;
+  right: auto !important;
+  width: auto !important;
+  max-width: none !important;
+  display: inline-block !important;
+  min-width: 13rem !important;
+  padding: .7rem 1.5rem .75rem !important;
+  border-radius: 0 1.25rem 0 1.25rem !important;
+  background: linear-gradient(#bca817, #8d7100) !important;
+  box-shadow: 0 5px 8px rgba(56, 48, 10, .24) !important;
+  z-index: 2 !important;
+}
+#content.adt-source-page .book-page168-title h1 {
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #fff !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  font-style: italic !important;
+  line-height: 1 !important;
+}
+#content.adt-source-page .book-page168-body { padding: 3.1rem .8rem 2.2rem !important; }
+#content.adt-source-page .book-page168-body > h2 {
+  margin: 2.2rem 0 .8rem !important;
+  font-size: 1.8rem !important;
+  font-weight: 800 !important;
+  font-style: italic !important;
+}
+#content.adt-source-page .book-page168-calculation {
+  width: 15rem !important;
+  color: #222 !important;
+  font-family: var(--book-font), Arial, sans-serif !important;
+  font-size: 1.65rem !important;
+  line-height: 1.28 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+#content.adt-source-page .book-page168-opening { margin-left: 3.5rem !important; }
+#content.adt-source-page .book-page168-calculation > div {
+  display: grid !important;
+  grid-template-columns: 1fr 3.2rem !important;
+  text-align: right !important;
+}
+#content.adt-source-page .book-page168-calculation .book-money-head { margin-bottom: .45rem !important; }
+#content.adt-source-page .book-page168-calculation .book-money-minus {
+  position: relative !important;
+  grid-template-columns: 1fr 3.2rem !important;
+  padding-bottom: .32rem !important;
+  border-bottom: 2px solid #252525 !important;
+}
+#content.adt-source-page .book-page168-calculation .book-money-minus b {
+  display: none !important;
+}
+#content.adt-source-page .book-page168-calculation .book-money-minus > span:first-of-type {
+  position: static !important;
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: flex-end !important;
+  gap: .55rem !important;
+}
+#content.adt-source-page .book-page168-calculation .book-money-minus > span:first-of-type::before {
+  content: "−" !important;
+  position: static !important;
+  color: #111 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 1.9rem !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: 1.1 !important;
+}
+#content.adt-source-page .book-page168-opening > i {
+  display: block !important;
+  width: 100% !important;
+  border-bottom: 2px solid #252525 !important;
+}
+#content.adt-source-page .book-page168-opening > i:first-of-type { margin-top: 2.15rem !important; }
+#content.adt-source-page .book-page168-steps {
+  display: grid !important;
+  grid-template-columns: minmax(0, 2.35fr) minmax(15rem, 1fr) !important;
+  border: 1px solid #9d8500 !important;
+}
+#content.adt-source-page .book-page168-steps > div {
+  padding: .55rem .7rem !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+#content.adt-source-page .book-page168-steps > div:nth-child(odd) { border-right: 1px solid #9d8500 !important; }
+#content.adt-source-page .book-page168-steps > div:nth-child(n+3) { border-top: 1px solid #9d8500 !important; }
+#content.adt-source-page .book-page168-copy {
+  display: grid !important;
+  grid-template-columns: 2.5rem 1fr !important;
+  font-size: 1.45rem !important;
+  line-height: 1.42 !important;
+}
+#content.adt-source-page .book-page168-copy p { margin: 0 0 .35rem !important; }
+#content.adt-source-page .book-page168-step-number { font-size: 1.45rem !important; }
+#content.adt-source-page .book-page168-work {
+  align-self: stretch !important;
+  justify-self: stretch !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 2.55rem 1.35rem .75rem !important;
+}
+#content.adt-source-page .book-page168-work .book-money-result {
+  margin-top: .55rem !important;
+  padding-bottom: .3rem !important;
+  border-bottom: 2px solid #252525 !important;
+}
+@media (max-width: 700px) {
+  #content.adt-source-page .book-page168-title { left: 1rem !important; }
+  #content.adt-source-page .book-page168-steps { grid-template-columns: 1fr !important; }
+  #content.adt-source-page .book-page168-steps > div { border-right: 0 !important; border-top: 1px solid #a58a18 !important; }
+  #content.adt-source-page .book-page168-steps > div:first-child { border-top: 0 !important; }
+}
+#content.adt-source-page [data-section-id='pg177_sec001'] label {
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+#content.adt-source-page [data-section-id='pg178_sec001'] > div:first-child {
+  border-color: #9d8500 !important;
+}
+#content.adt-source-page [data-section-id='pg178_sec001'] .book-example-card + .book-example-card {
+  margin-top: 3.25rem !important;
+}
+#content.adt-source-page [data-section-id='pg178_sec001'] > div:nth-child(2) {
+  padding-top: 5rem !important;
+}
+
+/* Keep every normal text run on printed page 167 at the established body size. */
+#content.adt-source-page [data-section-id='pg173_sec001'].book-page167 :is(
+  p, span, b, .book-page167-simple-steps, .book-page167-step-copy,
+  .book-page167-money, .book-page167-answer
+) {
+  font-size: 1.5rem !important;
+  line-height: 1.42 !important;
+}
+#content.adt-source-page [data-section-id='pg173_sec001'].book-page167 :is(
+  .book-page167-chip h1, .book-page167-chip h1 span
+) {
+  font-size: 2rem !important;
+  line-height: 1 !important;
+}
+#content.adt-source-page [data-section-id='pg173_sec001'].book-page167 .book-page167-card {
+  padding-top: 0 !important;
+}
+#content.adt-source-page [data-section-id='pg173_sec001'].book-page167 .book-page167-simple-steps > div {
+  margin-bottom: .7rem !important;
+}
+#content.adt-source-page [data-section-id='pg173_sec001'].book-page167 .book-page167-simple > p:last-child {
+  margin-top: .65rem !important;
+}
+#content.adt-source-page [data-section-id='pg173_sec001'].book-page167 .book-page167-step-grid {
+  row-gap: 3.8rem !important;
+}
+#content.adt-source-page [data-section-id='pg173_sec001'].book-page167 .book-page167-answer {
+  margin-top: 1.8rem !important;
+}
+
+#content.adt-source-page :is(
+  [data-section-id='pg126_sec001'],
+  [data-section-id='pg127_sec001'],
+  [data-section-id='pg130_sec001']
+) {
+  border-color: #9d8500 !important;
+}
+
+/* Printed exercises: warm cream field with the peach title strip. */
+#content.adt-source-page [data-source-kind='exercise'] {
+  background: var(--book-exercise) !important;
+  border-color: transparent !important;
+  border-radius: 0 1.25rem 0 1.25rem !important;
+  box-shadow: 0 3px 7px rgba(75, 65, 15, .12) !important;
+  margin-top: 2.25rem !important;
+  margin-bottom: 2.25rem !important;
+  padding: 0 1.5rem 1.5rem !important;
+  overflow: hidden !important;
+}
+
+#content :is([data-source-kind='example'], [data-source-kind='exercise'],
+  [data-source-kind='activity'], [data-source-kind='summary'],
+  [data-source-kind='vocabulary'], [data-source-kind='revision'])
+  + :is([data-source-kind='example'], [data-source-kind='exercise'],
+  [data-source-kind='activity'], [data-source-kind='summary'],
+  [data-source-kind='vocabulary'], [data-source-kind='revision']) {
+  margin-top: 2.5rem !important;
+}
+
+/* A physical source page may have been assembled from several converter
+   sections. Remove the duplicated page-edge padding between those parts;
+   keep one shared top and bottom page margin. */
+#content.adt-source-page > .adt-source-page-part + .adt-source-page-part {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+#content.adt-source-page > .adt-source-page-part:not(:last-child) {
+  padding-bottom: 0 !important;
+}
+
+#content.adt-source-page [data-source-heading='exercise'] {
   display: block !important;
   width: 100% !important;
   color: var(--book-ink) !important;
   background: linear-gradient(180deg, var(--book-exercise-bar-top), var(--book-exercise-bar-bottom)) !important;
-  border-radius: .3rem .3rem 0 0 !important;
-  box-shadow: none !important;
+  box-sizing: border-box !important;
+  border-radius: 0 1.2rem 0 1.2rem !important;
+  box-shadow: 0 3px 7px rgba(90, 65, 35, .16) !important;
   font-size: 1.18em !important;
   font-style: normal !important;
   line-height: 1.2 !important;
-  padding: .3rem .75rem !important;
+  padding: .65rem 1.5rem !important;
   text-align: left !important;
 }
 
-#content [data-source-heading-wrap='exercise'] {
-  width: 100% !important;
-  margin: 0 0 .75rem !important;
+/* Converter-generated option spans often have no data-id and otherwise keep
+   a smaller Tailwind text preset. Component text follows the book body size;
+   only the canonical heading retains its deliberate larger hierarchy. */
+#content.adt-source-page :is(
+  [data-source-kind='exercise'],
+  [data-source-kind='example'],
+  [data-source-kind='activity']
+) span:not([data-source-heading]):not(mjx-container):not(mjx-container *) {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+#content#content.adt-source-page :is(
+  [data-source-kind='exercise'],
+  [data-source-kind='example'],
+  [data-source-kind='activity']
+) [data-id]:not([data-source-heading]):not(mjx-container):not(mjx-container *) {
+  font-size: clamp(1rem, 2.868cqw, 2.15rem) !important;
+  line-height: 1.25 !important;
+}
+
+#content.adt-source-page [data-source-heading-wrap='exercise'] {
+  width: calc(100% + 3rem) !important;
+  margin: 0 -1.5rem 1rem !important;
   padding: 0 !important;
   background: transparent !important;
   border: 0 !important;
@@ -299,15 +1277,30 @@
   box-shadow: none !important;
 }
 
-/* Activities use the source book's pale cyan instructional panel. */
-#content [data-source-kind='activity'] {
-  background: var(--book-activity) !important;
+/* Extracted diagrams inherit the component surface. Raster assets are cleaned
+   to transparency; CSS also prevents converter frames, fills and shadows from
+   reintroducing an image-owned card inside a textbook component. */
+#content.adt-source-page :is(
+  [data-source-kind='example'],
+  [data-source-kind='exercise'],
+  [data-source-kind='activity']
+) :is(img, picture, figure) {
   border: 0 !important;
-  border-radius: .2rem !important;
+  outline: 0 !important;
+  background: transparent !important;
   box-shadow: none !important;
 }
 
-#content [data-source-heading='activity'] {
+/* Activities use the source book's pale cyan instructional panel. */
+#content.adt-source-page [data-source-kind='activity'] {
+  background: var(--book-activity) !important;
+  border: 0 !important;
+  border-radius: 1.5rem !important;
+  box-shadow: 0 5px 12px rgba(14, 165, 233, .16) !important;
+  overflow: hidden !important;
+}
+
+#content.adt-source-page [data-source-heading='activity'] {
   color: #00a6c7 !important;
   background: var(--book-activity-bar) !important;
   border-radius: 0 !important;
@@ -315,9 +1308,637 @@
   font-style: normal !important;
 }
 
-#content [data-source-heading-wrap='activity'] {
+#content.adt-source-page [data-source-heading-wrap='activity'] {
   background: var(--book-activity-bar) !important;
+  border-bottom: 3px solid #38bdf8 !important;
   box-shadow: none !important;
+}
+
+/* Use the same deliberate vertical rhythm between complete textbook
+   components, whether the converter kept them in one source section or split
+   them into consecutive sections. */
+#content.adt-source-page > .adt-source-page-part > section + section {
+  margin-top: 2.5rem !important;
+}
+
+/* Printed page 4 is a continuation of Exercise 1, not a new card. */
+#content [data-section-id='pg010_sec001'].book-page4 {
+  padding: 0 !important;
+}
+
+#content .book-page4-sheet {
+  display: grid !important;
+  gap: 1.35rem !important;
+  padding: .8rem .75rem 1rem !important;
+  border: 0 !important;
+  border-radius: 0 1.25rem 0 1.25rem !important;
+  background: #f4f0e4 !important;
+  box-shadow: none !important;
+}
+
+#content .book-page4-question {
+  display: grid !important;
+  grid-template-columns: 2.4rem minmax(0, 1fr) !important;
+  gap: .35rem !important;
+  align-items: start !important;
+}
+
+#content .book-page4-question > span {
+  color: #958017 !important;
+}
+
+#content .book-page4-question p {
+  margin: 0 !important;
+  text-align: left !important;
+  text-align-last: left !important;
+}
+
+#content .book-page4-q2 > div > p + p,
+#content .book-page4-subquestions > p {
+  padding-left: 1rem !important;
+}
+
+#content .book-page4-q2 > div > p + p {
+  margin-top: .35rem !important;
+}
+
+#content .book-page4-q3 table {
+  width: 94% !important;
+  margin: .55rem 0 0 1rem !important;
+  border-collapse: collapse !important;
+  table-layout: auto !important;
+}
+
+#content .book-page4-q3 th,
+#content .book-page4-q3 td {
+  height: 2.55rem !important;
+  padding: .25rem .55rem !important;
+  border: 1px solid #a78d23 !important;
+  background: transparent !important;
+  text-align: left !important;
+  vertical-align: middle !important;
+}
+
+#content .book-page4-q3 th {
+  background: #ded5a8 !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+}
+
+#content .book-page4-q3 th:first-child,
+#content .book-page4-q3 td:first-child {
+  width: 21% !important;
+  text-align: left !important;
+}
+
+#content .book-page4-q3 input {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+}
+
+#content .book-page4-subquestions {
+  display: grid !important;
+  gap: .35rem !important;
+}
+
+#content .book-page4-q6 > div > div {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1rem !important;
+  margin-top: .35rem !important;
+  padding-left: 1rem !important;
+}
+
+/* Printed pages 5–8: continuous Exercise 1 pages. */
+#content .book-early-page {
+  padding: 0 !important;
+  font-size: 23px !important;
+  line-height: 1.35 !important;
+}
+
+#content .book-early-exercise {
+  padding: .75rem !important;
+  border: 0 !important;
+  border-radius: 0 1.25rem 0 1.25rem !important;
+  background: #f4f0e4 !important;
+  box-shadow: none !important;
+}
+
+#content .book-page5 .book-early-exercise,
+#content .book-page6 .book-early-exercise {
+  min-height: 1000px !important;
+}
+
+#content .book-page5 .book-early-exercise {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+#content .book-page6 .book-early-exercise {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+#content .book-page7 .book-early-exercise {
+  min-height: 1015px !important;
+}
+
+#content .book-page8 .book-early-exercise {
+  display: flex !important;
+  min-height: 760px !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+#content .book-early-question {
+  display: grid !important;
+  grid-template-columns: 2.45rem minmax(0, 1fr) !important;
+  gap: .35rem !important;
+  align-items: start !important;
+}
+
+#content .book-early-question + .book-early-question {
+  margin-top: 1.35rem !important;
+}
+
+#content .book-early-question > span {
+  color: #958017 !important;
+}
+
+#content .book-early-question p {
+  margin: 0 !important;
+  text-align: left !important;
+  text-align-last: left !important;
+}
+
+#content .book-page5-cont {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: .75rem 2rem !important;
+  margin: 0 0 1.75rem 3rem !important;
+}
+
+#content .book-page5-shaded {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: .72rem 2rem !important;
+  margin-top: .85rem !important;
+  padding-left: 1rem !important;
+  font-size: 24px !important;
+}
+
+#content .book-page5-shaded-item {
+  display: grid !important;
+  grid-template-columns: 2.65rem 5.1rem !important;
+  align-items: center !important;
+}
+
+#content .book-page5-number {
+  display: inline-grid !important;
+  grid-template-columns: repeat(4, .85em) !important;
+  align-items: center !important;
+  justify-content: start !important;
+}
+
+#content .book-page5-number i {
+  position: relative !important;
+  z-index: 0 !important;
+  display: grid !important;
+  width: .85em !important;
+  height: 1.55em !important;
+  place-items: center !important;
+  font-style: normal !important;
+  line-height: 1 !important;
+}
+
+#content .book-page5-number i.is-shaded::before {
+  position: absolute !important;
+  z-index: -1 !important;
+  width: 1.22em !important;
+  height: 1.22em !important;
+  border-radius: 50% !important;
+  background: #76d7f3 !important;
+  content: '' !important;
+}
+
+#content .book-page5-fill {
+  margin: .55rem 0 0 1rem !important;
+}
+
+#content .book-page5-fill p + p {
+  margin: .15rem 0 0 2.3rem !important;
+  line-height: 1.65 !important;
+}
+
+#content .book-answer-line {
+  display: inline-block !important;
+  width: 4.1rem !important;
+  border-bottom: 1.5px solid #333 !important;
+  transform: translateY(-.18em) !important;
+}
+
+#content .book-page6-table {
+  width: 96% !important;
+  margin: .55rem 0 0 .75rem !important;
+  border-collapse: collapse !important;
+}
+
+#content .book-page6-table :is(th, td) {
+  height: 2.1rem !important;
+  padding: .12rem .35rem !important;
+  border: 1px solid #a78d23 !important;
+  background: transparent !important;
+  text-align: center !important;
+}
+
+#content .book-page6-table th {
+  background: #ded5a8 !important;
+  font-weight: 700 !important;
+}
+
+#content .book-page6-table input {
+  width: 100% !important;
+  height: 100% !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+#content .book-page6-fills {
+  display: grid !important;
+  gap: .52rem !important;
+  margin-top: .5rem !important;
+  padding-left: 1rem !important;
+}
+
+#content .book-place-value-row {
+  display: grid !important;
+  grid-template-columns: 3.25rem 4.65rem minmax(0, 1fr) !important;
+  align-items: start !important;
+  line-height: 1.35 !important;
+}
+
+#content .book-place-value-copy {
+  display: grid !important;
+  min-width: 0 !important;
+}
+
+#content .book-place-value-copy > span {
+  white-space: nowrap !important;
+}
+
+#content .book-page7-list {
+  display: flex !important;
+  min-height: 980px !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  padding: .25rem 2.2rem !important;
+}
+
+#content .book-page7-list .book-place-value-row {
+  width: 100% !important;
+}
+
+#content .book-page8-wrap .book-early-exercise {
+  padding: .75rem !important;
+}
+
+#content .book-page8-choices {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: .35rem 4rem !important;
+  margin-top: .35rem !important;
+  padding-left: 1rem !important;
+}
+
+#content .book-page8-riddles {
+  display: grid !important;
+  gap: .45rem !important;
+}
+
+#content .book-page8-riddles p {
+  padding-left: 0 !important;
+}
+
+#content .book-page8-topic {
+  margin-top: 1.2rem !important;
+}
+
+#content .book-page8-topic h1 {
+  margin: 0 0 .45rem !important;
+  color: var(--book-blue) !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  font-size: 28px !important;
+}
+
+#content .book-page8-topic p {
+  margin: 0 !important;
+  text-align: justify !important;
+  text-align-last: left !important;
+  font-size: 23px !important;
+  line-height: 1.4 !important;
+}
+
+/* Printed page 11: extracted abaci sit directly on the exercise tint. */
+#content [data-section-id='pg017_sec001'] .bg-stone-50 {
+  background: transparent !important;
+}
+
+#content [data-section-id='pg017_sec001'] img[data-id^='pg017_im'] {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  mix-blend-mode: multiply !important;
+}
+
+#content [data-section-id='pg017_sec001'] div:has(> img[data-id^='pg017_im']) + div {
+  display: none !important;
+}
+
+/* Printed page 12 continues Exercise 2 at the compact book scale. */
+#content [data-source-section='pg018_sec001'] > section[data-section-id='pg018_sec001'] {
+  width: 100% !important;
+  max-width: none !important;
+  padding: .8rem 1.5rem 1rem !important;
+  border-radius: 0 1.5rem 0 1.5rem !important;
+  background: #f7f3e6 !important;
+  box-shadow: none !important;
+}
+
+#content [data-section-id='pg018_sec001'] > div {
+  display: grid !important;
+  gap: .45rem !important;
+}
+
+#content [data-section-id='pg018_sec001'] > div > div {
+  grid-template-columns: 2.2rem minmax(0, 1fr) !important;
+  column-gap: .35rem !important;
+}
+
+#content [data-section-id='pg018_sec001'] [data-id='pg018_n0002'],
+#content [data-section-id='pg018_sec001'] [data-id='pg018_n0003'],
+#content [data-section-id='pg018_sec001'] [data-id='pg018_n0004'],
+#content [data-section-id='pg018_sec001'] [data-id='pg018_n0005'] {
+  padding-top: .1rem !important;
+  font-size: 1.45rem !important;
+  line-height: 1.2 !important;
+}
+
+#content [data-section-id='pg018_sec001'] img[data-id^='pg018_im'] {
+  width: min(26.5rem, 100%) !important;
+  max-width: 26.5rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  mix-blend-mode: multiply !important;
+}
+
+#content [data-section-id='pg018_sec001'] div:has(> img[data-id^='pg018_im']) > div {
+  display: none !important;
+}
+
+#content [data-section-id='pg018_sec001'] [data-id='pg018_n0006'] {
+  margin: 0 !important;
+  font-size: 1.45rem !important;
+  line-height: 1.35 !important;
+}
+
+#content [data-section-id='pg018_sec001'] [data-id='pg018_n0006'] + div {
+  margin-top: .25rem !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1rem !important;
+  font-size: 1.4rem !important;
+}
+
+/* Printed page 13: the book's place-value guide and table palette. */
+#content .book-page13-place-diagram {
+  position: relative !important;
+  width: min(25rem, 100%) !important;
+  height: 10.2rem !important;
+  margin: 0 auto !important;
+  background: transparent !important;
+}
+
+#content .book-page13-digits {
+  display: grid !important;
+  width: 7.5rem !important;
+  margin-left: 2.2rem !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  text-align: center !important;
+  font-size: 1.55rem !important;
+  line-height: 1 !important;
+}
+
+#content .book-page13-guides {
+  position: relative !important;
+  height: 8.7rem !important;
+  margin-left: 3.05rem !important;
+}
+
+#content .book-page13-guides > span {
+  position: absolute !important;
+  top: 0 !important;
+  height: var(--guide-height) !important;
+  border-left: 2px solid var(--guide-color) !important;
+}
+
+#content .book-page13-guides i {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: var(--guide-width) !important;
+  border-bottom: 2px solid var(--guide-color) !important;
+}
+
+#content .book-page13-guides b {
+  position: absolute !important;
+  bottom: -.55em !important;
+  left: calc(var(--guide-width) + .4rem) !important;
+  color: #2d2d2d !important;
+  font-size: 1.45rem !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+}
+
+#content .book-page13-guides .ones { left: 5.58rem !important; --guide-height: 2.5rem; --guide-width: 5.1rem; --guide-color: #37a9eb; }
+#content .book-page13-guides .tens { left: 3.7rem !important; --guide-height: 4.25rem; --guide-width: 7rem; --guide-color: #f0209a; }
+#content .book-page13-guides .hundreds { left: 1.82rem !important; --guide-height: 6rem; --guide-width: 8.9rem; --guide-color: #f59a23; }
+#content .book-page13-guides .thousands { left: 0 !important; --guide-height: 7.55rem; --guide-width: 10.75rem; --guide-color: #2e9d50; }
+
+#content .book-page13-value-table :is(th, td) {
+  background: #f7f3e7 !important;
+  border-color: #a78d23 !important;
+}
+
+#content .book-page13-value-table tr:first-child td {
+  background: #ddd3a2 !important;
+  font-weight: 700 !important;
+}
+
+/* Printed page 14: compact Example 4 and four-across Exercise 3. */
+#content [data-section-id='pg020_sec001'] > div {
+  padding: 1.1rem 1rem .8rem !important;
+}
+
+#content [data-section-id='pg020_sec001'] [data-id='pg020_n0003'] {
+  margin-bottom: .35rem !important;
+}
+
+#content [data-section-id='pg020_sec001'] [data-id='pg020_n0005'],
+#content [data-section-id='pg020_sec001'] [data-id='pg020_n0006'] {
+  margin-left: 1rem !important;
+  line-height: 1.3 !important;
+}
+
+#content [data-section-id='pg020_sec002'] > div {
+  border: 0 !important;
+  border-radius: 0 1.25rem 0 1.25rem !important;
+  background: #f7f3e6 !important;
+}
+
+#content [data-section-id='pg020_sec002'] > div > div:first-child > h1 {
+  box-sizing: border-box !important;
+  padding-left: 1.5rem !important;
+}
+
+#content [data-section-id='pg020_sec002'] > div > div:nth-child(2) {
+  display: grid !important;
+  gap: .7rem !important;
+  padding: .65rem .75rem .8rem !important;
+}
+
+#content [data-section-id='pg020_sec002'] > div > div:nth-child(2) > div {
+  display: grid !important;
+  gap: .25rem !important;
+}
+
+#content [data-section-id='pg020_sec002'] > div > div:nth-child(2) > div > div:first-child {
+  gap: .45rem !important;
+}
+
+#content [data-section-id='pg020_sec002'] > div > div:nth-child(2) > div > div:nth-child(2) {
+  padding-left: 2.9rem !important;
+}
+
+#content [data-section-id='pg020_sec002'] > div > div:nth-child(2) > div > div:nth-child(2) > .grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: .3rem 1rem !important;
+}
+
+#content [data-section-id='pg020_sec002'] div:has(> [data-id='pg020_n0060']) + div,
+#content [data-section-id='pg020_sec002'] div:has(> [data-id='pg020_n0063']) + div {
+  display: none !important;
+}
+
+#content [data-section-id='pg020_sec002'] [data-id='pg020_n0060'],
+#content [data-section-id='pg020_sec002'] [data-id='pg020_n0063'] {
+  font-size: 1.3rem !important;
+}
+
+#content [data-section-id='pg020_sec003'] [data-id='pg020_n0065'] {
+  font-size: 1.8rem !important;
+  line-height: 1.15 !important;
+}
+
+#content [data-section-id='pg020_sec003'] [data-id='pg020_n0067'],
+#content [data-section-id='pg020_sec003'] [data-id='pg020_n0068'] {
+  font-size: 1.35rem !important;
+  line-height: 1.35 !important;
+}
+
+/* Printed page 15: continued answer, Example 2, and compact Exercise 4. */
+#content [data-section-id='pg021_sec001'] > div {
+  padding: .45rem .75rem .55rem !important;
+}
+
+#content [data-section-id='pg021_sec001'] [data-id^='pg021_n000'] {
+  line-height: 1.18 !important;
+}
+
+#content [data-section-id='pg021_sec001']
+  div:has(> [data-id='pg021_n0003']) {
+  margin-top: .45rem !important;
+  row-gap: .22rem !important;
+}
+
+#content [data-section-id='pg021_sec002'] [data-source-kind='example'] {
+  overflow: visible !important;
+  padding: 0 .75rem .65rem !important;
+}
+
+#content [data-section-id='pg021_sec002'] [data-id^='pg021_n001'] {
+  line-height: 1.08 !important;
+}
+
+#content [data-source-section='pg021_sec002'] {
+  padding-top: 2.25rem !important;
+}
+
+#content [data-section-id='pg021_sec002'] [data-source-heading-wrap='example'] {
+  position: relative !important;
+  z-index: 2 !important;
+  width: max-content !important;
+  margin: 0 0 -.15rem 1.55rem !important;
+  transform: translateY(-52%) !important;
+}
+
+#content [data-section-id='pg021_sec002'] [data-id='pg021_n0010'] {
+  margin-top: -.15rem !important;
+}
+
+#content [data-section-id='pg021_sec002'] [data-id='pg021_n0011'],
+#content [data-section-id='pg021_sec002'] [data-id='pg021_n0016'] {
+  margin-top: .4rem !important;
+}
+
+#content [data-section-id='pg021_sec002'] [data-id='pg021_n0015'] {
+  margin-top: .45rem !important;
+}
+
+#content [data-section-id='pg021_sec003'] > div {
+  border-radius: 0 1.2rem 0 1.2rem !important;
+  background: #f7f3e6 !important;
+  box-shadow: none !important;
+}
+
+#content [data-section-id='pg021_sec003'] > div > div:first-child {
+  border-radius: 0 1.2rem 0 1.2rem !important;
+  padding: .55rem 1.5rem !important;
+}
+
+#content [data-section-id='pg021_sec003'] > div > div:nth-child(2) {
+  padding: .55rem 1rem .65rem !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#content [data-section-id='pg021_sec003'] [data-id='pg021_n0022'] {
+  font-size: inherit !important;
+}
+
+#content [data-section-id='pg021_sec003']
+  div:has(> [data-id='pg021_n0022']) {
+  margin-bottom: .25rem !important;
+  padding-left: 1.75rem !important;
+}
+
+#content [data-section-id='pg021_sec003']
+  div:has(> p > [data-id='pg021_n0023']) {
+  row-gap: .28rem !important;
+  padding-left: 3.1rem !important;
+}
+
+#content [data-section-id='pg021_sec003'] [data-id^='pg021_n002'] {
+  line-height: 1.12 !important;
 }
 
 /* End-of-chapter panels retain the printed lavender and cyan system. */
@@ -356,6 +1977,193 @@
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
+}
+
+/* A revision panel may also be the section's page-level surface. Keep its
+   source pale-blue field above the generic white-page background rule. */
+#content [data-source-section] > section[data-source-kind='revision'] {
+  background: var(--book-revision) !important;
+}
+
+/* Printed page 175 continues the Revision exercise in a second converter
+   section. Preserve one uninterrupted pale-blue field through question 4. */
+#content.adt-source-page [data-source-section='pg181_sec002'],
+#content.adt-source-page [data-section-id='pg181_sec002'] {
+  background: #edf9fe !important;
+}
+
+#content.adt-source-page section[data-section-id='pg181_sec001'] {
+  background: #edf9fe !important;
+}
+
+/* Question numerals and their copy share one baseline. Wrapped text hangs at
+   the beginning of the question rather than returning beneath the number. */
+#content.adt-source-page [data-section-id='pg181_sec001']
+  .space-y-6.text-\[21px\] p {
+  display: grid !important;
+  grid-template-columns: 2.1rem minmax(0, 1fr) !important;
+  column-gap: .65rem !important;
+  align-items: baseline !important;
+}
+
+#content.adt-source-page [data-section-id='pg181_sec001']
+  .space-y-6.text-\[21px\] p > span:first-child {
+  margin-right: 0 !important;
+}
+
+#content.adt-source-page [data-section-id='pg181_sec002'] > div:first-child {
+  display: grid !important;
+  grid-template-columns: 2.1rem minmax(0, 1fr) !important;
+  column-gap: .65rem !important;
+  align-items: baseline !important;
+  padding-left: 1.5rem !important;
+}
+
+#content.adt-source-page [data-section-id='pg181_sec002'] > div:first-child > :is(h1, p) {
+  margin: 0 !important;
+}
+
+#content.adt-source-page [data-section-id='pg181_sec002']
+  > div:first-child > h1,
+#content.adt-source-page [data-section-id='pg181_sec002']
+  [data-id='pg181_n0019'] {
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
+}
+
+#content.adt-source-page [data-section-id='pg181_sec002'] table {
+  background: #edf9fe !important;
+}
+
+#content.adt-source-page [data-section-id='pg181_sec002'] table tbody :is(th, td) {
+  background: #edf9fe !important;
+}
+
+#content.adt-source-page [data-section-id='pg181_sec002'] table thead th {
+  background: #ede6cb !important;
+}
+
+/* Printed page 171 continues the subtraction exercise with five two-column
+   vertical calculations. Keep the warm field, aligned shilling/cent columns,
+   and the pair of answer rules shown in the source book. */
+#content.adt-source-page [data-section-id='pg177_sec001'].book-page171-exercises {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 53.75rem !important;
+  margin: 0 auto !important;
+  padding: 2.1rem 2.2rem 2.4rem !important;
+  border-radius: 0 1.25rem 0 1.25rem !important;
+  background: #f4f0e4 !important;
+}
+
+#content.adt-source-page [data-section-id='pg177_sec001'] .book-page171-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  column-gap: clamp(2rem, 7cqw, 5rem) !important;
+  row-gap: clamp(2.5rem, 5.2cqw, 4rem) !important;
+}
+
+#content.adt-source-page [data-section-id='pg177_sec001'] .book-page171-problem {
+  display: grid !important;
+  grid-template-columns: 3.1rem minmax(0, 1fr) !important;
+  column-gap: .6rem !important;
+  align-items: start !important;
+}
+
+#content.adt-source-page [data-section-id='pg177_sec001'] .book-page171-number {
+  color: #917000 !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+}
+
+#content.adt-source-page [data-section-id='pg177_sec001'] .book-page171-calc {
+  display: grid !important;
+  grid-template-columns: 1.5ch 7ch 3ch !important;
+  align-items: baseline !important;
+  width: max-content !important;
+  font-variant-numeric: tabular-nums lining-nums !important;
+  line-height: 1.18 !important;
+}
+
+#content.adt-source-page [data-section-id='pg177_sec001'] .book-page171-calc > span {
+  text-align: right !important;
+}
+
+#content.adt-source-page [data-section-id='pg177_sec001'] .book-page171-calc > span:nth-child(3n + 1) {
+  text-align: left !important;
+}
+
+#content.adt-source-page [data-section-id='pg177_sec001'] .book-page171-calc > i {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  height: 2.15rem !important;
+  margin-top: .25rem !important;
+  border-top: 1.5px solid var(--book-ink) !important;
+  border-bottom: 1.5px solid var(--book-ink) !important;
+}
+
+/* Example 1 continues on printed page 172, so page 171 must not draw a false
+   closing rule or rounded lower corner. */
+#content.adt-source-page [data-section-id='pg177_sec002'] .book-example-card {
+  border-bottom: 0 !important;
+  border-radius: 0 28px 0 0 !important;
+  box-shadow: none !important;
+}
+
+/* Printed page 169: Example 4 leaves a blank answer area between two rules,
+   followed by eight horizontal subtraction questions in Exercise 7. */
+#content.adt-source-page [data-section-id='pg175_sec001'] .book-page169-answer-rule {
+  display: block !important;
+  width: 100% !important;
+  height: 2.25rem !important;
+  border-bottom: 2px solid var(--book-ink) !important;
+}
+
+#content.adt-source-page [data-section-id='pg175_sec002'][data-source-kind='exercise'] {
+  background: #f7f3e6 !important;
+}
+
+#content.adt-source-page [data-section-id='pg175_sec002'] [data-source-heading='exercise'] {
+  color: #8d7000 !important;
+}
+
+#content.adt-source-page [data-section-id='pg175_sec002'] .book-page169-question {
+  display: grid !important;
+  grid-template-columns: 2.6rem minmax(0, 1fr) !important;
+  column-gap: .75rem !important;
+  align-items: baseline !important;
+  width: 100% !important;
+  font-weight: 400 !important;
+}
+
+#content.adt-source-page [data-section-id='pg175_sec002'] .book-page169-number {
+  color: #8d7000 !important;
+  font-weight: 400 !important;
+}
+
+@media (max-width: 640px) {
+  #content.adt-source-page [data-section-id='pg177_sec001'] .book-page171-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Printed page 166: the topic heading and its description share the exact
+   content-area edges used by the exercise above. */
+#content.adt-source-page [data-source-section='pg172_sec002']
+  [data-section-id='pg172_sec002'] {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+#content.adt-source-page [data-source-section='pg172_sec002']
+  [data-section-id='pg172_sec002'] :is(div, h1, p) {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 #content [data-source-heading='revision'],
@@ -531,9 +2339,884 @@
   }
 }
 
+#content#content.adt-source-page [data-section-id='pg021_sec002'] {
+  margin-top: 38px !important;
+}
+
+/* Page 15 was authored with an extra inner card. Neutralise that converter
+   wrapper so Example 2 has the one standard olive outline and one label tab. */
+#content#content.adt-source-page [data-section-id='pg021_sec002'] > div {
+  overflow: visible !important;
+  border: 2px solid rgb(149, 133, 46) !important;
+  border-radius: 0 28px !important;
+  background: #fff !important;
+  box-shadow: 0 2px 4px rgba(79, 65, 0, .15) !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg021_sec002']
+  > div > [data-source-kind='example'] {
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 40px 24px !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg021_sec002']
+  [data-source-heading='example'] {
+  margin: 0 0 -2px 0 !important;
+  transform: translateY(-50%) !important;
+  font-size: clamp(1rem, 2.868cqw, 2.15rem) !important;
+  line-height: 1.25 !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg021_sec001']
+  div:has(> [data-id='pg021_n0003']) > div + div,
+#content#content.adt-source-page [data-section-id='pg021_sec003']
+  div:has(> p > [data-id='pg021_n0023']) > p + p {
+  margin-top: 5px !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg021_sec003']
+  > div > div:nth-child(2) {
+  padding-top: 12px !important;
+  padding-bottom: 14px !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg021_sec003']
+  > [data-source-kind='exercise'] > div:first-child {
+  width: 100% !important;
+  margin: 0 0 16px !important;
+  padding: 0 !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg021_sec003']
+  [data-source-heading='exercise'] {
+  display: block !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  padding: 10px 24px !important;
+  font-size: clamp(1rem, 2.868cqw, 2.15rem) !important;
+  line-height: 1.25 !important;
+}
+
+/* Printed page 18: remove the converter's decorative box inside Example 2.
+   The source has one olive card and compact content insets. */
+#content#content.adt-source-page [data-section-id='pg024_sec002'] {
+  padding: 36px 16px 20px !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg024_sec002']
+  > div:last-child {
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg024_sec001']
+  [data-source-kind='exercise'] {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg024_sec001']
+  [data-source-kind='exercise'] > div:last-child {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Printed page 19 tables use compact textbook cells; converter `text-3xl`
+   and `py-5` made digits collide and doubled the exercise height. */
+#content#content.adt-source-page [data-section-id^='pg025_']
+  .grid.grid-cols-10 {
+  width: 100% !important;
+  grid-template-columns: repeat(10, minmax(0, 1fr)) !important;
+}
+
+#content#content.adt-source-page [data-section-id^='pg025_']
+  .grid.grid-cols-10 > div {
+  min-width: 0 !important;
+  padding: 8px 2px !important;
+  font-size: 21px !important;
+  line-height: 1.15 !important;
+}
+
+#content#content.adt-source-page [data-section-id^='pg025_']
+  [data-source-kind='exercise'] > div:last-child {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+#content#content.adt-source-page [data-section-id^='pg025_']
+  .overflow-x-auto > div {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Printed page 20 ends after the Example 1 prompt.  Answer controls generated
+   by the converter belong to neither this PDF page nor the printed component. */
+#content#content.adt-source-page [data-section-id='pg026_sec002']
+  [data-source-kind='example'] > div:last-child {
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg026_sec002']
+  [data-source-kind='example'] > div:last-child > div:last-child {
+  display: none !important;
+}
+
+/* Printed page 21 begins with the Answer continuation from Example 1. */
+#content#content.adt-source-page [data-section-id='pg027_sec001']
+  > div > div:first-child {
+  border: 2px solid rgb(149, 133, 46) !important;
+  border-top: 0 !important;
+  border-radius: 0 0 20px 20px !important;
+  padding: 10px 20px 16px !important;
+  box-shadow: none !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg027_sec001']
+  > div > div:first-child::before {
+  content: 'Answer';
+  display: block;
+  margin: 0 0 6px !important;
+  font-size: clamp(1rem, 2.868cqw, 2.15rem) !important;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* Printed page 22: question 2 is part of the same Exercise 8 cream field. */
+#content#content.adt-source-page [data-section-id='pg028_sec002'] {
+  border-radius: 0 !important;
+  background: #f7f3e8 !important;
+  padding: 0 16px 18px !important;
+  box-shadow: none !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg028_sec002']
+  > div:first-child > div:first-child {
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  margin-right: 14px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #9a7600 !important;
+  box-shadow: none !important;
+  font-size: clamp(1rem, 2.868cqw, 2.15rem) !important;
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg028_sec002']
+  [data-id^='pg028_n01'] {
+  color: #2d2926 !important;
+}
+
+/* Printed page 27 uses three compact Examples. Example 3's place values are
+   one vertical list in the PDF, not a converter-created two-column grid. */
+#content#content.adt-source-page [data-section-id^='pg033_']
+  [data-source-kind='example'] {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+#content#content.adt-source-page [data-section-id^='pg033_']
+  .grid.grid-cols-2:has(+ p) {
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+  padding-left: 22px !important;
+}
+
+#content#content.adt-source-page [data-section-id^='pg033_']
+  .grid.grid-cols-2:has(+ p) > div {
+  font-size: 22px !important;
+  line-height: 1.28 !important;
+}
+
+/* Printed page 28 keeps Example 6's table compact and Exercise 9 text at
+   regular body weight. */
+#content#content.adt-source-page [data-section-id^='pg034_']
+  [data-source-kind='example'] :is(th, td) {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  line-height: 1.12 !important;
+}
+
+#content#content.adt-source-page [data-section-id^='pg034_']
+  [data-source-kind='exercise'] [data-id]:not([data-source-heading]) {
+  font-weight: 400 !important;
+}
+
+/* Printed page 31 question 1 is a compact 3-by-2 comparison table, not six
+   large application cards. */
+#content#content.adt-source-page [data-section-id='pg037_sec001']
+  .grid.grid-cols-3:has([data-id='pg037_n0010']) {
+  gap: 12px 26px !important;
+  padding: 0 46px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg037_sec001']
+  .grid.grid-cols-3:has([data-id='pg037_n0010']) > div {
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg037_sec001']
+  .grid.grid-cols-3:has([data-id='pg037_n0010']) > div > div {
+  gap: 0 !important;
+  justify-content: flex-start !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg037_sec001']
+  .grid.grid-cols-3:has([data-id='pg037_n0010']) > div > div > span:first-child {
+  width: 34px !important;
+  min-width: 34px !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg037_sec001']
+  .grid.grid-cols-3:has([data-id='pg037_n0010']) > div > div > span:not(:first-child) {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  min-width: 42px !important;
+  height: 30px !important;
+  padding: 1px 6px !important;
+  border: 1px solid #2d2926 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  line-height: 1 !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg037_sec001']
+  .grid.grid-cols-3:has([data-id='pg037_n0010']) .comparison-symbol-blank {
+  width: 30px !important;
+  height: 30px !important;
+  margin: 0 !important;
+  border: 1px solid #2d2926 !important;
+  border-bottom: 1px solid #2d2926 !important;
+  background: #d6ca91 !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg037_sec001']
+  .grid.grid-cols-3:has([data-id='pg037_n0010']) p {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg037_sec001']
+  .grid.grid-cols-3:has([data-id='pg037_n0010']) p > span:last-child {
+  padding: 2px 8px !important;
+  border: 1px solid #2d2926 !important;
+  background: #fff !important;
+  line-height: 1 !important;
+}
+
+/* Question 2 has answer rules between each number pair in the source book. */
+#content#content.adt-source-page [data-section-id='pg037_sec001']
+  .grid.grid-cols-2:has([data-id='pg037_n0030']) > div > div > span:first-child::after {
+  content: "" !important;
+  display: inline-block !important;
+  width: 68px !important;
+  margin: 0 10px 3px !important;
+  border-bottom: 1px solid #2d2926 !important;
+}
+
+/* Printed page 33: Example 1 presents the sequence as ordinary text. The
+   dashed converter input card is not present in the source page. */
+#content#content.adt-source-page [data-section-id='pg039_sec002']
+  [data-id='pg039_n0015_completed'] {
+  font-size: 22px !important;
+  line-height: 1.3 !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg039_sec002']
+  div:has(> [data-id='pg039_n0015_completed']) {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg039_sec002']
+  table,
+#content#content.adt-source-page [data-section-id='pg039_sec002']
+  table :is(th, td) {
+  border-radius: 0 !important;
+}
+
+/* Printed pages 34–35 continue Example 2/4 without a new rounded card, and
+   Exercise 11 uses one uninterrupted cream field rather than answer cards. */
+#content#content.adt-source-page [data-section-id='pg040_sec001'],
+#content#content.adt-source-page [data-section-id='pg041_sec001'] {
+  border-top: 0 !important;
+  border-radius: 0 0 0 18px !important;
+  box-shadow: none !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg040_sec002'] table,
+#content#content.adt-source-page [data-section-id='pg040_sec003'] > div > div:last-child > div:last-child,
+#content#content.adt-source-page [data-section-id='pg041_sec002'] table {
+  border-radius: 0 !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg041_sec003']
+  div:has(> [data-id='pg041_n0064']),
+#content#content.adt-source-page [data-section-id='pg041_sec003']
+  div:has(> [data-id='pg041_n0064']) + div,
+#content#content.adt-source-page [data-section-id='pg041_sec003']
+  div:has(> [data-id='pg041_n0064']) ~ div:has(.fitb-sentence) {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg041_sec003'] .border-dashed {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+#content#content.adt-source-page :is([data-section-id='pg040_sec002'],
+  [data-section-id='pg040_sec003'], [data-section-id='pg041_sec001'],
+  [data-section-id='pg041_sec002']) :is(table, [data-id^='pg040_n005'], [data-id^='pg041_n000'], [data-id^='pg041_n002'], [data-id^='pg041_n003']) {
+  font-family: Arial, sans-serif !important;
+}
+
+/* Printed page 45: both place-value tables fit on the same line inside the
+   Example. The converter's 830px minimum made the second table overflow. */
+#content#content.adt-source-page [data-section-id='pg051_sec001']
+  [data-source-kind='example'] .overflow-x-auto > .flex,
+#content#content.adt-source-page [data-section-id='pg051_sec001']
+  div:has(> table[aria-label='Place values for 3246']) {
+  width: 100% !important;
+  min-width: 0 !important;
+  gap: 6px !important;
+  overflow: visible !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg051_sec001']
+  table[aria-label^='Place values for'] {
+  width: calc(50% - 14px) !important;
+  table-layout: fixed !important;
+  font-size: 14px !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg051_sec001']
+  table[aria-label^='Place values for'] :is(th, td) {
+  padding: 4px 3px !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.05 !important;
+  white-space: nowrap !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg051_sec001']
+  div:has(> [data-id='pg051_n0023']) + div,
+#content#content.adt-source-page [data-section-id='pg051_sec001']
+  div:has(> [data-id='pg051_n0023']) ~ :is(div, h4, p) {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg051_sec001']
+  div:has(> table[aria-label='Place values for 3246']) {
+  margin-left: -54px !important;
+  margin-right: -54px !important;
+  width: calc(100% + 108px) !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg051_sec001']
+  .overflow-x-auto:has(table[aria-label='Place values for 3246']) {
+  width: calc(100% + 108px) !important;
+  margin-left: -54px !important;
+  margin-right: -54px !important;
+  overflow: visible !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg051_sec001']
+  .overflow-x-auto:has(table[aria-label='Place values for 3246']) > .flex {
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+
+/* Printed pages 46–47 continue the preceding worked Example without
+   introducing another rounded card at the top edge. */
+#content#content.adt-source-page [data-section-id='pg052_sec001'] > div:first-child,
+#content#content.adt-source-page [data-section-id='pg053_sec001'] > div:first-child {
+  border-top: 0 !important;
+  border-radius: 0 0 0 18px !important;
+  box-shadow: none !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg053_sec001'] figure img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 auto !important;
+}
+
+/* Printed page 48: Exercise 1 is one cream field and Example 1 is one olive
+   card. Remove the converter's inner white/orange application cards. */
+#content#content.adt-source-page [data-section-id='pg054_sec001'] > div:nth-child(2) {
+  margin-top: 0 !important;
+  padding: 18px 16px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg054_sec002'] {
+  padding: 0 !important;
+  border: 1.5px solid #9a7600 !important;
+  border-radius: 0 22px 0 22px !important;
+  background: #fff !important;
+  box-shadow: 3px 4px 7px rgba(45, 41, 38, .15) !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg054_sec002'] > div {
+  padding: 38px 24px 20px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg054_sec002']
+  div:has(> [data-id='pg054_n0036']) {
+  left: 38px !important;
+  right: auto !important;
+  width: auto !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg054_sec002']
+  div:has(> [data-id='pg054_n0036']) ~ div {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+/* Printed page 49: compact labels overlap the left side of each card. */
+#content#content.adt-source-page [data-section-id='pg055_sec001'] > [data-id='pg055_n0002'],
+#content#content.adt-source-page [data-section-id='pg055_sec002'] [data-id='pg055_n0034'] {
+  display: inline-flex !important;
+  align-items: center !important;
+  position: absolute !important;
+  left: 38px !important;
+  top: 0 !important;
+  right: auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  padding: 7px 18px !important;
+  transform: translateY(-50%) !important;
+  border-radius: 0 14px 0 14px !important;
+  background: linear-gradient(#cdbb23, #927600) !important;
+  color: #fff !important;
+  box-shadow: 2px 4px 6px rgba(45, 41, 38, .18) !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg055_sec001'] {
+  padding-top: 30px !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg055_sec002'] {
+  overflow: visible !important;
+  padding: 30px 16px 16px !important;
+  border-width: 1.5px !important;
+  border-radius: 0 22px 0 22px !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg055_sec002'] table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  font-size: 14px !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg055_sec002'] table :is(th, td) {
+  padding: 5px 3px !important;
+  line-height: 1.15 !important;
+}
+
+/* Printed page 51 continues Exercise 2; the converter-added instruction line
+   is not part of the source page. */
+#content#content.adt-source-page [data-section-id='pg057_sec001']
+  > div:first-child:has([data-id='pg057_n0002']) {
+  display: none !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg057_sec001']
+  > div:nth-child(2) {
+  padding: 12px 16px 18px !important;
+  border-radius: 0 0 0 16px !important;
+  box-shadow: none !important;
+}
+
+/* Printed page 53 Exercise 3 uses the canonical full-width peach strip and
+   cream field. Keep the heading above—not inside—the question grid. */
+#content#content.adt-source-page [data-section-id='pg059_sec002'] {
+  padding: 0 0 16px !important;
+  border-radius: 0 18px 0 18px !important;
+  background: #f4f0e3 !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg059_sec002']
+  div:has(> [data-id='pg059_n0010']) {
+  position: relative !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  margin: 0 0 12px !important;
+  padding: 8px 16px !important;
+  transform: none !important;
+  border-radius: 0 16px 0 16px !important;
+  background: linear-gradient(#ffd8b8, #f6b17d) !important;
+  box-shadow: 0 4px 5px rgba(45, 41, 38, .18) !important;
+}
+
+#content#content.adt-source-page [data-section-id='pg059_sec002']
+  [data-id='pg059_n0010'] {
+  color: #2d2926 !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+}
+
+/* Printed page 55 starts with the remaining rows of Example 1. */
+#content#content.adt-source-page [data-section-id='pg061_sec001'] {
+  border-top: 0 !important;
+  border-radius: 0 0 0 18px !important;
+  box-shadow: none !important;
+}
+
+/* Printed page 63 contains two separate Example cards; the converter's outer
+   orange frame is not another component. */
+#content#content.adt-source-page [data-section-id='pg069_sec001'] {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
 @media (min-width: 641px) {
   #content .grid:has([data-id='pg180_n0007']) {
     grid-template-columns: 14rem minmax(0, 1fr) !important;
+  }
+}
+
+/* Shared physical-page shell — matched to the audited Hisabati Standard Three
+   conversion. This affects page geometry only; the English source content and
+   its page-specific components remain independent. */
+body {
+  background: rgb(226, 232, 240) !important;
+}
+
+body > main {
+  display: flex !important;
+  justify-content: center !important;
+  padding: 1.25rem 1rem 7rem !important;
+}
+
+#content.adt-source-page {
+  position: relative !important;
+  display: block !important;
+  box-sizing: border-box !important;
+  width: min(100%, 920px) !important;
+  max-width: 920px !important;
+  min-height: 1307px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #fff !important;
+  box-shadow: 0 22px 55px rgba(15, 23, 42, .2) !important;
+}
+
+/* From page ii onward the physical sheet itself is always white.  Colour is
+   permitted only on local textbook components; page-part wrappers never own
+   a wash, tint, texture, or gradient. */
+#content.adt-source-page:not(:has([data-source-section='pg001_sec001'])) {
+  background-color: rgb(255, 255, 255) !important;
+  background-image: none !important;
+}
+
+#content.adt-source-page:not(:has([data-source-section='pg001_sec001'])) >
+  .adt-source-page-part {
+  background: transparent !important;
+}
+
+#content.adt-source-page::before,
+#content.adt-source-page::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  height: 118px;
+  pointer-events: none;
+}
+
+#content.adt-source-page::before {
+  top: 0;
+  background: linear-gradient(to bottom, color-mix(in srgb, #98def8 38%, white), transparent);
+}
+
+#content.adt-source-page::after {
+  bottom: 0;
+  background: linear-gradient(to top, color-mix(in srgb, #98def8 38%, white), transparent);
+}
+
+/* Suppress the older per-part wash: one physical page has one top gradient. */
+#content.adt-source-page > [data-source-section]::before {
+  display: none !important;
+}
+#content.adt-source-page > .book-source-autofit > [data-source-section]::before {
+  display: none !important;
+}
+
+#content.adt-source-page > .adt-source-page-part {
+  position: relative !important;
+  display: block !important;
+  float: none !important;
+  z-index: 3 !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding-left: 66px !important;
+  padding-right: 66px !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Old converter templates often painted an additional sky/white wash on the
+   whole page or on a full-page section.  The physical-page shell above is the
+   sole owner of that treatment: one gradient at the top and one at the
+   bottom.  Keep local gold/orange/blue component bars intact. */
+#content.adt-source-page:is(
+  [class*='from-sky-50'][class*='to-sky-50'],
+  [class*='from-sky-100'][class*='to-sky-100']
+) {
+  background-color: rgb(255, 255, 255) !important;
+  background-image: none !important;
+}
+
+#content.adt-source-page > .adt-source-page-part:is(
+  [class*='from-sky-50'][class*='to-sky-50'],
+  [class*='from-sky-100'][class*='to-sky-100'],
+  [class*='from-sky-50'][class*='to-white']
+),
+#content.adt-source-page > .adt-source-page-part > section:is(
+  [class*='from-sky-50'][class*='to-sky-50'],
+  [class*='from-sky-100'][class*='to-sky-100'],
+  [class*='from-sky-50'][class*='to-white']
+) {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Page ii predates the shared shell and contains two empty gradient spacer
+   elements of its own.  Suppress them so the page has exactly one shell fade
+   at the top and one at the bottom, matching the Hisabati reader. */
+#content.adt-source-page [data-section-id='pg002_sec001'] >
+  :is(.bg-gradient-to-b, .bg-gradient-to-t) {
+  display: none !important;
+}
+
+/* Converter-era pages may also contain absolutely positioned top/bottom fade
+   overlays inside their top-level section (page v is one example).  The
+   shared page shell already supplies these two fades, so suppress every such
+   duplicate edge overlay throughout the book. */
+#content.adt-source-page > .adt-source-page-part > section >
+  .absolute.inset-x-0:is(.top-0, .bottom-0)[class*='bg-gradient'] {
+  display: none !important;
+}
+
+/* Page iv is the book-wide content-width reference: a 788px printable column
+   with a 32px inner inset, leaving 724px for ordinary prose. */
+#content.adt-source-page [data-section-id='pg002_sec001'] {
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+}
+
+#content [data-section-id='pg009_sec002'] > div {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+#content.adt-source-page:has([data-source-section='pg009_sec002']) >
+  [data-source-section='pg009_sec002'] {
+  padding-top: 40px !important;
+}
+
+#content.adt-source-page > .adt-source-page-part:first-child {
+  padding-top: 92px !important;
+}
+
+#content.adt-source-page > .adt-source-page-part:last-of-type {
+  padding-bottom: 122px !important;
+}
+
+#content.adt-source-page > .adt-source-page-part > section {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 788px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+}
+
+/* Every converted section occupies the complete printable column. Converter
+   max-width utilities were useful for app cards but made textbook sections
+   appear inconsistently narrow from page to page. */
+#content.adt-source-page > .adt-source-page-part > section > :is(div, article, aside) {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+#content.adt-source-page [data-source-kind] {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* Source prose is fully justified, with the final line returning to the
+   content start. Do not stretch short instructional rows, captions, answer
+   choices, arithmetic, or deliberately centred/right-aligned copy. */
+#content.adt-source-page p:not(.text-center):not(.text-right):not(:has(> img)):not(:has(> table)) {
+  text-align: justify !important;
+  text-align-last: left !important;
+  text-justify: inter-word !important;
+}
+
+#content.adt-source-page :is(
+  [data-source-kind='exercise'],
+  [data-source-kind='example'],
+  [data-source-kind='activity'],
+  [data-source-kind='revision']
+) :is(.grid, [class*='grid-cols'], [class*='font-mono'], .adt-vertical-arithmetic, .adt-pre-calculation) p,
+#content.adt-source-page figcaption p {
+  text-align: left !important;
+  text-align-last: left !important;
+}
+
+/* Page 164: the prose section arrived with two nested layers of horizontal
+   card padding, reducing the paragraph well below the printable column. */
+#content [data-source-section='pg164_sec002'] > section,
+#content [data-source-section='pg164_sec002'] > section > div {
+  width: 100% !important;
+  max-width: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+#content [data-source-section='pg164_sec002'] p {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  text-align: justify !important;
+  text-align-last: left !important;
+  text-justify: inter-word !important;
+}
+
+#content.adt-source-page:has([data-source-section='pg001_sec001']) > .adt-source-page-part {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+#content.adt-source-page:has([data-source-section='pg001_sec001']) > .adt-source-page-part > section {
+  max-width: 920px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  background: transparent !important;
+}
+
+/* Replace the cover's old inset fades with the shared full-page shell fades. */
+#content.adt-source-page [data-section-id='pg001_sec001'] >
+  :is(.bg-gradient-to-b, .bg-gradient-to-t) {
+  display: none !important;
+}
+
+/* The intentionally blank preliminary page has no converter part wrapper. */
+#content.adt-source-page > section[data-section-id='pg006_sec001'] {
+  position: relative !important;
+  z-index: 3 !important;
+  box-sizing: border-box !important;
+  width: 788px !important;
+  max-width: calc(100% - 132px) !important;
+  min-height: 1093px !important;
+  margin: 92px auto 122px !important;
+}
+
+.source-book-page-footer {
+  position: absolute !important;
+  z-index: 4 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 118px !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+.source-book-page-number {
+  position: absolute !important;
+  left: 50% !important;
+  bottom: 32px !important;
+  box-sizing: border-box !important;
+  width: auto !important;
+  min-width: 54px !important;
+  height: auto !important;
+  padding: 5px 16px 4px !important;
+  transform: translateX(-50%) !important;
+  border: 0 !important;
+  border-radius: 0 16px !important;
+  background: linear-gradient(rgb(72, 215, 241), rgb(7, 152, 208)) !important;
+  box-shadow: none !important;
+  color: #fff !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 640px) {
+  body > main { padding: 0 0 5.5rem !important; }
+  #content.adt-source-page { width: 100% !important; box-shadow: none !important; }
+  #content.adt-source-page > .adt-source-page-part {
+    padding-left: clamp(1rem, 7.17vw, 66px) !important;
+    padding-right: clamp(1rem, 7.17vw, 66px) !important;
   }
 }
 
@@ -588,4 +3271,1278 @@ body:has(.pdf-page-facsimile) {
     margin: 0 0 5.5rem !important;
     box-shadow: none !important;
   }
+}
+
+/* Keep printed page 160's continued exercise physically joined after the
+   generic source-part spacing rule. */
+#content.adt-source-page:has([data-section-id="pg166_sec001"]) > .adt-source-page-part + .adt-source-page-part {
+  margin-top: 0 !important;
+}
+
+/* Printed page 156: retain the source table's image/label proportions. */
+#content.adt-source-page [data-section-id="pg162_sec001"] > div:first-child {
+  padding: 2rem 0 1rem !important;
+}
+#content.adt-source-page [data-section-id="pg162_sec001"] > div:first-child > :is(h1, p) {
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+#content.adt-source-page [data-section-id="pg162_sec001"] > div:first-child > p {
+  text-align: justify !important;
+  text-align-last: left !important;
+}
+#content.adt-source-page [data-section-id="pg162_sec001"] [data-source-kind="exercise"] {
+  margin-top: 1.15rem !important;
+  padding: 0 0 1rem !important;
+}
+#content.adt-source-page [data-section-id="pg162_sec001"] [data-source-heading="exercise"] {
+  margin: 0 !important;
+  width: 100% !important;
+}
+#content.adt-source-page [data-section-id="pg162_sec001"] [data-source-kind="exercise"] > div:last-child {
+  padding: .75rem !important;
+}
+#content.adt-source-page [data-section-id="pg162_sec001"] [data-source-kind="exercise"] > div:last-child > p {
+  margin-bottom: .65rem !important;
+}
+#content.adt-source-page [data-section-id="pg162_sec001"] table {
+  table-layout: fixed !important;
+  width: 100% !important;
+}
+#content.adt-source-page [data-section-id="pg162_sec001"] table [data-id] {
+  font-size: 24px !important;
+  line-height: 1.28 !important;
+}
+#content.adt-source-page [data-section-id="pg162_sec001"] table td > .flex {
+  gap: .75rem !important;
+}
+#content.adt-source-page [data-section-id="pg162_sec001"] [data-id="pg162_n0050"] {
+  max-width: 9rem !important;
+}
+
+/* Printed page 151 is one continuous Revision exercise field. The converter
+   split its three questions into separate decorated sections. */
+#content.adt-source-page:has([data-section-id="pg157_sec001"]) {
+  min-height: 1508px !important;
+}
+#content.adt-source-page:has([data-section-id="pg157_sec001"]) > .adt-source-page-part {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+#content.adt-source-page:has([data-section-id="pg157_sec001"]) > .adt-source-page-part:first-child {
+  padding-top: 8.25rem !important;
+}
+#content.adt-source-page :is(
+  [data-section-id="pg157_sec001"],
+  [data-section-id="pg157_sec002"],
+  [data-section-id="pg157_sec003"]
+) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #e7f6fb !important;
+  box-shadow: none !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec001"] {
+  padding: 0 1.5rem 1.15rem !important;
+  border-radius: 0 1.2rem 0 0 !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec001"] > div:first-child {
+  margin: 0 -1.5rem 1rem !important;
+  padding: .7rem 1rem !important;
+  border-radius: 0 !important;
+  background: linear-gradient(90deg, #a8dff1, #70cce9) !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec001"] > div:nth-child(2) {
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec001"] > div:nth-child(2) .space-y-3 > * + * {
+  margin-top: 0 !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec001"] > div:nth-child(2) .space-y-3 > p {
+  line-height: 1.18 !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec002"] {
+  padding: .75rem 1.5rem 1rem !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec002"] > div:first-child {
+  margin-bottom: .55rem !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec002"] > div:nth-child(2) {
+  display: grid !important;
+  row-gap: .25rem !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec002"] > div:nth-child(2) > div {
+  display: grid !important;
+  grid-template-columns: 9rem minmax(10rem, 14rem) !important;
+  column-gap: .65rem !important;
+  align-items: end !important;
+  min-height: 1.65rem !important;
+  gap: 0 .65rem !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec002"] > div:nth-child(2) > div > span {
+  line-height: 1.15 !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec002"] > div:nth-child(2) > div::after {
+  content: "" !important;
+  display: block !important;
+  width: 100% !important;
+  border-bottom: 1.5px solid #292929 !important;
+  transform: translateY(-.35rem) !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec003"] {
+  padding: .55rem 1.5rem 1.35rem !important;
+  border-radius: 0 0 0 1.2rem !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec003"] > div:first-child {
+  margin-bottom: .45rem !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec003"] table {
+  width: calc(100% - 3rem) !important;
+  margin-left: 3rem !important;
+}
+#content.adt-source-page [data-section-id="pg157_sec003"] table :is(th, td) {
+  padding: 0 .65rem !important;
+  line-height: 1.1 !important;
+}
+
+/* Printed page 150: only the Activity and Instructions labels are blue and
+   bold; the descriptive text remains ordinary book prose. */
+html body #content.adt-source-page :is(
+  [data-section-id="pg156_sec001"],
+  [data-section-id="pg156_sec002"],
+  [data-section-id="pg156_sec003"]
+) {
+  box-sizing: border-box !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Printed page 149: semantic full-width 2020 calendar. */
+html body #content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) {
+  width: 100% !important;
+  max-width: none !important;
+  padding: 1.25rem 0 .75rem !important;
+  background: #fff !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-2020 {
+  width: 100% !important;
+  color: #111 !important;
+  font-family: Georgia, 'Times New Roman', serif !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-2020 > header {
+  position: relative !important;
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: center !important;
+  margin-bottom: .55rem !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-2020 > header h1 {
+  margin: 0 !important;
+  font: 700 2.55rem/1 Georgia, 'Times New Roman', serif !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-2020 > header strong {
+  position: absolute !important;
+  right: .8rem !important;
+  font-size: 1.4rem !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 1.45rem 2rem !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-month {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  font-size: .76rem !important;
+  line-height: 1.1 !important;
+  text-align: center !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-month caption {
+  padding: 0 0 .15rem !important;
+  font-size: 1.02rem !important;
+  font-weight: 700 !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-month thead {
+  border-top: 2px solid #111 !important;
+  border-bottom: 2px solid #111 !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-month :is(th, td) {
+  height: 1.15rem !important;
+  padding: 0 !important;
+  font-family: inherit !important;
+  font-size: .76rem !important;
+  line-height: inherit !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-month .is-holiday {
+  color: #ed1c24 !important;
+  font-weight: 700 !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-holidays {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 2rem !important;
+  margin-top: 1.1rem !important;
+  font-size: .87rem !important;
+  line-height: 1.2 !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-holidays div {
+  display: flex !important;
+  flex-direction: column !important;
+}
+#content.adt-source-page :is([data-section-id="pg154_sec001"], [data-section-id="pg155_sec001"]) .book-calendar-holidays strong {
+  margin-bottom: .15rem !important;
+}
+
+/* Printed page 147: source-faithful two-half month table. */
+html body #content.adt-source-page [data-section-id="pg153_sec001"] .book-months-source-table {
+  width: 100% !important;
+  margin: 1rem 0 0 !important;
+  border-collapse: collapse !important;
+  table-layout: fixed !important;
+  border: 1px solid #aa8b13 !important;
+}
+html body #content.adt-source-page [data-section-id="pg153_sec001"] div:has(> .book-months-source-table) {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+html body #content.adt-source-page [data-section-id="pg153_sec001"] .book-months-source-table :is(th, td) {
+  border: 1px solid #aa8b13 !important;
+  padding: .72rem .2rem !important;
+  text-align: center !important;
+  font-size: 1.22rem !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+}
+html body #content.adt-source-page [data-section-id="pg153_sec001"] .book-months-source-table .month-row th {
+  background: #e8dfb6 !important;
+}
+html body #content.adt-source-page [data-section-id="pg153_sec001"] .book-months-source-table .month-separator td {
+  height: 2.6rem !important;
+  padding: 0 !important;
+  background: #fff !important;
+}
+
+/* Backward audit, printed pages 142–146: source-page density and widths. */
+html body #content.adt-source-page [data-section-id="pg148_sec001"] {
+  padding-top: .4rem !important;
+  padding-bottom: .4rem !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg148_sec001"] > p {
+  margin-bottom: .65rem !important;
+  font-size: 1.38rem !important;
+  line-height: 1.38 !important;
+}
+html body #content.adt-source-page [data-section-id="pg148_sec001"] table :is(th, td) {
+  padding: .28rem .45rem !important;
+  font-size: 1.25rem !important;
+  line-height: 1.08 !important;
+}
+
+html body #content.adt-source-page [data-section-id="pg149_sec001"] {
+  gap: 1.15rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg149_sec001"] > div:first-child table :is(th, td) {
+  padding: .25rem .5rem !important;
+  font-size: 1.25rem !important;
+  line-height: 1.1 !important;
+}
+html body #content.adt-source-page [data-section-id="pg149_sec001"] > div:nth-child(2) {
+  padding: .55rem .8rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg149_sec001"] .book-example-card {
+  padding: 1.45rem .75rem .65rem !important;
+  border-radius: .8rem 1.1rem 0 .8rem !important;
+}
+
+html body #content.adt-source-page:has([data-section-id="pg150_sec001"]) > .adt-source-page-part + .adt-source-page-part {
+  margin-top: 1.4rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg150_sec001"] .book-example-card {
+  padding: 1.55rem .75rem .7rem !important;
+  border-width: 2px !important;
+  border-radius: .8rem 1.1rem 0 .8rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg150_sec002"] .book-exercise-panel > div:nth-child(2) {
+  width: 100% !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg150_sec002"] .book-exercise-panel > div:nth-child(2) > div {
+  padding: .6rem .75rem .75rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg150_sec002"] .space-y-5 {
+  gap: 0 !important;
+}
+html body #content.adt-source-page [data-section-id="pg150_sec002"] .space-y-5 > div {
+  grid-template-columns: 2.2rem minmax(0, 1fr) !important;
+  min-height: 0 !important;
+  margin-top: .35rem !important;
+  column-gap: .4rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg150_sec002"] .space-y-5 > div > div:first-child {
+  font-size: 1.28rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg150_sec003"] .book-exercise-panel > div:last-child {
+  padding-top: .55rem !important;
+  padding-bottom: .7rem !important;
+}
+
+html body #content.adt-source-page [data-section-id="pg152_sec001"] {
+  padding-top: .6rem !important;
+  padding-bottom: .4rem !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg152_sec001"] > div:nth-child(3) {
+  width: 64% !important;
+  aspect-ratio: 1.45 / 1 !important;
+  margin: .4rem auto 1rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg152_sec001"] > div:nth-child(4) {
+  margin-bottom: 1.35rem !important;
+  padding: .55rem .8rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg152_sec001"] > div:nth-child(4) :is(p, li) {
+  margin-top: .2rem !important;
+  margin-bottom: .2rem !important;
+  line-height: 1.25 !important;
+}
+html body #content.adt-source-page [data-section-id="pg152_sec001"] > p:nth-child(6) {
+  margin-bottom: .55rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg152_sec001"] table {
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+
+html body #content.adt-source-page:has([data-section-id="pg150_sec001"]) > [data-source-section="pg150_sec002"],
+html body #content.adt-source-page:has([data-section-id="pg150_sec001"]) > [data-source-section="pg150_sec003"] {
+  padding-top: 0 !important;
+  margin-top: 1.15rem !important;
+}
+
+html body #content.adt-source-page [data-section-id="pg151_sec001"] > div:first-child {
+  padding: .65rem .8rem .8rem !important;
+  border-radius: 0 0 .8rem .8rem !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg151_sec001"] > div:first-child > div:first-child {
+  gap: .55rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg151_sec001"] > div:first-child > div:first-child > div:first-child,
+html body #content.adt-source-page [data-section-id="pg151_sec001"] p,
+html body #content.adt-source-page [data-section-id="pg151_sec001"] .time-conversion-grid > div,
+html body #content.adt-source-page [data-section-id="pg151_sec001"] .mt-8 > div {
+  font-size: 1.2rem !important;
+  line-height: 1.35 !important;
+}
+html body #content.adt-source-page [data-section-id="pg151_sec001"] .time-conversion-grid {
+  gap: .28rem 2.2rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg151_sec001"] .mt-8 {
+  margin-top: .7rem !important;
+  gap: 0 !important;
+}
+html body #content.adt-source-page [data-section-id="pg151_sec001"] .mt-8 > div {
+  margin-top: .45rem !important;
+  gap: .45rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg152_sec001"] table :is(th, td) {
+  padding: .35rem .15rem !important;
+  font-size: 1rem !important;
+  white-space: nowrap !important;
+}
+html body #content.adt-source-page :is(
+  [data-section-id="pg156_sec001"],
+  [data-section-id="pg156_sec002"],
+  [data-section-id="pg156_sec003"]
+) > div:first-child {
+  width: 100% !important;
+  max-width: none !important;
+}
+#content.adt-source-page [data-section-id="pg156_sec002"] [data-id="pg156_n0021"],
+#content.adt-source-page [data-section-id="pg156_sec002"] [data-id="pg156_n0023"] {
+  color: #2f2f2f !important;
+  font-weight: 400 !important;
+}
+#content.adt-source-page [data-section-id="pg156_sec002"] :is(
+  [data-id="pg156_n0021"],
+  [data-id="pg156_n0023"]
+) > strong {
+  color: #0aa5e8 !important;
+  font-weight: 700 !important;
+}
+
+/* Printed page 155 is one uninterrupted cream exercise continuation. */
+#content.adt-source-page:has([data-section-id="pg161_sec001"]) > .adt-source-page-part {
+  margin-top: 0 !important;
+  padding-bottom: 0 !important;
+  background: transparent !important;
+}
+#content.adt-source-page:has([data-section-id="pg161_sec001"]) > .adt-source-page-part + .adt-source-page-part {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+html body #content.adt-source-page [data-section-id="pg161_sec001"],
+html body #content.adt-source-page [data-section-id="pg161_sec002"] {
+  background: #efe7cf !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg161_sec001"] {
+  border-radius: 1.35rem 1.35rem 0 0 !important;
+  padding-bottom: .5rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg161_sec002"] {
+  border-radius: 0 0 1.35rem 1.35rem !important;
+  padding-top: .35rem !important;
+  padding-bottom: .85rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg161_sec002"] > div {
+  margin-bottom: .7rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg161_sec002"] > div:last-child {
+  margin-bottom: 0 !important;
+}
+html body #content.adt-source-page [data-section-id="pg161_sec002"] p {
+  line-height: 1.32 !important;
+}
+
+/* Printed page 154: Exercise 1 is a plain continuation field, not a peach bar. */
+#content.adt-source-page:has([data-section-id="pg160_sec002"]) > .adt-source-page-part + .adt-source-page-part {
+  margin-top: 0 !important;
+  padding-top: 1.5rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg160_sec002"] .book-exercise-heading-wrap {
+  min-height: 0 !important;
+  margin: 0 0 .55rem !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg160_sec002"] .book-exercise-heading {
+  padding: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  color: #9a7b12 !important;
+  font-size: 26.3856px !important;
+  line-height: 1.1 !important;
+}
+#content.adt-source-page [data-section-id="pg160_sec002"] [data-id="pg160_n0029"]::before {
+  content: "";
+  display: inline-block;
+  width: 11rem;
+  margin-right: .55rem;
+  border-bottom: 2px solid #27272a;
+  transform: translateY(-.2rem);
+}
+
+/* Printed page 154: both coin faces are equally sized cut-outs and inherit
+   the cream activity background instead of showing extraction rectangles. */
+#content.adt-source-page [data-section-id="pg160_sec002"] img {
+  width: 210px !important;
+  height: 210px !important;
+  object-fit: contain !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  mix-blend-mode: multiply !important;
+}
+
+/* Printed page 155 must remain inside the standard 788px content column. */
+#content.adt-source-page [data-section-id^="pg161_sec"] {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 788px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Printed page 160: align each question number with its statement while
+   allowing each HTML table to span the full exercise width. */
+#content.adt-source-page [data-section-id="pg166_sec001"] [data-id="pg166_n0002"],
+#content.adt-source-page [data-section-id="pg166_sec001"] [data-id="pg166_n0003"],
+#content.adt-source-page [data-section-id="pg166_sec001"] [data-id="pg166_n0004"],
+#content.adt-source-page [data-section-id="pg166_sec001"] [data-id="pg166_n0005"],
+#content.adt-source-page [data-section-id="pg166_sec002"] > div:nth-child(2) > div > :is(.mb-2, p) [data-id] {
+  font-size: 24px !important;
+  line-height: 1.32 !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec002"] > div:nth-child(2) > div {
+  display: grid !important;
+  grid-template-columns: 2.1rem minmax(0, 1fr) !important;
+  column-gap: .65rem !important;
+  align-items: baseline !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec002"] > div:nth-child(2) > div > .mb-2 {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  margin: 0 !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec002"] > div:nth-child(2) > div > p:first-of-type {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  margin: 0 !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec002"] > div:nth-child(2) > div > p:nth-of-type(2) {
+  grid-column: 2 !important;
+  margin: .1rem 0 .4rem !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec002"] > div:nth-child(2) > div > .activity-text {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+}
+
+/* Reserve a complete source-page canvas so dense exercise content clears the
+   footer badge instead of extending underneath it. */
+#content.adt-source-page:has([data-section-id="pg161_sec001"]),
+#content.adt-source-page:has([data-section-id="pg166_sec001"]) {
+  min-height: 1508px !important;
+}
+
+/* Printed page 160 is physically one Exercise 4 card. The extractor split it
+   into two sections; source-book-theme.js merges the continuation here. */
+html body #content.adt-source-page [data-section-id="pg166_sec001"] .book-page160-panel {
+  width: 100% !important;
+  padding: 0 1rem .8rem !important;
+  border-radius: 1.4rem !important;
+  background: #f7f3e7 !important;
+  box-shadow: none !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec001"] .book-page160-panel > div:nth-child(2) {
+  margin: 0 !important;
+  padding: .7rem .5rem .35rem !important;
+  background: transparent !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec001"] .book-page160-question {
+  display: grid !important;
+  grid-template-columns: 2.1rem minmax(0, 1fr) !important;
+  column-gap: .65rem !important;
+  align-items: baseline !important;
+  margin: .65rem 0 0 !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec001"] .book-page160-question > .mb-2 {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  margin: 0 !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec001"] .book-page160-question > p:first-of-type {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  margin: 0 !important;
+  font-size: 24px !important;
+  line-height: 1.32 !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec001"] .book-page160-question > p:nth-of-type(2) {
+  grid-column: 2 !important;
+  margin: .1rem 0 .4rem !important;
+  font-size: 24px !important;
+  line-height: 1.32 !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec001"] .book-page160-question > .activity-text {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+#content.adt-source-page [data-section-id="pg166_sec001"] .book-page160-question table {
+  width: 100% !important;
+}
+
+/* Printed page 159: source-sized internal rhythm and a distinct gap between
+   the two Example cards. */
+#content.adt-source-page [data-section-id="pg165_sec001"] {
+  padding-top: 0 !important;
+}
+#content.adt-source-page [data-section-id="pg165_sec001"] > .book-example-card {
+  margin-top: 2.6rem !important;
+  padding: 2.25rem 1rem 1rem !important;
+}
+#content.adt-source-page [data-section-id="pg165_sec001"] > .book-example-card + .book-example-card {
+  margin-top: 4rem !important;
+}
+#content.adt-source-page [data-section-id="pg165_sec001"] > .book-example-card > div:last-child {
+  font-size: 24px !important;
+  line-height: 1.25 !important;
+}
+#content.adt-source-page [data-section-id="pg165_sec001"] > .book-example-card > div:last-child > * + * {
+  margin-top: .45rem !important;
+}
+#content.adt-source-page [data-section-id="pg165_sec001"] [data-id="pg165_n0005"],
+#content.adt-source-page [data-section-id="pg165_sec001"] [data-id="pg165_n0014"] {
+  padding-top: .2rem !important;
+  font-size: 24px !important;
+  line-height: 1.2 !important;
+}
+
+/* Final page-144 geometry override: converter continuation wrappers must not
+   add a second page-top inset between the three source components. */
+html body #content#content.adt-source-page:has([data-section-id="pg150_sec001"]) > .adt-source-page-part[data-source-section="pg150_sec002"],
+html body #content#content.adt-source-page:has([data-section-id="pg150_sec001"]) > .adt-source-page-part[data-source-section="pg150_sec003"] {
+  padding-top: 0 !important;
+  margin-top: 1.15rem !important;
+}
+
+/* Backward audit, printed pages 137–141. */
+html body #content.adt-source-page [data-section-id="pg143_sec001"] {
+  padding: .5rem .6rem !important;
+  border-width: 0 1px !important;
+  border-color: #9a7a00 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg143_sec001"] > div:first-child {
+  gap: .65rem 3rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg143_sec001"] img {
+  width: 190px !important;
+  height: 190px !important;
+  object-fit: contain !important;
+}
+
+html body #content.adt-source-page [data-section-id="pg144_sec001"] > div:first-child {
+  padding: .55rem .65rem .7rem !important;
+  border-width: 0 1px 1px !important;
+  border-radius: 0 0 .8rem 0 !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg144_sec001"] > div:first-child :is(p, li) {
+  margin-top: .18rem !important;
+  margin-bottom: .18rem !important;
+  font-size: 1.15rem !important;
+  line-height: 1.25 !important;
+}
+html body #content.adt-source-page [data-section-id="pg144_sec002"] .book-exercise-panel {
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg144_sec002"] img[data-id="pg144_im001"] {
+  width: 190px !important;
+  height: 190px !important;
+  object-fit: contain !important;
+}
+html body #content.adt-source-page [data-section-id="pg144_sec002"] img[data-id="pg144_im002"] {
+  width: 220px !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+html body #content.adt-source-page [data-section-id="pg145_sec001"] {
+  padding: .5rem .65rem .8rem !important;
+  border-radius: 0 0 .8rem .8rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg145_sec001"] > div:nth-child(3) {
+  gap: .8rem 3.5rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg145_sec001"] img {
+  width: 190px !important;
+  height: 190px !important;
+  object-fit: contain !important;
+}
+
+html body #content#content.adt-source-page:has([data-section-id="pg146_sec001"]) > .adt-source-page-part + .adt-source-page-part,
+html body #content#content.adt-source-page:has([data-section-id="pg147_sec001"]) > .adt-source-page-part + .adt-source-page-part {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+html body #content.adt-source-page [data-section-id="pg146_sec001"],
+html body #content.adt-source-page [data-section-id="pg146_sec002"] {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg146_sec001"] {
+  padding: .65rem .7rem .4rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg146_sec001"] > div:nth-child(2) {
+  gap: .8rem 3rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg146_sec001"] img {
+  width: 185px !important;
+  height: 185px !important;
+  object-fit: contain !important;
+}
+html body #content.adt-source-page [data-section-id="pg146_sec002"] {
+  padding: .4rem .7rem .7rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg146_sec002"] > div:nth-child(2) {
+  margin-left: 3.2rem !important;
+  gap: 0 !important;
+}
+html body #content.adt-source-page [data-section-id="pg146_sec002"] > div:nth-child(2) > * {
+  margin-top: .3rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg147_sec002"] > div:nth-child(2) > div > *::after {
+  content: '' !important;
+  display: inline-block !important;
+  width: 10rem !important;
+  margin-left: 1.2rem !important;
+  border-bottom: 1px solid #222 !important;
+  transform: translateY(-.18rem) !important;
+}
+html body #content.adt-source-page [data-section-id="pg147_sec002"] > div:nth-child(2) > div > * {
+  display: grid !important;
+  grid-template-columns: minmax(0, max-content) 10rem !important;
+  align-items: baseline !important;
+  column-gap: 1.2rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg146_sec002"] > div:nth-child(2) > div {
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 1.2rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg146_sec002"] > div:nth-child(2) > div::after {
+  content: '' !important;
+  display: block !important;
+  width: 10rem !important;
+  border-bottom: 1px solid #222 !important;
+  transform: translateY(-.18rem) !important;
+}
+html body #content.adt-source-page [data-section-id="pg146_sec002"] input {
+  display: block !important;
+  width: 10rem !important;
+  height: 1.6rem !important;
+  border: 0 !important;
+  border-bottom: 1px solid #222 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+html body #content.adt-source-page [data-section-id="pg147_sec001"] > div:first-child,
+html body #content.adt-source-page [data-section-id="pg147_sec002"] > div:nth-child(2) {
+  padding: .65rem .75rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #f5efdf !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg147_sec001"] > div:first-child {
+  padding-bottom: .2rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg147_sec002"] > div:first-child {
+  margin: 0 !important;
+  padding: .2rem .75rem !important;
+  background: #f5efdf !important;
+}
+html body #content.adt-source-page [data-section-id="pg147_sec002"] > div:nth-child(2) {
+  padding-top: .15rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg147_sec002"] > div:nth-child(2) > * {
+  margin-top: .25rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg147_sec003"] > div:first-child {
+  padding: .65rem .75rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg147_sec003"] img {
+  width: 360px !important;
+  height: auto !important;
+  margin: .45rem auto 0 !important;
+}
+
+/* Backward audit, printed pages 132–136: reproduce the source clock-page
+   proportions and keep both Example cards inside the printable page. */
+html body #content.adt-source-page [data-section-id="pg138_sec001"] {
+  padding: .45rem .75rem .8rem !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg138_sec001"] > div:first-child {
+  margin-bottom: 1rem !important;
+  padding: .45rem .7rem !important;
+  border-radius: 0 0 .7rem .7rem !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg138_sec001"] > div:first-child p {
+  margin-bottom: .2rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg138_sec001"] img[data-id="pg138_im001"] {
+  width: 385px !important;
+  height: auto !important;
+}
+html body #content.adt-source-page [data-section-id="pg138_sec001"] img[data-id="pg138_im002"] {
+  width: 250px !important;
+  height: auto !important;
+}
+
+html body #content.adt-source-page [data-section-id="pg139_sec001"] {
+  padding: .5rem .7rem .8rem !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg139_sec001"] > div:first-child {
+  margin-bottom: .3rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg139_sec001"] h1 {
+  font-size: 1.25rem !important;
+  font-weight: 400 !important;
+}
+html body #content.adt-source-page [data-section-id="pg139_sec001"] img[data-id="pg139_im001"] {
+  width: 300px !important;
+}
+html body #content.adt-source-page [data-section-id="pg139_sec001"] img[data-id^="pg139_im00"]:not([data-id="pg139_im001"]) {
+  width: 205px !important;
+}
+html body #content.adt-source-page [data-section-id="pg139_sec001"] [data-id="pg139_n0011"],
+html body #content.adt-source-page [data-section-id="pg139_sec001"] [data-id="pg139_n0014"] {
+  display: none !important;
+}
+
+html body #content.adt-source-page [data-section-id="pg140_sec001"] {
+  padding: 1rem .65rem .65rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg140_sec001"] img {
+  width: 195px !important;
+  height: auto !important;
+}
+html body #content.adt-source-page [data-section-id="pg140_sec001"] [data-id="pg140_n0004"] {
+  margin-bottom: .5rem !important;
+}
+
+html body #content.adt-source-page [data-section-id="pg141_sec001"] > .mb-8 {
+  margin-bottom: .35rem !important;
+}
+html body #content.adt-source-page [data-section-id="pg141_sec001"] > p {
+  margin-bottom: 2.1rem !important;
+  line-height: 1.3 !important;
+}
+html body #content.adt-source-page [data-section-id="pg141_sec001"] > .relative {
+  padding: 2.3rem .55rem .7rem !important;
+  margin-bottom: 2.8rem !important;
+  border-radius: 0 1.1rem 0 1.1rem !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg141_sec001"] > .relative:last-child {
+  margin-bottom: 0 !important;
+}
+html body #content.adt-source-page [data-section-id="pg141_sec001"] img[data-id="pg141_im001"] {
+  width: 185px !important;
+}
+html body #content.adt-source-page [data-section-id="pg141_sec001"] img[data-id="pg141_im002"],
+html body #content.adt-source-page [data-section-id="pg141_sec001"] img[data-id="pg141_im003"],
+html body #content.adt-source-page [data-section-id="pg141_sec001"] img[data-id="pg141_im004"] {
+  width: 145px !important;
+}
+html body #content.adt-source-page [data-section-id="pg141_sec001"] [data-id="pg141_n0019"],
+html body #content.adt-source-page [data-section-id="pg141_sec001"] [data-id="pg141_n0022"],
+html body #content.adt-source-page [data-section-id="pg141_sec001"] [data-id="pg141_n0025"] {
+  display: none !important;
+}
+
+html body #content.adt-source-page [data-section-id="pg142_sec001"] > .space-y-10 {
+  display: block !important;
+}
+html body #content.adt-source-page [data-section-id="pg142_sec001"] > .space-y-10 > .relative {
+  margin: 0 0 3rem !important;
+  padding: 2.35rem .55rem .65rem !important;
+  border-radius: 0 1.1rem 0 1.1rem !important;
+  box-shadow: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg142_sec001"] > .space-y-10 > .relative:last-child {
+  margin-bottom: 0 !important;
+}
+html body #content.adt-source-page [data-section-id="pg142_sec001"] img[data-id="pg142_im001"],
+html body #content.adt-source-page [data-section-id="pg142_sec001"] img[data-id="pg142_im002"],
+html body #content.adt-source-page [data-section-id="pg142_sec001"] img[data-id="pg142_im003"] {
+  width: 145px !important;
+  height: auto !important;
+}
+html body #content.adt-source-page [data-section-id="pg142_sec001"] [data-id="pg142_n0010"],
+html body #content.adt-source-page [data-section-id="pg142_sec001"] [data-id="pg142_n0014"],
+html body #content.adt-source-page [data-section-id="pg142_sec001"] [data-id="pg142_n0018"] {
+  display: none !important;
+}
+html body #content.adt-source-page [data-section-id="pg142_sec001"] img[data-id="pg142_im004"],
+html body #content.adt-source-page [data-section-id="pg142_sec001"] img[data-id="pg142_im005"] {
+  width: 190px !important;
+  height: auto !important;
+}
+
+/* Pages in the backward 102–131 audit contain source-faithful components but
+   several converter pages inflated the complete stack.  Scale the stack as a
+   single unit and expand its layout width inversely, so it still occupies the
+   complete 788px printable column instead of becoming a narrow card. */
+#content.adt-source-page > .book-source-autofit {
+  transform: scale(var(--book-fit-scale, 1));
+  transform-origin: top left;
+}
+#content.adt-source-page.book-fit-pending {
+  visibility: hidden !important;
+}
+
+/* Printed page 42 is one continuous diagram field in the source book.  The
+   converter split it into three rounded cards and added answer prompts, which
+   displaced the abacuses and made their orientations appear inconsistent. */
+#content.adt-source-page [data-section-id="pg048_sec001"] {
+  padding: .7rem 1.6rem .85rem !important;
+  border-radius: 0 0 .8rem .8rem !important;
+  background: #e5f4f8 !important;
+  box-shadow: none !important;
+}
+#content.adt-source-page [data-section-id="pg048_sec001"] > .relative.z-10 {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+#content.adt-source-page [data-section-id="pg048_sec001"] > .relative.z-10 > div {
+  position: relative !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+#content.adt-source-page [data-section-id="pg048_sec001"] img {
+  display: block !important;
+  width: 520px !important;
+  max-width: 82% !important;
+  height: auto !important;
+  margin: -.15rem auto 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  mix-blend-mode: multiply !important;
+  transform: none !important;
+  object-position: center center !important;
+}
+#content.adt-source-page [data-section-id="pg048_sec001"] [data-id="pg048_n0002"],
+#content.adt-source-page [data-section-id="pg048_sec001"] [data-id="pg048_n0010"],
+#content.adt-source-page [data-section-id="pg048_sec001"] [data-id="pg048_n0018"] {
+  position: absolute !important;
+  top: .15rem !important;
+  left: .1rem !important;
+  z-index: 2 !important;
+  margin: 0 !important;
+  font-size: 1.25rem !important;
+  line-height: 1 !important;
+  font-weight: 400 !important;
+}
+#content.adt-source-page [data-section-id="pg048_sec001"] label {
+  display: none !important;
+}
+
+/* Printed pages 1–20: source-sized typography and compact vertical rhythm.
+   These overrides remove converter-card air without shrinking the whole page. */
+#content.adt-source-page :is(
+  [data-section-id="pg007_sec001"], [data-section-id="pg008_sec001"],
+  [data-section-id="pg008_sec002"], [data-section-id="pg009_sec001"],
+  [data-section-id="pg009_sec002"], [data-section-id="pg010_sec001"],
+  [data-section-id="pg011_sec001"], [data-section-id="pg012_sec001"],
+  [data-section-id="pg013_sec001"], [data-section-id="pg014_sec001"],
+  [data-section-id="pg015_sec001"], [data-section-id="pg016_sec001"],
+  [data-section-id="pg017_sec001"], [data-section-id="pg018_sec001"],
+  [data-section-id="pg019_sec001"], [data-section-id="pg020_sec001"],
+  [data-section-id="pg021_sec001"], [data-section-id="pg022_sec001"],
+  [data-section-id="pg023_sec001"], [data-section-id="pg024_sec001"],
+  [data-section-id="pg025_sec001"], [data-section-id="pg026_sec001"]
+) {
+  font-size: 26.3856px !important;
+}
+
+/* Page 2 has four compact examples on one source page. */
+#content.adt-source-page [data-section-id="pg008_sec001"] {
+  display: grid !important;
+  gap: 1rem !important;
+}
+#content.adt-source-page [data-section-id="pg008_sec001"] > [data-source-kind="example"],
+#content.adt-source-page [data-section-id="pg008_sec002"] [data-source-kind="example"] {
+  margin: 1.05rem 0 .35rem !important;
+  padding: 0 1rem .7rem !important;
+  min-height: 0 !important;
+}
+#content.adt-source-page [data-section-id="pg008_sec001"] [data-source-heading-wrap="example"],
+#content.adt-source-page [data-section-id="pg008_sec002"] [data-source-heading-wrap="example"] {
+  margin: -.85rem 0 .35rem !important;
+}
+#content.adt-source-page [data-section-id^="pg008_sec"] :is(p, div[data-id]) {
+  line-height: 1.16 !important;
+}
+#content.adt-source-page [data-section-id="pg008_sec001"] .pl-6,
+#content.adt-source-page [data-section-id="pg008_sec002"] .pl-6 {
+  padding-left: .65rem !important;
+}
+
+/* Page 2 is exceptionally dense: four examples occupy one printed page. */
+#content.adt-source-page [data-section-id="pg008_sec001"] {
+  gap: .55rem !important;
+}
+#content.adt-source-page [data-section-id^="pg008_sec"] [data-source-kind="example"] {
+  margin-top: .7rem !important;
+  margin-bottom: .15rem !important;
+  padding: 0 .85rem .45rem !important;
+}
+#content.adt-source-page [data-section-id^="pg008_sec"] [data-source-heading-wrap="example"] {
+  margin: -.72rem 0 .22rem !important;
+}
+#content.adt-source-page [data-section-id^="pg008_sec"] [data-source-heading="example"] {
+  font-size: 23px !important;
+  line-height: 1 !important;
+  padding: .38rem 1rem !important;
+}
+#content.adt-source-page [data-section-id^="pg008_sec"] :is(p, div[data-id], span[data-id]) {
+  font-size: 22px !important;
+  line-height: 1.08 !important;
+}
+#content.adt-source-page [data-section-id^="pg008_sec"] :is(.mt-3, .mt-2, .mt-1, .mb-3) {
+  margin-top: .18rem !important;
+  margin-bottom: .12rem !important;
+}
+#content.adt-source-page [data-section-id="pg008_sec002"] {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Page 3: the source uses one compact example and one uninterrupted exercise. */
+#content.adt-source-page [data-section-id="pg009_sec001"] {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+#content.adt-source-page [data-section-id="pg009_sec001"] [data-source-kind="example"] {
+  margin: 1rem 0 .65rem !important;
+  padding: 0 1rem .65rem !important;
+}
+#content.adt-source-page [data-section-id="pg009_sec001"] .place-example .questions {
+  gap: .35rem 1rem !important;
+  margin-top: .25rem !important;
+}
+#content.adt-source-page [data-section-id="pg009_sec001"] .place-example h3 {
+  margin: .35rem 0 .15rem !important;
+}
+#content.adt-source-page [data-section-id="pg009_sec001"] .source-diagrams {
+  width: 610px !important;
+  max-height: 430px !important;
+  object-fit: contain !important;
+  mix-blend-mode: multiply !important;
+}
+#content.adt-source-page [data-section-id="pg009_sec002"] [data-source-kind="exercise"] {
+  margin: .65rem 0 0 !important;
+}
+#content.adt-source-page [data-section-id="pg009_sec002"] [data-source-kind="exercise"] > div:last-child {
+  padding-top: .8rem !important;
+  padding-bottom: .8rem !important;
+}
+#content.adt-source-page [data-section-id="pg009_sec002"] [style*="gap:1.5rem"] {
+  gap: .45rem !important;
+  margin-top: .55rem !important;
+}
+
+/* Diagram exercise continuations: keep all figures clear of both gradients. */
+#content.adt-source-page [data-section-id="pg017_sec001"] {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+#content.adt-source-page [data-section-id="pg017_sec001"] > .bg-stone-50,
+#content.adt-source-page [data-section-id="pg017_sec001"] .space-y-6 {
+  padding: 0 !important;
+}
+#content.adt-source-page [data-section-id="pg017_sec001"] .space-y-6 {
+  display: grid !important;
+  gap: .45rem !important;
+}
+#content.adt-source-page [data-section-id="pg017_sec001"] img[data-id^="pg017_im"] {
+  width: 350px !important;
+  max-height: 235px !important;
+  object-fit: contain !important;
+  margin: 0 auto !important;
+}
+#content.adt-source-page [data-section-id="pg017_sec001"] :is(.mb-2, .mb-3) {
+  margin-bottom: .2rem !important;
+}
+
+/* Pages 9–20 contain many converter spacing utilities.  Keep their top-level
+   stacks source-compact while preserving explicit table and diagram grids. */
+#content.adt-source-page :is(
+  [data-section-id="pg015_sec001"], [data-section-id="pg016_sec001"],
+  [data-section-id="pg018_sec001"], [data-section-id="pg019_sec001"],
+  [data-section-id="pg020_sec001"], [data-section-id="pg021_sec001"],
+  [data-section-id="pg022_sec001"], [data-section-id="pg023_sec001"],
+  [data-section-id="pg024_sec001"], [data-section-id="pg025_sec001"],
+  [data-section-id="pg026_sec001"]
+) :is(.space-y-12, .space-y-10, .space-y-8, .space-y-6) {
+  row-gap: 1rem !important;
+}
+
+/* Repeated components on pages 9–20 must fit by using the printed compact
+   padding—not by reducing the type to an app-card scale. */
+#content.adt-source-page :is(
+  [data-section-id="pg015_sec001"], [data-section-id="pg016_sec001"],
+  [data-section-id="pg017_sec001"], [data-section-id="pg018_sec001"],
+  [data-section-id="pg019_sec001"], [data-section-id="pg020_sec001"],
+  [data-section-id="pg021_sec001"], [data-section-id="pg022_sec001"],
+  [data-section-id="pg023_sec001"], [data-section-id="pg024_sec001"],
+  [data-section-id="pg025_sec001"], [data-section-id="pg026_sec001"]
+) [data-source-kind="example"] {
+  margin-top: 1.05rem !important;
+  margin-bottom: .65rem !important;
+  padding: 0 1rem .75rem !important;
+  min-height: 0 !important;
+}
+#content.adt-source-page :is(
+  [data-section-id="pg015_sec001"], [data-section-id="pg016_sec001"],
+  [data-section-id="pg017_sec001"], [data-section-id="pg018_sec001"],
+  [data-section-id="pg019_sec001"], [data-section-id="pg020_sec001"],
+  [data-section-id="pg021_sec001"], [data-section-id="pg022_sec001"],
+  [data-section-id="pg023_sec001"], [data-section-id="pg024_sec001"],
+  [data-section-id="pg025_sec001"], [data-section-id="pg026_sec001"]
+) [data-source-heading-wrap="example"] {
+  margin: -.85rem 0 .4rem !important;
+}
+#content.adt-source-page :is(
+  [data-section-id="pg015_sec001"], [data-section-id="pg016_sec001"],
+  [data-section-id="pg017_sec001"], [data-section-id="pg018_sec001"],
+  [data-section-id="pg019_sec001"], [data-section-id="pg020_sec001"],
+  [data-section-id="pg021_sec001"], [data-section-id="pg022_sec001"],
+  [data-section-id="pg023_sec001"], [data-section-id="pg024_sec001"],
+  [data-section-id="pg025_sec001"], [data-section-id="pg026_sec001"]
+) [data-source-kind="exercise"] {
+  margin-top: .8rem !important;
+  margin-bottom: .8rem !important;
+}
+#content.adt-source-page :is(
+  [data-section-id="pg019_sec001"], [data-section-id="pg020_sec001"],
+  [data-section-id="pg021_sec001"]
+) :is(p, li, td, th, [data-id]) {
+  line-height: 1.2 !important;
+}
+#content.adt-source-page :is(
+  [data-section-id="pg019_sec001"], [data-section-id="pg020_sec001"],
+  [data-section-id="pg021_sec001"]
+) :is(.p-8, .py-8, .px-8, .p-6, .py-6) {
+  padding-top: .65rem !important;
+  padding-bottom: .65rem !important;
+}
+
+/* Printed page 14: the expanded-form introduction and worked question share
+   the same left text line in the source; they are not centred callouts. */
+#content.adt-source-page [data-section-id="pg020_sec003"] > div:first-child,
+#content.adt-source-page [data-section-id="pg020_sec003"] > div:nth-child(2) {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  text-align: left !important;
+}
+#content.adt-source-page [data-section-id="pg020_sec003"] :is(
+  [data-id="pg020_n0067"], [data-id="pg020_n0068"]
+) {
+  display: inline !important;
+  margin: 0 !important;
+  font-size: 30px !important;
+  line-height: 1.22 !important;
+  text-align: left !important;
+}
+#content.adt-source-page [data-section-id="pg020_sec003"] [data-id="pg020_n0067"]::after {
+  content: ' ';
+}
+#content.adt-source-page [data-section-id="pg020_sec003"] div:has(> [data-id="pg020_n0072"]) {
+  margin: .45rem 0 .55rem !important;
+  text-align: left !important;
+}
+#content.adt-source-page [data-section-id="pg020_sec003"] [data-id="pg020_n0072"] {
+  font-size: 30px !important;
+  line-height: 1.2 !important;
+  text-align: left !important;
+}
+
+/* From printed page 17 onward, blue topic headings begin a new content
+   section and retain the source's visible breathing room above and below. */
+#content.adt-source-page .book-blue-content-heading {
+  display: block !important;
+  margin-top: 1.15rem !important;
+  margin-bottom: .55rem !important;
+}
+
+/* Printed page 17 establishes the ordinary-text baseline for the remainder
+   of the book.  Converter utility sizes must not make questions, options,
+   prose, labels, or table text optically smaller from page to page. */
+#content.adt-source-page.book-standard-content-from-page17 .book-standard-body-text {
+  font-size: 26.3856px !important;
+  line-height: 1.25 !important;
+}
+
+/* Ordinary content uses the complete printable column.  Retain intentional
+   image sizing, but remove prose/card max-width utilities inherited from the
+   converter's app layout. */
+#content.adt-source-page.book-standard-content-from-page17
+  [data-section-id] :is(
+    p, ol, ul,
+    [class*="max-w-2xl"], [class*="max-w-3xl"],
+    [class*="max-w-4xl"], [class*="max-w-5xl"],
+    [class*="max-w-6xl"], [class*="max-w-7xl"]
+  ) {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+#content.adt-source-page.book-standard-content-from-page17
+  [data-section-id] :is(p, li) {
+  text-align: justify !important;
+  text-align-last: left !important;
+}
+
+/* Keep extracted place-value diagrams in the source-book orientation. */
+#content.adt-source-page [data-section-id="pg015_sec001"] img[data-id^="pg015_im"],
+#content.adt-source-page [data-section-id="pg016_sec001"] img[data-id^="pg016_im"],
+#content.adt-source-page [data-section-id="pg017_sec001"] img[data-id^="pg017_im"],
+#content.adt-source-page [data-section-id="pg048_sec001"] img[data-id^="pg048_im"] {
+  transform: none !important;
+  rotate: none !important;
+  object-position: center center !important;
+}
+#content.adt-source-page > .book-source-autofit > .adt-source-page-part,
+#content.adt-source-page > .book-source-autofit > .adt-source-page-part {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* A physical page may be assembled from several converter sections.  Once
+   consolidated, only the first and last sections reserve the shell edges;
+   intermediate sections must not create extra gradients or page padding. */
+#content.adt-source-page > .book-source-autofit > .adt-source-page-part {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+#content.adt-source-page > .book-source-autofit > .adt-source-page-part:first-child {
+  padding-top: 92px !important;
+}
+#content.adt-source-page > .book-source-autofit > .adt-source-page-part:last-child {
+  padding-bottom: 122px !important;
+}
+#content.adt-source-page > .book-source-autofit [data-section-id] {
+  width: calc(788px / var(--book-fit-scale, 1)) !important;
+  max-width: calc(788px / var(--book-fit-scale, 1)) !important;
+  box-sizing: border-box !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-inline: auto !important;
+}
+
+/* Final cascade guard for the page-17 body-type standard.  Calendar date
+   grids on printed pages 148–149 remain compact, as in the source book. */
+html body #content.adt-source-page.book-standard-content-from-page17:not(:has([data-section-id="pg154_sec001"])):not(:has([data-section-id="pg155_sec001"]))
+  .book-standard-body-text {
+  font-size: 26.3856px !important;
+  line-height: 1.25 !important;
 }

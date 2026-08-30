@@ -48,9 +48,10 @@
 
 <link href="./content/tailwind_output.css?v=12" rel="stylesheet">
 <link href="./assets/typography-consistency.css?v=6" rel="stylesheet">
-<link href="./assets/source-book-theme.css?v=8" rel="stylesheet">
+<link href="./assets/source-book-theme.css?v=164" rel="stylesheet">
 <link href="./assets/libs/fontawesome/css/all.min.css" rel="stylesheet">
 <link href="./assets/fonts.css?v=4" rel="stylesheet">
+<link href="./assets/hisabati-parity.css?v=285" rel="stylesheet">
 <style id="adt-source-page-consolidation">
   /* One reader screen now corresponds to one physical source-PDF page. */
   #content.adt-source-page { width: 100%; max-width: 112rem; margin: 0 auto; }
@@ -93,8 +94,38 @@
           <p data-id="pg069_n0009" class="text-[2rem] leading-snug text-zinc-800 max-lg:text-[1.6rem] max-sm:text-lg">This can be done as shown in the table.</p>
         </div>
 
-        <div class="mt-6 max-sm:mt-4 flex justify-center">
-          <img data-id="pg069_im001" src="images/pg069_im001.jpg" alt="Place value table for subtraction" class="block w-full max-w-4xl h-auto object-contain" style="max-width: 100%; height: auto;">
+        <div class="mt-6 max-sm:mt-4 flex items-center justify-center text-zinc-900">
+          <span aria-hidden="true" class="mr-2 text-[2.2rem]">−</span>
+          <table class="w-full max-w-4xl table-fixed border-collapse text-center" aria-label="Place value subtraction table">
+            <thead>
+              <tr>
+                <th class="border border-zinc-600 bg-[#86d1ea] px-2 py-2 font-normal">Thousands</th>
+                <th class="border border-zinc-600 bg-[#e89ac3] px-2 py-2 font-normal">Hundreds</th>
+                <th class="border border-zinc-600 bg-[#f8d6a5] px-2 py-2 font-normal">Tens</th>
+                <th class="border border-zinc-600 bg-[#9cd4bb] px-2 py-2 font-normal">Ones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border border-zinc-600 bg-[#86d1ea] py-2">9</td>
+                <td class="border border-zinc-600 bg-[#e89ac3] py-2">8</td>
+                <td class="border border-zinc-600 bg-[#f8d6a5] py-2">5</td>
+                <td class="border border-zinc-600 bg-[#9cd4bb] py-2">4</td>
+              </tr>
+              <tr>
+                <td class="border border-zinc-600 bg-[#86d1ea] py-2">8</td>
+                <td class="border border-zinc-600 bg-[#e89ac3] py-2">7</td>
+                <td class="border border-zinc-600 bg-[#f8d6a5] py-2">4</td>
+                <td class="border border-zinc-600 bg-[#9cd4bb] py-2">3</td>
+              </tr>
+              <tr class="bg-zinc-200">
+                <td class="border border-zinc-600 py-2">1</td>
+                <td class="border border-zinc-600 py-2">1</td>
+                <td class="border border-zinc-600 py-2">1</td>
+                <td class="border border-zinc-600 py-2">1</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <p data-id="pg069_n0011" class="mt-6 max-sm:mt-4 text-[2rem] leading-snug text-zinc-800 max-lg:text-[1.6rem] max-sm:text-lg">Therefore, the answer is 1111.</p>
@@ -105,6 +136,13 @@
       <div class="rounded-[1.25rem] border-2 border-yellow-600/70 bg-white px-5 py-5 max-sm:px-3 max-sm:py-3">
         <div class="inline-block rounded-xl bg-gradient-to-b from-yellow-600 to-yellow-700 px-5 py-2 shadow-md max-sm:px-3 max-sm:py-1.5">
           <span data-id="pg069_n0014" class="text-white text-3xl max-lg:text-2xl max-sm:text-lg font-black tracking-wide">Example 2</span>
+        </div>
+
+        <div class="page63-example-two-arithmetic" aria-label="86597 minus 54326">
+          <div>86597</div>
+          <div><span aria-hidden="true">−</span> 54326</div>
+          <div class="page63-rule"></div>
+          <div class="page63-answer-rule"></div>
         </div>
 
         <div class="mt-6 max-sm:mt-4 space-y-3">
@@ -169,11 +207,11 @@
 
 
 
-<script src="./assets/offline-preloader.js?v=110"></script>
+<script src="./assets/offline-preloader.js?v=111"></script>
 <script src="./assets/scorm.js"></script>
-<script src="./assets/source-book-theme.js?v=4"></script>
+<script src="./assets/source-book-theme.js?v=76"></script>
 <script src="./assets/pdf-facsimile.js?v=6"></script>
-<script src="./assets/accessible-tts.js?v=38"></script>
+<script src="./assets/accessible-tts.js?v=41"></script>
 <script src="./assets/media-playback-independence.js"></script>
 <script src="./assets/base.bundle.local.js?v=110"></script>
 <script src="./assets/sign-language-video.js"></script>

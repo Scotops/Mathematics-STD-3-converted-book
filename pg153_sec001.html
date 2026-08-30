@@ -56,9 +56,10 @@
 
 <link href="./content/tailwind_output.css?v=12" rel="stylesheet">
 <link href="./assets/typography-consistency.css?v=6" rel="stylesheet">
-<link href="./assets/source-book-theme.css?v=8" rel="stylesheet">
+<link href="./assets/source-book-theme.css?v=164" rel="stylesheet">
 <link href="./assets/libs/fontawesome/css/all.min.css" rel="stylesheet">
 <link href="./assets/fonts.css?v=4" rel="stylesheet">
+<link href="./assets/hisabati-parity.css?v=285" rel="stylesheet">
 <style>
       .months-table { width: 100%; border-collapse: collapse; font-size: 1.35rem; line-height: 1.4; }
       .months-table th, .months-table td { border: 2px solid #b89a32; padding: .7rem 1rem; text-align: center; }
@@ -93,26 +94,16 @@
       <span data-id="pg153_n0004">A year has twelve months.</span>
       <span data-id="pg153_n0005">Each month has its own name as shown in the following table.</span>
     </p>
-    <div class="overflow-x-auto rounded-3xl border-4 border-amber-300 bg-white p-4 shadow-md max-lg:p-3 max-sm:rounded-2xl max-sm:border-[3px] max-sm:p-1">
-      <table class="months-table" aria-label="Months of the year, their month numbers, and their numbers of days">
-        <thead><tr>
-          <th scope="col"><span data-id="pg153_tbl_h1">Month</span></th>
-          <th scope="col"><span data-id="pg153_tbl_h2">Month number</span></th>
-          <th scope="col"><span data-id="pg153_tbl_h3">Number of days</span></th>
-        </tr></thead>
+    <div class="months-table-wrap">
+      <table class="months-source-table" aria-label="Months of the year, their month numbers, and their numbers of days">
         <tbody>
-          <tr aria-label="January is month number 1 and has 31 days."><td><span class="sr-only" data-id="pg153_tbl_r01"></span><span aria-hidden="true">January</span></td><td aria-hidden="true">1</td><td aria-hidden="true">31 days</td></tr>
-          <tr aria-label="February is month number 2 and has 28 days, or 29 days in a leap year."><td><span class="sr-only" data-id="pg153_tbl_r02"></span><span aria-hidden="true">February</span></td><td aria-hidden="true">2</td><td aria-hidden="true">28 or 29 days</td></tr>
-          <tr aria-label="March is month number 3 and has 31 days."><td><span class="sr-only" data-id="pg153_tbl_r03"></span><span aria-hidden="true">March</span></td><td aria-hidden="true">3</td><td aria-hidden="true">31 days</td></tr>
-          <tr aria-label="April is month number 4 and has 30 days."><td><span class="sr-only" data-id="pg153_tbl_r04"></span><span aria-hidden="true">April</span></td><td aria-hidden="true">4</td><td aria-hidden="true">30 days</td></tr>
-          <tr aria-label="May is month number 5 and has 31 days."><td><span class="sr-only" data-id="pg153_tbl_r05"></span><span aria-hidden="true">May</span></td><td aria-hidden="true">5</td><td aria-hidden="true">31 days</td></tr>
-          <tr aria-label="June is month number 6 and has 30 days."><td><span class="sr-only" data-id="pg153_tbl_r06"></span><span aria-hidden="true">June</span></td><td aria-hidden="true">6</td><td aria-hidden="true">30 days</td></tr>
-          <tr aria-label="July is month number 7 and has 31 days."><td><span class="sr-only" data-id="pg153_tbl_r07"></span><span aria-hidden="true">July</span></td><td aria-hidden="true">7</td><td aria-hidden="true">31 days</td></tr>
-          <tr aria-label="August is month number 8 and has 31 days."><td><span class="sr-only" data-id="pg153_tbl_r08"></span><span aria-hidden="true">August</span></td><td aria-hidden="true">8</td><td aria-hidden="true">31 days</td></tr>
-          <tr aria-label="September is month number 9 and has 30 days."><td><span class="sr-only" data-id="pg153_tbl_r09"></span><span aria-hidden="true">September</span></td><td aria-hidden="true">9</td><td aria-hidden="true">30 days</td></tr>
-          <tr aria-label="October is month number 10 and has 31 days."><td><span class="sr-only" data-id="pg153_tbl_r10"></span><span aria-hidden="true">October</span></td><td aria-hidden="true">10</td><td aria-hidden="true">31 days</td></tr>
-          <tr aria-label="November is month number 11 and has 30 days."><td><span class="sr-only" data-id="pg153_tbl_r11"></span><span aria-hidden="true">November</span></td><td aria-hidden="true">11</td><td aria-hidden="true">30 days</td></tr>
-          <tr aria-label="December is month number 12 and has 31 days."><td><span class="sr-only" data-id="pg153_tbl_r12"></span><span aria-hidden="true">December</span></td><td aria-hidden="true">12</td><td aria-hidden="true">31 days</td></tr>
+          <tr class="month-names"><th>January</th><th>February</th><th>March</th><th>April</th><th>May</th><th>June</th></tr>
+          <tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
+          <tr><td>31 days</td><td>28 or 29 days</td><td>31 days</td><td>30 days</td><td>31 days</td><td>30 days</td></tr>
+          <tr class="months-spacer"><td colspan="6"></td></tr>
+          <tr class="month-names"><th>July</th><th>August</th><th>September</th><th>October</th><th>November</th><th>December</th></tr>
+          <tr><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>
+          <tr><td>31 days</td><td>31 days</td><td>30 days</td><td>31 days</td><td>30 days</td><td>31 days</td></tr>
         </tbody>
       </table>
     </div>
@@ -136,10 +127,10 @@
 
     <div class="relative z-50" id="interface-container"></div>
     <div class="relative z-50" id="nav-container"></div>
-<script src="./assets/source-book-theme.js?v=4"></script>
+<script src="./assets/source-book-theme.js?v=76"></script>
 <script src="./assets/pdf-facsimile.js?v=6"></script>
-<script src="./assets/accessible-tts.js?v=38"></script>
-<script src="./assets/offline-preloader.js?v=110"></script>
+<script src="./assets/accessible-tts.js?v=41"></script>
+<script src="./assets/offline-preloader.js?v=111"></script>
 <script src="./assets/scorm.js"></script>
 <script src="./assets/media-playback-independence.js"></script>
 <script src="./assets/base.bundle.local.js?v=110"></script>
