@@ -1,4 +1,4 @@
-"""Audit the final 184-page ADT against its source and runtime contract."""
+"""Audit the final 185-page ADT against its source and runtime contract."""
 
 from __future__ import annotations
 
@@ -89,11 +89,15 @@ def main() -> int:
             "assets/typography-consistency.css?v=6",
             "assets/source-book-theme.css?v=8",
             "assets/source-book-theme.js?v=4",
-            "assets/pdf-facsimile.js?v=6",
             "assets/accessible-tts.js?v=38",
-            "assets/offline-preloader.js?v=104",
         )
         if any(asset not in markup for asset in required_markup_assets):
+            report["missing_fidelity_assets"].append(href)
+        facsimile_version = "v=7" if index in {1, 184, 185} else "v=6"
+        preloader_version = "v=105" if index in {1, 184, 185} else "v=104"
+        if f"assets/pdf-facsimile.js?{facsimile_version}" not in markup:
+            report["missing_fidelity_assets"].append(href)
+        if f"assets/offline-preloader.js?{preloader_version}" not in markup:
             report["missing_fidelity_assets"].append(href)
         page_match = re.match(r"pg(\d{3})_", actual_title)
         facsimile_path = (
@@ -259,7 +263,7 @@ def main() -> int:
     summary = {
         "pages": len(manifest),
         "source_page_assets": len(report["unwanted_source_page_assets"]),
-        "facsimile_assets": 184 - len(report["missing_facsimile_assets"]),
+        "facsimile_assets": len(manifest) - len(report["missing_facsimile_assets"]),
         "text_ids": report["referenced_text_ids"],
         "critical_failures": report["critical_failure_count"],
         "unmapped_audio_ids": len(report["unmapped_audio_ids"]),

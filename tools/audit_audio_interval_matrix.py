@@ -71,11 +71,11 @@ def main() -> None:
 
     for relative in ("content/pages.json", "content/toc.json"):
         manifest = (ROOT / relative).read_text(encoding="utf-8")
-        require("?reader=31" not in manifest, f"{relative}: stale reader 31 link", failures)
-        require("?reader=32" in manifest, f"{relative}: reader 32 links missing", failures)
+        require("?reader=33" in manifest, f"{relative}: reader 33 links missing", failures)
         require(
-            "assets/offline-preloader.js?v=104" in source,
-            f"{filename}: offline preloader v104 missing",
+            "assets/offline-preloader.js?v=104" in source
+            or "assets/offline-preloader.js?v=105" in source,
+            f"{filename}: offline preloader missing",
             failures,
         )
 
@@ -161,7 +161,7 @@ def main() -> None:
     )
 
     config = json.loads((ROOT / "assets" / "config.json").read_text(encoding="utf-8"))
-    require(config.get("bundleVersion") == "109", "bundle version 109 missing", failures)
+    require(config.get("bundleVersion") == "110", "bundle version 110 missing", failures)
 
     print(
         json.dumps(

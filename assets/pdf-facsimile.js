@@ -9,7 +9,7 @@
   if (!match) return;
 
   const pageNumber = Number(match[1]);
-  if (pageNumber < 1 || pageNumber > 184) return;
+  if (pageNumber < 1 || pageNumber > 185) return;
 
   const content = document.getElementById('content');
   if (!content || content.querySelector('.pdf-page-facsimile')) return;
@@ -21,7 +21,7 @@
 
   const image = document.createElement('img');
   image.className = 'pdf-page-facsimile';
-  image.src = `images/pdf-pages/pg-${String(pageNumber).padStart(3, '0')}.jpg?v=6`;
+  image.src = `images/pdf-pages/pg-${String(pageNumber).padStart(3, '0')}.jpg?v=7`;
   image.alt = '';
   image.setAttribute('aria-hidden', 'true');
   image.decoding = 'async';
