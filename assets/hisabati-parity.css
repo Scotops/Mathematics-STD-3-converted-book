@@ -11122,3 +11122,303 @@ html body #content#content#content#content#content.adt-source-page
     line-height:1.15!important;
   }
 }
+
+/* -------------------------------------------------------------------------
+   Screenshot QA regression guard (printed pages 28, 30, 34, 35, 45, 48,
+   49 and 53-55).
+
+   These pages were laid out against the source book's 820px content column.
+   The final generic 710px component contract must not narrow their cards or
+   move a child section to the left edge of its source-page wrapper. */
+html body #content#content#content#content#content.adt-source-page
+  :is([data-section-id="pg034_sec001"], [data-section-id="pg034_sec002"],
+      [data-section-id="pg036_sec001"], [data-section-id="pg036_sec002"], [data-section-id="pg036_sec003"],
+      [data-section-id="pg040_sec001"], [data-section-id="pg040_sec002"], [data-section-id="pg040_sec003"],
+      [data-section-id="pg041_sec001"], [data-section-id="pg041_sec002"], [data-section-id="pg041_sec003"],
+      [data-section-id="pg051_sec001"],
+      [data-section-id="pg054_sec001"], [data-section-id="pg054_sec002"],
+      [data-section-id="pg055_sec001"], [data-section-id="pg055_sec002"],
+      [data-section-id="pg059_sec001"], [data-section-id="pg059_sec002"],
+      [data-section-id="pg060_sec001"], [data-section-id="pg060_sec002"],
+      [data-section-id="pg061_sec001"], [data-section-id="pg061_sec002"]) {
+  width:820px!important;
+  max-width:820px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+
+html body #content#content#content#content#content.adt-source-page
+  :is([data-section-id="pg034_sec001"], [data-section-id="pg034_sec002"],
+      [data-section-id="pg040_sec003"],
+      [data-section-id="pg054_sec001"],
+      [data-section-id="pg055_sec001"], [data-section-id="pg055_sec002"],
+      [data-section-id="pg061_sec002"])
+  :is(.book-example-card, .book-exercise-panel),
+html body #content#content#content#content#content.adt-source-page
+  :is([data-section-id="pg034_sec001"], [data-section-id="pg034_sec002"],
+      [data-section-id="pg040_sec003"],
+      [data-section-id="pg054_sec001"],
+      [data-section-id="pg055_sec001"], [data-section-id="pg055_sec002"],
+      [data-section-id="pg061_sec002"]).book-example-card,
+html body #content#content#content#content#content.adt-source-page
+  :is([data-section-id="pg034_sec002"], [data-section-id="pg054_sec001"]).book-exercise-panel {
+  width:820px!important;
+  max-width:820px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+
+/* Printed page 28: the Example 6 table and Exercise 9 share one centre line. */
+html body #content#content#content#content#content.adt-source-page
+  [data-source-section="pg034_sec001"],
+html body #content#content#content#content#content.adt-source-page
+  [data-source-section="pg040_sec003"] {
+  display:flex!important;
+  justify-content:center!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg034_sec001"] {
+  width:820px!important;
+  max-width:820px!important;
+  min-width:820px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg034_sec002"] {
+  width:820px!important;
+  max-width:100%!important;
+}
+
+/* Printed page 34: lift Example 4 clear of the cyan printed page number. */
+html body #content#content#content#content#content.adt-source-page
+  [data-source-section="pg040_sec003"] {
+  margin-top:-48px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg040_sec003"] {
+  min-width:820px!important;
+}
+
+/* Printed page 35: Exercise 11's first prompt belongs below its title bar. */
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg041_sec003"] {
+  padding:48px 14px 12px!important;
+  overflow:visible!important;
+}
+
+/* Printed page 45: both lines of the chapter panel are centred as in print. */
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg051_sec001"] [data-id="pg051_chapter_title"] {
+  display:flex!important;
+  justify-content:center!important;
+  width:100%!important;
+  font-size:23px!important;
+  line-height:1.15!important;
+  text-align:center!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg051_sec001"] h1:not([data-id]) {
+  width:100%!important;
+  font-size:29px!important;
+  line-height:1.2!important;
+  text-align:center!important;
+}
+
+/* Printed page 48: restore the exercise inset, and keep the topic and gold
+   Example 1 tab on their own full-width lines. */
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg054_sec001"] {
+  min-height:395px!important;
+  padding:46px 12px 10px!important;
+  overflow:visible!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg054_sec002"] [data-id="pg054_n0035"] {
+  width:max-content!important;
+  max-width:none!important;
+  white-space:nowrap!important;
+  font-size:21px!important;
+  line-height:1.1!important;
+}
+
+/* Printed page 53: keep Exercise 3 inside the full-width peach title strip. */
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg059_sec002"] .book-exercise-panel {
+  box-sizing:border-box!important;
+  position:relative!important;
+  width:820px!important;
+  max-width:820px!important;
+  height:296px!important;
+  margin:0 auto!important;
+  padding:48px 22px 12px!important;
+  overflow:visible!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg059_sec002"] > div > div > .book-exercise-heading-wrap {
+  position:absolute!important;
+  top:0!important;
+  left:18px!important;
+  width:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:8px 10px!important;
+  transform:none!important;
+  height:44px!important;
+  border-radius:0 16px 0 16px!important;
+  background:linear-gradient(#ffd8bb,#f8c99f)!important;
+  box-shadow:0 4px 8px rgba(0,0,0,.12)!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg059_sec002"] .book-exercise-heading-wrap {
+  min-width:calc(100% + 44px)!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg059_sec002"] [data-id="pg059_n0010"] {
+  font-size:21px!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+
+/* Restore the compact source typography where the generic contract otherwise
+   makes long arithmetic steps spill into adjacent columns. */
+html body #content#content#content#content#content.adt-source-page
+  :is([data-section-id="pg054_sec001"], [data-section-id="pg054_sec002"],
+      [data-section-id="pg055_sec001"], [data-section-id="pg055_sec002"],
+      [data-section-id="pg059_sec001"], [data-section-id="pg059_sec002"],
+      [data-section-id="pg060_sec001"], [data-section-id="pg060_sec002"],
+      [data-section-id="pg061_sec001"], [data-section-id="pg061_sec002"])
+  :is(p, li, td, th, label, span[data-id], div[data-id]):not(.book-example-heading):not([data-source-heading]) {
+  font-size:18px!important;
+  line-height:1.28!important;
+}
+
+@media (max-width:860px) {
+  html body #content#content#content#content#content.adt-source-page:has(
+    :is([data-section-id="pg034_sec001"], [data-section-id="pg036_sec001"],
+        [data-section-id="pg040_sec001"], [data-section-id="pg041_sec001"],
+        [data-section-id="pg051_sec001"], [data-section-id="pg054_sec001"],
+        [data-section-id="pg055_sec001"], [data-section-id="pg059_sec001"],
+        [data-section-id="pg060_sec001"], [data-section-id="pg061_sec001"])) {
+    height:auto!important;
+    min-height:1307px!important;
+    max-height:none!important;
+    padding-bottom:118px!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    :is([data-source-section="pg034_sec001"], [data-source-section="pg034_sec002"],
+        [data-source-section="pg036_sec001"], [data-source-section="pg036_sec002"], [data-source-section="pg036_sec003"],
+        [data-source-section="pg040_sec001"], [data-source-section="pg040_sec002"], [data-source-section="pg040_sec003"],
+        [data-source-section="pg041_sec001"], [data-source-section="pg041_sec002"], [data-source-section="pg041_sec003"],
+        [data-source-section="pg051_sec001"],
+        [data-source-section="pg054_sec001"], [data-source-section="pg054_sec002"],
+        [data-source-section="pg055_sec001"], [data-source-section="pg055_sec002"],
+        [data-source-section="pg059_sec001"], [data-source-section="pg059_sec002"],
+        [data-source-section="pg060_sec001"], [data-source-section="pg060_sec002"],
+        [data-source-section="pg061_sec001"], [data-source-section="pg061_sec002"]),
+  html body #content#content#content#content#content.adt-source-page
+    :is([data-section-id="pg034_sec001"], [data-section-id="pg034_sec002"],
+        [data-section-id="pg036_sec001"], [data-section-id="pg036_sec002"], [data-section-id="pg036_sec003"],
+        [data-section-id="pg040_sec001"], [data-section-id="pg040_sec002"], [data-section-id="pg040_sec003"],
+        [data-section-id="pg041_sec001"], [data-section-id="pg041_sec002"], [data-section-id="pg041_sec003"],
+        [data-section-id="pg051_sec001"],
+        [data-section-id="pg054_sec001"], [data-section-id="pg054_sec002"],
+        [data-section-id="pg055_sec001"], [data-section-id="pg055_sec002"],
+        [data-section-id="pg059_sec001"], [data-section-id="pg059_sec002"],
+        [data-section-id="pg060_sec001"], [data-section-id="pg060_sec002"],
+        [data-section-id="pg061_sec001"], [data-section-id="pg061_sec002"]) {
+    width:calc(100% - 24px)!important;
+    max-width:calc(100% - 24px)!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    :is([data-source-section="pg034_sec001"], [data-source-section="pg034_sec002"],
+        [data-source-section="pg036_sec001"], [data-source-section="pg036_sec002"], [data-source-section="pg036_sec003"],
+        [data-source-section="pg040_sec001"], [data-source-section="pg040_sec002"], [data-source-section="pg040_sec003"],
+        [data-source-section="pg041_sec001"], [data-source-section="pg041_sec002"], [data-source-section="pg041_sec003"],
+        [data-source-section="pg051_sec001"],
+        [data-source-section="pg054_sec001"], [data-source-section="pg054_sec002"],
+        [data-source-section="pg055_sec001"], [data-source-section="pg055_sec002"],
+        [data-source-section="pg059_sec001"], [data-source-section="pg059_sec002"],
+        [data-source-section="pg060_sec001"], [data-source-section="pg060_sec002"],
+        [data-source-section="pg061_sec001"], [data-source-section="pg061_sec002"]) {
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    :is([data-source-section="pg034_sec001"], [data-source-section="pg034_sec002"],
+        [data-source-section="pg036_sec001"], [data-source-section="pg036_sec002"], [data-source-section="pg036_sec003"],
+        [data-source-section="pg040_sec001"], [data-source-section="pg040_sec002"], [data-source-section="pg040_sec003"],
+        [data-source-section="pg041_sec001"], [data-source-section="pg041_sec002"], [data-source-section="pg041_sec003"],
+        [data-source-section="pg051_sec001"],
+        [data-source-section="pg054_sec001"], [data-source-section="pg054_sec002"],
+        [data-source-section="pg055_sec001"], [data-source-section="pg055_sec002"],
+        [data-source-section="pg059_sec001"], [data-source-section="pg059_sec002"],
+        [data-source-section="pg060_sec001"], [data-source-section="pg060_sec002"],
+        [data-source-section="pg061_sec001"], [data-source-section="pg061_sec002"])
+    > [data-section-id] {
+    flex:0 1 calc(100% - 24px)!important;
+    min-width:0!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg059_sec002"] > div {
+    display:flex!important;
+    min-width:0!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg059_sec002"] .book-exercise-panel {
+    flex:0 1 100%!important;
+    min-width:0!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    :is([data-section-id="pg034_sec002"], [data-section-id="pg054_sec001"]).book-exercise-panel,
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg059_sec002"] .book-exercise-panel {
+    width:calc(100% - 24px)!important;
+    max-width:calc(100% - 24px)!important;
+    min-width:0!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    [data-source-section="pg040_sec003"] {
+    margin-top:20px!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    :is([data-section-id="pg034_sec001"], [data-section-id="pg040_sec003"]) {
+    min-width:0!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    :is([data-section-id="pg054_sec001"], [data-section-id="pg059_sec002"])
+    .grid {
+    grid-template-columns:1fr!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg034_sec001"] table {
+    display:block!important;
+    max-width:100%!important;
+    overflow-x:auto!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg054_sec002"] [data-id="pg054_n0035"] {
+    width:100%!important;
+    max-width:100%!important;
+    white-space:normal!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    [data-source-section="pg059_sec002"],
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg059_sec002"],
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg059_sec002"] > div,
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg059_sec002"] .book-exercise-panel {
+    height:auto!important;
+    min-height:0!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg059_sec002"] .book-exercise-panel {
+    padding-bottom:24px!important;
+  }
+}

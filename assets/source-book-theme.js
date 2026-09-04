@@ -172,7 +172,12 @@
       if (card.querySelector(':scope > .book-example-card')) return;
       const section = card.closest('[data-section-id]');
       if (!section) return;
-      const targetWidth = section.clientWidth;
+      const parentWidth = card.parentElement?.clientWidth || section.clientWidth;
+      const narrowGutter = window.matchMedia('(max-width: 860px)').matches ? 24 : 0;
+      const targetWidth = Math.min(
+        section.clientWidth,
+        Math.max(0, parentWidth - narrowGutter)
+      );
       card.style.setProperty('width', `${targetWidth}px`, 'important');
       card.style.setProperty('max-width', `${targetWidth}px`, 'important');
       card.style.setProperty('margin-left', '0px', 'important');
