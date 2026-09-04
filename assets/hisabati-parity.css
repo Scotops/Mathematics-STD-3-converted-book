@@ -24,6 +24,7 @@
   --std3-exercise-title: #f7c79d;
 }
 
+
 html body #content.adt-source-page {
   box-sizing: border-box !important;
   position: relative !important;
@@ -10828,4 +10829,296 @@ html body #content#content#content#content.adt-source-page
   background:transparent!important;
   font-size:20px!important;
   line-height:26px!important;
+}
+/* -------------------------------------------------------------------------
+   Screenshot QA regression guard (printed pages 2, 3, 8, 10, 14, 16, 18,
+   20, 23, 26 and 27).
+
+   The final book-wide contract is intentionally conservative for later pages,
+   but it must not flatten the source-measured rules above for these early
+   pages. Keep their original 820px column, typography, card rhythm and cream
+   exercise fields. */
+html body #content#content#content#content#content.adt-source-page
+  :is([data-section-id="pg008_sec001"], [data-section-id="pg008_sec002"],
+      [data-section-id="pg009_sec001"], [data-section-id="pg009_sec002"],
+      [data-section-id="pg014_sec001"], [data-section-id="pg014_sec002"],
+      [data-section-id="pg016_sec001"],
+      [data-section-id="pg020_sec001"], [data-section-id="pg020_sec002"], [data-section-id="pg020_sec003"],
+      [data-section-id="pg022_sec001"], [data-section-id="pg022_sec002"],
+      [data-section-id="pg024_sec001"], [data-section-id="pg024_sec002"],
+      [data-section-id="pg026_sec001"], [data-section-id="pg026_sec002"],
+      [data-section-id="pg029_sec001"], [data-section-id="pg029_sec002"],
+      [data-section-id="pg032_sec001"], [data-section-id="pg033_sec001"]) {
+  width:820px!important;
+  max-width:calc(100% - 24px)!important;
+}
+
+html body #content#content#content#content#content.adt-source-page
+  :is([data-section-id="pg009_sec002"], [data-section-id="pg014_sec001"],
+      [data-section-id="pg020_sec002"], [data-section-id="pg024_sec001"])
+  .book-exercise-panel {
+  width:820px!important;
+  max-width:100%!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+
+/* Gold tabs are single-line labels in the printed book. A max-width inherited
+   from the wrapper previously reduced the text box by its own padding and
+   forced labels such as “Example 4” onto two lines. */
+html body #content#content#content#content#content.adt-source-page .book-example-heading-wrap {
+  width:max-content!important;
+  max-width:none!important;
+}
+html body #content#content#content#content#content.adt-source-page .book-example-heading {
+  width:max-content!important;
+  max-width:none!important;
+  min-width:max-content!important;
+  white-space:nowrap!important;
+  font-size:25px!important;
+  line-height:30px!important;
+}
+
+/* Pages 2 and 3: restore the measured pupil-facing size and full card width. */
+html body #content#content#content#content#content.adt-source-page
+  :is([data-section-id="pg008_sec001"], [data-section-id="pg008_sec002"],
+      [data-section-id="pg009_sec001"], [data-section-id="pg009_sec002"])
+  .book-example-card {
+  width:820px!important;
+  max-width:100%!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  :is([data-section-id="pg008_sec001"], [data-section-id="pg008_sec002"],
+      [data-section-id="pg009_sec001"], [data-section-id="pg009_sec002"])
+  :is(p, p *, div[data-id]:not(.book-example-heading), span[data-id]:not(.book-example-heading)) {
+  font-size:28px!important;
+  line-height:30px!important;
+}
+
+/* Printed page 8: keep Exercise 1 at the source width and spacing. */
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg014_sec001"] :is(p, p *, span, td, th, label),
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg014_sec002"] :is(p, p *, span, td, th, label) {
+  font-size:26px!important;
+  line-height:29px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg014_sec001"] .book-early-exercise {
+  min-height:685px!important;
+}
+
+/* Printed page 10: source-sized abacus cards and text. */
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg016_sec001"] .book-example-card {
+  width:820px!important;
+  max-width:100%!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg016_sec001"] .book-example-card
+  :is(p, p *, strong, div:last-child, div:last-child *) {
+  font-size:26px!important;
+  line-height:29px!important;
+}
+
+/* Printed page 14: pull the expanded-form topic back to its source position.
+   This also leaves the cyan printed page number below, rather than on top of,
+   the final row of Example 1. */
+html body #content#content#content#content#content.adt-source-page
+  [data-source-section="pg020_sec003"] {
+  margin-top:-150px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  :is([data-section-id="pg020_sec001"], [data-section-id="pg020_sec002"], [data-section-id="pg020_sec003"])
+  :is(p, p *, label, span[data-id]:not(.book-example-heading), div[data-id]:not(.book-example-heading)) {
+  font-size:26px!important;
+  line-height:29px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg020_sec003"] > div:last-child {
+  width:820px!important;
+  max-width:100%!important;
+}
+
+/* Printed page 16: retain the compact table and six evenly separated number
+   decomposition diagrams. */
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg022_sec001"] > div:first-child :is(h1, div, p, span) {
+  font-size:24px!important;
+  line-height:29px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg022_sec001"] table :is(th, td, span),
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg022_sec002"] > div:first-child :is(div, span),
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg022_sec002"] > div:last-child > div > span:first-child {
+  font-size:23px!important;
+  line-height:27px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg022_sec001"] table {
+  width:690px!important;
+  max-width:100%!important;
+  min-width:0!important;
+}
+
+/* Printed page 18: restore the number-table density and the Example 2 type. */
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg024_sec001"] > div > div:first-child :is(h1, span),
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg024_sec001"] > div > div:last-child > p,
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg024_sec002"] > div:first-child h1 {
+  font-size:26px!important;
+  line-height:30px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg024_sec001"] .grid-cols-10 > div,
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg024_sec002"] > div:last-child :is(p, div, h3) {
+  font-size:22px!important;
+  line-height:29px!important;
+}
+html body #content#content#content#content#content#content#content#content.adt-source-page
+  [data-section-id="pg024_sec002"].book-example-card {
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+html body #content#content#content#content#content#content#content#content.adt-source-page
+  [data-source-section="pg024_sec002"] {
+  display:flex!important;
+  justify-content:center!important;
+}
+
+/* Printed page 20: keep the writing topic and Example 1 above the footer. */
+html body #content#content#content#content#content.adt-source-page
+  [data-source-section="pg026_sec002"] {
+  margin-top:-110px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg026_sec001"] table :is(td, span) {
+  font-size:21px!important;
+  line-height:31px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg026_sec002"] [data-id="pg026_n0221"] {
+  font-size:29px!important;
+  line-height:32px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg026_sec002"]
+  :is([data-id="pg026_n0223"], [data-id="pg026_n0224"], [data-id="pg026_n0225"]) {
+  font-size:24px!important;
+  line-height:29px!important;
+}
+
+/* Printed page 23 is one continuous cream exercise field, not two white
+   fragments. */
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg029_sec001"] {
+  border-radius:0 16px 0 0!important;
+  background:#f7f2e6!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg029_sec002"] {
+  border-radius:0 0 16px 16px!important;
+  background:#f7f2e6!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg029_sec001"] :is(div, span),
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg029_sec002"] > div:first-child :is(span, p) {
+  font-size:22px!important;
+  line-height:29px!important;
+}
+
+/* Printed page 26: restore heading/body size and leave a true gap between the
+   two worked examples. */
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg032_sec001"] [data-id="pg032_n0002"] {
+  max-width:100%!important;
+  white-space:normal!important;
+  font-size:27px!important;
+  line-height:32px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg032_sec001"] [data-id="pg032_n0002"] + p,
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg032_sec001"] > div:nth-child(n+2) :is(p, div):not(.book-example-heading-wrap) {
+  font-size:22px!important;
+  line-height:30px!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg032_sec001"] > div:nth-child(2) {
+  margin-bottom:84px!important;
+}
+
+/* Printed page 27: the next gold tab begins after the preceding card instead
+   of sitting on its last answer line. */
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg033_sec001"] > div {
+  width:820px!important;
+  max-width:100%!important;
+}
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg033_sec001"] > div > div + div {
+  margin-top:96px!important;
+}
+
+/* These pages must remain readable and centered when the reader is narrow.
+   Reflow only at the narrow breakpoint; desktop keeps the source measurements. */
+@media (max-width: 860px) {
+  html body #content#content#content#content#content.adt-source-page:has(
+    :is([data-section-id="pg008_sec001"], [data-section-id="pg009_sec001"],
+        [data-section-id="pg014_sec001"], [data-section-id="pg016_sec001"],
+        [data-section-id="pg020_sec001"], [data-section-id="pg022_sec001"],
+        [data-section-id="pg024_sec001"], [data-section-id="pg026_sec001"],
+        [data-section-id="pg029_sec001"], [data-section-id="pg032_sec001"],
+        [data-section-id="pg033_sec001"])) {
+    height:auto!important;
+    min-height:1307px!important;
+    max-height:none!important;
+    padding-bottom:118px!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    :is([data-section-id="pg008_sec001"], [data-section-id="pg008_sec002"],
+        [data-section-id="pg009_sec001"], [data-section-id="pg009_sec002"],
+        [data-section-id="pg014_sec001"], [data-section-id="pg014_sec002"],
+        [data-section-id="pg016_sec001"],
+        [data-section-id="pg020_sec001"], [data-section-id="pg020_sec002"], [data-section-id="pg020_sec003"],
+        [data-section-id="pg022_sec001"], [data-section-id="pg022_sec002"],
+        [data-section-id="pg024_sec001"], [data-section-id="pg024_sec002"],
+        [data-section-id="pg026_sec001"], [data-section-id="pg026_sec002"],
+        [data-section-id="pg029_sec001"], [data-section-id="pg029_sec002"],
+        [data-section-id="pg032_sec001"], [data-section-id="pg033_sec001"]) {
+    width:calc(100% - 24px)!important;
+    max-width:calc(100% - 24px)!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    :is(.book-example-card, .book-exercise-panel) {
+    width:100%!important;
+    max-width:100%!important;
+  }
+  html body #content#content#content#content#content.adt-source-page
+    :is([data-section-id="pg008_sec001"], [data-section-id="pg008_sec002"],
+        [data-section-id="pg009_sec001"], [data-section-id="pg009_sec002"],
+        [data-section-id="pg014_sec001"], [data-section-id="pg014_sec002"],
+        [data-section-id="pg016_sec001"], [data-section-id="pg020_sec001"],
+        [data-section-id="pg020_sec002"], [data-section-id="pg020_sec003"],
+        [data-section-id="pg022_sec001"], [data-section-id="pg022_sec002"],
+        [data-section-id="pg024_sec001"], [data-section-id="pg024_sec002"],
+        [data-section-id="pg026_sec001"], [data-section-id="pg026_sec002"],
+        [data-section-id="pg029_sec001"], [data-section-id="pg029_sec002"],
+        [data-section-id="pg032_sec001"], [data-section-id="pg033_sec001"])
+    :is(p, li, td, th, label, [data-id]):not(.book-example-heading):not([data-source-heading]) {
+    font-size:clamp(16px, 4.7vw, 20px)!important;
+    line-height:1.3!important;
+  }
+  html body #content#content#content#content#content.adt-source-page .book-example-heading {
+    font-size:clamp(18px, 5.3vw, 23px)!important;
+    line-height:1.15!important;
+  }
 }
