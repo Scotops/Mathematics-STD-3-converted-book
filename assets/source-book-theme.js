@@ -123,6 +123,9 @@
     classifyPrintedPage(root);
     normalizeBlueContentHeadings(root);
     normalizeContentWidthAndBodyType(root);
+    normalizeAdditionalComments(root);
+    window.setTimeout(() => normalizeAdditionalComments(root), 350);
+    window.setTimeout(() => normalizeAdditionalComments(root), 1250);
     addPrintedPageFooter(root);
     normalizeArithmeticMinusSigns(root);
     window.setTimeout(() => normalizeArithmeticMinusSigns(root), 850);
@@ -405,6 +408,8 @@
     ];
     const calendar = document.createElement('div');
     calendar.className = 'book-calendar-2020';
+    calendar.dataset.ttsText = '2019 Tanzania calendar. January. February. March. April. May. June. July. August. September. October. November. December.';
+    calendar.setAttribute('aria-label', calendar.dataset.ttsText);
     calendar.innerHTML = `<header><h1>2019</h1><strong>Tanzania</strong></header><div class="book-calendar-grid">${months.map(monthTable).join('')}</div><div class="book-calendar-holidays"><div><strong>2019 Holidays for Tanzania</strong>${holidays[0].map(x => `<span>${x}</span>`).join('')}</div>${holidays.slice(1).map(column => `<div>${column.map(x => `<span>${x}</span>`).join('')}</div>`).join('')}</div>`;
     calendar.querySelectorAll('.book-calendar-month :is(th, td)').forEach((cell) => cell.style.setProperty('font-size', '12px', 'important'));
     image.closest('.mt-8')?.replaceWith(calendar);
@@ -436,7 +441,53 @@
       ['Oct 14 Nyerere Day', 'Oct 29 Maulid Day', 'Dec 9 Independence Day', 'Dec 25 Christmas Day', 'Dec 26 Boxing Day'],
     ];
     section.innerHTML = `<div class="book-calendar-2020"><header><h1>2020</h1><strong>Tanzania</strong></header><div class="book-calendar-grid">${months.map(monthTable).join('')}</div><div class="book-calendar-holidays"><div><strong>2020 Holidays for Tanzania</strong>${holidays[0].map(x => `<span>${x}</span>`).join('')}</div>${holidays.slice(1).map(column => `<div>${column.map(x => `<span>${x}</span>`).join('')}</div>`).join('')}</div></div>`;
+    const calendar = section.querySelector('.book-calendar-2020');
+    calendar.dataset.ttsText = '2020 Tanzania calendar. January. February. March. April. May. June. July. August. September. October. November. December.';
+    calendar.setAttribute('aria-label', calendar.dataset.ttsText);
     section.querySelectorAll('.book-calendar-month :is(th, td)').forEach((cell) => cell.style.setProperty('font-size', '12px', 'important'));
+  }
+
+  /* Corrections from the Additional Comments matrix. Keep the visible source
+     layout intact while supplying unambiguous narration hooks and ensuring
+     mathematical subtraction signs survive browser MathML rendering. */
+  function normalizeAdditionalComments(root) {
+    const id = document.querySelector('meta[name="title-id"]')?.content || '';
+
+    if (id === 'pg046_sec001') {
+      root.querySelectorAll('.source-answer-blank').forEach((blank) => {
+        blank.dataset.ttsText = 'dash';
+        blank.setAttribute('aria-label', 'dash');
+      });
+    }
+
+    if (id === 'pg076_sec001') {
+      root.querySelectorAll('[data-section-id="pg076_sec002"] .font-mono > div:nth-child(2)').forEach((line) => {
+        if (line.dataset.additionalOperator === 'true') return;
+        const match = line.textContent.trim().match(/^[-–−]\s*(.+)$/);
+        if (!match) return;
+        line.dataset.additionalOperator = 'true';
+        const sign = document.createElement('span');
+        sign.className = 'book-minus-sign';
+        sign.textContent = '−';
+        line.replaceChildren(sign, document.createTextNode(` ${match[1]}`));
+      });
+    }
+
+    if (id === 'pg080_sec001') {
+      root.querySelectorAll('[data-revision-vertical] > span:nth-child(3)').forEach((operator) => {
+        if (/^[-–−]$/.test(operator.textContent.trim())) operator.classList.add('book-minus-sign');
+      });
+    }
+
+    if (['pg125_sec001', 'pg126_sec001', 'pg127_sec001', 'pg128_sec001',
+      'pg129_sec001', 'pg133_sec001'].includes(id)) {
+      root.querySelectorAll('math mo').forEach((operator) => {
+        if (!/^[-–−]$/.test(operator.textContent.trim())) return;
+        operator.textContent = '-';
+        operator.classList.add('book-visible-minus');
+        operator.setAttribute('aria-label', 'minus');
+      });
+    }
   }
 
   function normalizePrintedPage150(root) {
@@ -819,7 +870,7 @@
     const targets = [];
     while (walker.nextNode()) {
       const node = walker.currentNode;
-      if (node.parentElement?.closest('math')) continue;
+      if (node.parentElement?.closest('math, .book-minus-sign')) continue;
       if (/[−–]/.test(node.nodeValue || '')) targets.push(node);
     }
     targets.forEach((node) => {
@@ -944,7 +995,7 @@
     const shell = (content, extra = '') => `<div class="adt-source-page-part"><section class="book-early-page book-page${page} ${extra}" data-section-id="${id}">${content}</section></div>`;
     const sheet = (content) => `<div class="book-exercise-panel book-early-exercise" data-source-kind="exercise">${content}</div>`;
     const question = (number, content, cls = '') => `<div class="book-early-question ${cls}"><span>${number}.</span><div>${content}</div></div>`;
-    const line = '<span class="book-answer-line" aria-hidden="true"></span>';
+    const line = '<span class="book-answer-line" data-tts-text="dash" aria-label="dash"></span>';
 
     if (id === 'pg011_sec001') {
       const shaded = [
@@ -955,7 +1006,7 @@
       const blanks = (letter, number, digits) => `<div class="book-page5-fill"><p>(${letter}) &nbsp; In ${number}:</p><p>${digits[0]} is in ${line}, ${digits[1]} is in ${line},<br>${digits[2]} is in ${line} and ${digits[3]} is in ${line}.</p></div>`;
       root.innerHTML = shell(sheet(`
         <div class="book-page5-cont">${[['d','4444'],['e','3239'],['f','2776'],['g','1111'],['h','8107'],['i','9009'],['j','5108']].map(([l,n])=>`<span>(${l}) &nbsp; ${n}</span>`).join('')}</div>
-        ${question(7, `<p>Write the place value of the shaded digit in the following whole numbers:</p><div class="book-page5-shaded">${shaded.map(([l,n,active])=>`<span class="book-page5-shaded-item"><span>(${l})</span><span class="book-page5-number">${[...n].map((digit,index)=>`<i${index===active?' class="is-shaded"':''}>${digit}</i>`).join('')}</span></span>`).join('')}</div>`)}
+        ${question(7, `<p>Write the place value of the shaded digit in the following whole numbers:</p><div class="book-page5-shaded">${shaded.map(([l,n,active])=>`<span class="book-page5-shaded-item" data-tts-text="(${l}) ${n}. The shaded digit is ${n[active]}."><span>(${l})</span><span class="book-page5-number">${[...n].map((digit,index)=>`<i${index===active?' class="is-shaded"':''}>${digit}</i>`).join('')}</span></span>`).join('')}</div>`)}
         ${question(8, `<p>Fill in the blanks with the place values of the given digits.</p>${blanks('a','2968',['2','9','6','8'])}${blanks('b','9801',['9','8','0','1'])}${blanks('c','7236',['7','2','3','6'])}${blanks('d','5649',['5','6','4','9'])}`)}
       `));
       return;
@@ -963,9 +1014,11 @@
 
     if (id === 'pg012_sec001') {
       const rows = [[1,0,2,0],[1,1,2,0],[2,4,4,0],[3,3,0,1],[6,8,9,9],[9,2,7,4],[2,9,7,3],[8,1,2,2],[7,1,7,3],[1,2,7,7],[7,2,9,1],[1,0,0,0],[2,3,1,1]];
+      const place = (value, name) => `${value} ${name}${value === 1 ? '' : 's'}`;
+      const tableNarration = `Table. ${rows.map((r, i) => `Row ${i + 1}. ${place(r[0], 'thousand')}, ${place(r[1], 'hundred')}, ${place(r[2], 'ten')}, ${place(r[3], 'one')}. Number, dash.`).join(' ')}`;
       const fill = (l,n) => `<div class="book-place-value-row"><span class="book-place-value-letter">(${l})</span><span class="book-place-value-number">${n}</span><span class="book-place-value-copy"><span>has ${line} thousands, ${line} hundreds, ${line}</span><span>tens and ${line} ones.</span></span></div>`;
       root.innerHTML = shell(sheet(`
-        ${question(9, `<p>Write the number represented by the place values in the following table:</p><table class="book-page6-table"><thead><tr><th>Thousands</th><th>Hundreds</th><th>Tens</th><th>Ones</th><th>Number</th></tr></thead><tbody>${rows.map((r,i)=>`<tr>${r.map(v=>`<td>${v}</td>`).join('')}<td><input aria-label="Answer for table row ${i+1}"></td></tr>`).join('')}</tbody></table>`)}
+        ${question(9, `<p>Write the number represented by the place values in the following table:</p><table class="book-page6-table" data-tts-text="${tableNarration}"><thead><tr><th>Thousands</th><th>Hundreds</th><th>Tens</th><th>Ones</th><th>Number</th></tr></thead><tbody>${rows.map((r,i)=>`<tr>${r.map(v=>`<td>${v}</td>`).join('')}<td><input aria-label="Answer for table row ${i+1}"></td></tr>`).join('')}</tbody></table>`)}
         ${question(10, `<p>Fill in the blanks with the correct place values of the following whole numbers.</p><div class="book-page6-fills">${fill('a','1872')}${fill('b','2663')}${fill('c','4793')}</div>`)}
       `));
       return;
