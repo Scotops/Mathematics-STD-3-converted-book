@@ -9618,6 +9618,28 @@ html body #content#content#content.adt-source-page [data-source-section="pg155_s
 html body #content#content#content.adt-source-page [data-source-section="pg155_sec001"] .book-calendar-2020 { width:762.5px!important;height:auto!important;transform:scale(.8)!important;transform-origin:top left!important; }
 html body #content#content#content.adt-source-page [data-source-section="pg155_sec001"] :is(.book-calendar-grid,.book-calendar-holidays) { width:762.5px!important;height:auto!important;max-height:none!important; }
 
+/* Reader pages 154-155: keep both calendars large enough to read. */
+@media (min-width:481px) {
+html body #content#content#content#content#content#content.adt-source-page [data-source-section="pg154_sec001"] .book-calendar-2020 { width:610px!important;transform:none!important; }
+html body #content#content#content#content#content#content.adt-source-page [data-source-section="pg155_sec001"] .book-calendar-2020 { width:710px!important;transform:none!important; }
+html body #content#content#content#content#content#content.adt-source-page [data-source-section="pg154_sec001"] :is(.book-calendar-grid,.book-calendar-holidays) { width:610px!important; }
+html body #content#content#content#content#content#content.adt-source-page [data-source-section="pg155_sec001"] :is(.book-calendar-grid,.book-calendar-holidays) { width:710px!important; }
+html body #content#content#content#content#content#content.adt-source-page :is([data-source-section="pg154_sec001"],[data-source-section="pg155_sec001"]) .book-calendar-grid { grid-template-rows:repeat(4,auto)!important;gap:12px 20px!important; }
+html body #content#content#content#content#content#content.adt-source-page :is([data-source-section="pg154_sec001"],[data-source-section="pg155_sec001"]) .book-calendar-month caption { padding-bottom:2px!important;font-size:17px!important;line-height:1.1!important; }
+html body #content#content#content#content#content#content.adt-source-page :is([data-source-section="pg154_sec001"],[data-source-section="pg155_sec001"]) .book-calendar-month :is(th,td) { height:18px!important;line-height:18px!important; }
+html body #content#content#content#content#content#content.adt-source-page :is([data-source-section="pg154_sec001"],[data-source-section="pg155_sec001"]) .book-calendar-holidays { gap:20px!important;margin-top:12px!important;font-size:12px!important;line-height:1.15!important; }
+}
+
+@media (max-width:480px) {
+html body #content#content#content#content#content#content.adt-source-page :is([data-source-section="pg154_sec001"],[data-source-section="pg155_sec001"])>section { overflow-x:auto!important;overflow-y:visible!important; }
+html body #content#content#content#content#content#content.adt-source-page :is([data-source-section="pg154_sec001"],[data-source-section="pg155_sec001"]) .book-calendar-2020,
+html body #content#content#content#content#content#content.adt-source-page :is([data-source-section="pg154_sec001"],[data-source-section="pg155_sec001"]) :is(.book-calendar-grid,.book-calendar-holidays) { width:610px!important;transform:none!important; }
+html body #content#content#content#content#content#content.adt-source-page :is([data-source-section="pg154_sec001"],[data-source-section="pg155_sec001"]) .book-calendar-grid { grid-template-rows:repeat(4,auto)!important;gap:12px 20px!important; }
+html body #content#content#content#content#content#content.adt-source-page :is([data-source-section="pg154_sec001"],[data-source-section="pg155_sec001"]) .book-calendar-month caption { padding-bottom:2px!important;font-size:17px!important;line-height:1.1!important; }
+html body #content#content#content#content#content#content.adt-source-page :is([data-source-section="pg154_sec001"],[data-source-section="pg155_sec001"]) .book-calendar-month :is(th,td) { height:18px!important;line-height:18px!important; }
+html body #content#content#content#content#content#content.adt-source-page :is([data-source-section="pg154_sec001"],[data-source-section="pg155_sec001"]) .book-calendar-holidays { gap:20px!important;margin-top:12px!important;font-size:12px!important;line-height:1.15!important; }
+}
+
 /* Printed page 150: Exercise 6, Activity, Summary and Vocabulary. */
 html body #content#content#content.adt-source-page:has([data-source-section="pg156_sec001"]) { width:100%!important;max-width:112rem!important;margin:0 auto!important;padding:0!important; }
 html body #content#content#content.adt-source-page [data-source-section^="pg156_sec00"] { width:710px!important;max-width:710px!important;margin-left:auto!important;margin-right:auto!important;padding:0!important;background:transparent!important; }

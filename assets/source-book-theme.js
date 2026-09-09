@@ -408,10 +408,10 @@
     ];
     const calendar = document.createElement('div');
     calendar.className = 'book-calendar-2020';
-    calendar.dataset.ttsText = '2019 Tanzania calendar. January. February. March. April. May. June. July. August. September. October. November. December.';
+    calendar.dataset.ttsText = 'January. February. March. April. May. June. July. August. September. October. November. December.';
     calendar.setAttribute('aria-label', calendar.dataset.ttsText);
     calendar.innerHTML = `<header><h1>2019</h1><strong>Tanzania</strong></header><div class="book-calendar-grid">${months.map(monthTable).join('')}</div><div class="book-calendar-holidays"><div><strong>2019 Holidays for Tanzania</strong>${holidays[0].map(x => `<span>${x}</span>`).join('')}</div>${holidays.slice(1).map(column => `<div>${column.map(x => `<span>${x}</span>`).join('')}</div>`).join('')}</div>`;
-    calendar.querySelectorAll('.book-calendar-month :is(th, td)').forEach((cell) => cell.style.setProperty('font-size', '12px', 'important'));
+    calendar.querySelectorAll('.book-calendar-month :is(th, td)').forEach((cell) => cell.style.setProperty('font-size', '14px', 'important'));
     image.closest('.mt-8')?.replaceWith(calendar);
   }
 
@@ -442,9 +442,9 @@
     ];
     section.innerHTML = `<div class="book-calendar-2020"><header><h1>2020</h1><strong>Tanzania</strong></header><div class="book-calendar-grid">${months.map(monthTable).join('')}</div><div class="book-calendar-holidays"><div><strong>2020 Holidays for Tanzania</strong>${holidays[0].map(x => `<span>${x}</span>`).join('')}</div>${holidays.slice(1).map(column => `<div>${column.map(x => `<span>${x}</span>`).join('')}</div>`).join('')}</div></div>`;
     const calendar = section.querySelector('.book-calendar-2020');
-    calendar.dataset.ttsText = '2020 Tanzania calendar. January. February. March. April. May. June. July. August. September. October. November. December.';
+    calendar.dataset.ttsText = 'January. February. March. April. May. June. July. August. September. October. November. December.';
     calendar.setAttribute('aria-label', calendar.dataset.ttsText);
-    section.querySelectorAll('.book-calendar-month :is(th, td)').forEach((cell) => cell.style.setProperty('font-size', '12px', 'important'));
+    section.querySelectorAll('.book-calendar-month :is(th, td)').forEach((cell) => cell.style.setProperty('font-size', '14px', 'important'));
   }
 
   /* Corrections from the Additional Comments matrix. Keep the visible source
