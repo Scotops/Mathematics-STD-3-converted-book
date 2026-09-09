@@ -220,6 +220,41 @@ html body #content#content#content#content#content.adt-source-page
 }
 
 
+
+
+/* Printed page 122: paint every Exercise 4 subtraction bar directly from
+   its fraction sequence, without depending on a cached runtime class. */
+html body #content#content#content#content#content.adt-source-page
+  [data-section-id="pg128_sec001"] math mrow > mfrac:first-child + mo {
+  display:inline-block!important;
+  flex:0 0 16px!important;
+  width:16px!important;
+  min-width:16px!important;
+  max-width:16px!important;
+  height:3px!important;
+  min-height:3px!important;
+  margin:0 5px!important;
+  align-self:center!important;
+  color:transparent!important;
+  background:#111!important;
+  font-size:0!important;
+  line-height:0!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+
+@media (max-width:480px) {
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg128_sec001"] math mrow > mfrac:first-child + mo {
+    flex-basis:10px!important;
+    width:10px!important;
+    min-width:10px!important;
+    max-width:10px!important;
+    height:2px!important;
+    min-height:2px!important;
+    margin:0 2px!important;
+  }
+}
 html body #content.adt-source-page {
   box-sizing: border-box !important;
   position: relative !important;
