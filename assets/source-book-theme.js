@@ -479,8 +479,9 @@
       });
     }
 
-    if (['pg125_sec001', 'pg126_sec001', 'pg127_sec001', 'pg128_sec001',
-      'pg129_sec001', 'pg133_sec001'].includes(id)) {
+    const fractionPage = id.match(/^pg(\d{3})_sec\d{3}$/);
+    const fractionPageNumber = fractionPage ? Number(fractionPage[1]) : 0;
+    if (fractionPageNumber >= 124 && fractionPageNumber <= 139) {
       root.querySelectorAll('math mo').forEach((operator) => {
         if (!/^[-–−]$/.test(operator.textContent.trim())) return;
         operator.textContent = '-';

@@ -42,11 +42,7 @@ html body #content#content#content.adt-source-page
   visibility:visible!important;
   opacity:1!important;
 }
-html body #content#content#content.adt-source-page
-  :is([data-section-id="pg125_sec001"], [data-section-id="pg126_sec001"],
-      [data-section-id="pg127_sec001"], [data-section-id="pg128_sec001"],
-      [data-section-id="pg129_sec001"], [data-section-id="pg133_sec001"])
-  math mo.book-visible-minus {
+html body #content#content#content math mo.book-visible-minus {
   display:inline-block!important;
   width:16px!important;
   min-width:16px!important;
