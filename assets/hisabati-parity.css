@@ -8017,7 +8017,8 @@ html body #content#content#content.adt-source-page [data-source-section="pg126_s
   box-shadow: none !important;
 }
 html body #content#content#content.adt-source-page [data-source-section="pg126_sec001"] > section > div {
-  width: 800px !important;
+  width: 100% !important;
+  max-width: 100% !important;
   height: 690px !important;
   padding: 14px 12px !important;
   overflow: hidden !important;
@@ -8099,6 +8100,78 @@ html body #content#content#content.adt-source-page [data-source-section="pg126_s
 html body #content#content#content.adt-source-page [data-source-section="pg126_sec002"] > section > div:nth-child(4) {
   margin: 0 0 8px !important;
   font-size: 24px !important;
+}
+
+@media (min-width: 841px) {
+  html body #content#content#content#content#content.adt-source-page > .book-source-autofit
+    > .adt-source-page-part[data-source-section="pg126_sec001"] {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    [data-source-section="pg126_sec001"] > section {
+    width: 704px !important;
+    max-width: 704px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* Printed page 120: keep both continuation panels aligned inside narrow readers. */
+@media (max-width: 840px) {
+  html body #content#content#content.adt-source-page:has([data-source-section="pg126_sec001"]) {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  html body #content#content#content.adt-source-page:has([data-source-section="pg126_sec001"]) > .adt-source-page-part {
+    width: 100% !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page [data-source-section="pg126_sec001"] > section {
+    width: calc(100vw - 60px) !important;
+    max-width: calc(100vw - 60px) !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page [data-source-section="pg126_sec001"] > section > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  html body #content#content#content.adt-source-page [data-source-section="pg126_sec002"] > section {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  html body #content#content#content.adt-source-page [data-source-section="pg126_sec001"] > section > div {
+    height: auto !important;
+    min-height: 690px !important;
+    overflow: visible !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page [data-source-section="pg126_sec001"] img {
+    width: 100% !important;
+    max-width: 540px !important;
+  }
+
+  html body #content#content#content.adt-source-page [data-source-section="pg126_sec002"] > section {
+    height: auto !important;
+    min-height: 330px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  html body #content#content#content#content#content.adt-source-page [data-source-section="pg126_sec001"] > section {
+    width: calc(100vw - 52px) !important;
+    max-width: calc(100vw - 52px) !important;
+  }
 }
 
 /* Printed page 121: Example 2 continuation and Example 3. */
