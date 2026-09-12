@@ -210,19 +210,6 @@
 <script src="./assets/pdf-facsimile.js?v=6"></script>
 <script src="./assets/accessible-tts.js?v=42"></script>
 <script src="./assets/media-playback-independence.js"></script>
-<script>
-  /* The publisher's cover is intentionally outside the signed page sequence. */
-  (function suppressCoverVideo() {
-    function stopAndHide() {
-      document.querySelectorAll('video[src*="/video/"]').forEach(function (video) {
-        video.pause();
-        if (video.parentElement) video.parentElement.hidden = true;
-      });
-    }
-    new MutationObserver(stopAndHide).observe(document.documentElement, { childList: true, subtree: true });
-    stopAndHide();
-  }());
-</script>
 <script src="./assets/base.bundle.local.js?v=110"></script>
 <script src="./assets/sign-language-video.js"></script>
 <script src="./assets/numerical-alignment.js?v=5"></script>
