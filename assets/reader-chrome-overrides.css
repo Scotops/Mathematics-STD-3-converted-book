@@ -1,5 +1,118 @@
 /* Responsive reader chrome adapted from the supplied ADT reference book. */
 @media (max-width: 767.98px) {
+  html,
+  body {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: clip !important;
+  }
+
+  body {
+    align-items: flex-start !important;
+  }
+
+  body > main {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding-bottom: calc(3.25rem + env(safe-area-inset-bottom)) !important;
+  }
+
+  /* The desktop reconstruction has a fixed source-page canvas. On phones,
+     release that canvas so semantic page content can use the viewport. */
+  html body #content#content#content#content#content.adt-source-page,
+  html body #content#content#content#content#content.adt-source-page:has([data-section-id]) {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    > :is(.adt-source-page-part, .book-source-autofit),
+  html body #content#content#content#content#content.adt-source-page
+    :is(.adt-source-page-part, .book-source-autofit),
+  html body #content#content#content#content#content.adt-source-page
+    > :is(.adt-source-page-part, .book-source-autofit)
+    > section,
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id] {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    :is(.grid, .flex, [role="group"], figure, picture) {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    :is(div, section, article, aside, header, footer, figure, figcaption,
+      ul, ol, li, p, h1, h2, h3, h4, h5, h6) {
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    :is(img, video, canvas, svg) {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    :is(table, pre, mjx-container) {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    .overflow-x-auto {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Covers behave like the reference ADT: the complete source artwork is
+     fitted to the screen instead of being clipped to the desktop page width. */
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-type="front_cover"],
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-type="back_cover"] {
+    aspect-ratio: auto !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    :is([data-section-type="front_cover"], [data-section-type="back_cover"])
+    img {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
   #nav-container > [role="group"][class~="bottom-0"] {
     box-sizing: border-box !important;
     display: flex !important;
@@ -174,5 +287,339 @@
     min-width: 2.75rem !important;
     max-width: 2.75rem !important;
     height: 2.75rem !important;
+  }
+}
+
+@media (max-width: 639.98px) {
+  /* Honour the converter's intended phone layouts even where later
+     source-fidelity rules fixed the desktop grid or flex direction. */
+  html body #content#content#content#content#content.adt-source-page
+    [class~="max-sm:grid-cols-1"] {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    [class~="max-sm:flex-col"] {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id] :is(div, article, aside):has(> p) {
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id] > :is(div, p, ul, ol, header, footer) {
+    width: auto !important;
+    max-width: 100% !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    [class~="max-sm:w-full"] {
+    width: 100% !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    [class~="max-sm:max-w-full"] {
+    max-width: 100% !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    [class~="max-sm:block"] {
+    display: block !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    :is(.book-example-card, .book-exercise-panel) {
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg136_sec001"] > div:nth-child(2) {
+    height: auto !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg136_sec001"] > div:last-child {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none !important;
+    height: auto !important;
+  }
+
+  html body #content#content#content#content#content.adt-source-page
+    [data-section-id="pg136_sec001"] > div:last-child > div:last-child {
+    width: 100% !important;
+    max-width: 100% !important;
+    align-self: flex-start !important;
+  }
+
+  /* The source-fidelity sheet deliberately uses very specific fixed desktop
+     grids. Add one extra ID component here so the authored max-sm utilities
+     still win when both declarations are !important. */
+  html body #content#content#content#content#content#content.adt-source-page
+    [class~="max-sm:grid-cols-1"] {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [class~="max-sm:grid-cols-2"] {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [class~="max-sm:flex-col"] {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [class~="max-sm:block"] {
+    display: block !important;
+  }
+
+  /* Use a comfortable phone text size. Desktop source typography remains
+     untouched, while long exercises gain enough room to wrap naturally. */
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id]
+    :is(p, li, td, th, label, span[data-id], div[data-id]):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not([data-source-heading]) {
+    font-size: clamp(1rem, 4.6vw, 1.0625rem) !important;
+    line-height: 1.35 !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    :is(.book-place-value-copy > span, .fitb-sentence) {
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    .book-place-value-row {
+    grid-template-columns: 1.75rem 3.25rem minmax(0, 1fr) !important;
+    column-gap: 0.5rem !important;
+    height: auto !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    .book-place-value-copy {
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  /* Early-number worksheets and multi-column arithmetic must stack on a
+     narrow phone; otherwise the desktop column gaps overlap adjacent sums. */
+  html body #content#content#content#content#content#content.adt-source-page
+    :is([data-section-id="pg011_sec001"], [data-section-id="pg036_sec001"],
+        [data-section-id="pg071_sec001"]) .grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-auto-rows: auto !important;
+    column-gap: 0 !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id="pg071_sec001"] .grid {
+    row-gap: 1.75rem !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id="pg071_sec001"] .grid > div {
+    width: 100% !important;
+    max-width: 15rem !important;
+    margin-inline: auto !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id="pg011_sec001"]
+    :is(.book-page5-cont, .book-page5-shaded) {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.75rem !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id="pg011_sec001"] .book-page5-fill p {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    white-space: normal !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id="pg011_sec001"] .book-answer-line {
+    width: 3.25em !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id="pg013_sec001"] .book-page7-list {
+    padding-inline: 0.5rem !important;
+  }
+
+  /* Keep the tall CD segment inside its diagram card on printed page 95. */
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg101_sec001"]
+    div:has(> img[data-id="pg101_im001_seg003_v1"]) {
+    height: 42% !important;
+    max-height: 42% !important;
+    overflow: hidden !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    img[data-id="pg101_im001_seg003_v1"] {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+  /* Geometry answers and MathML formula lists remain readable rather than
+     being clipped at the right edge. */
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg113_sec001"] > section > div:nth-of-type(4) > div:last-child {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.35rem !important;
+    margin-left: 0 !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-id="pg105_n0016"] {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Currency pages were locked to the 710px print canvas. Re-enable their
+     authored card and grid layouts for the phone breakpoint. */
+  html body #content#content#content#content#content#content.adt-source-page
+    :is([data-source-section^="pg163_sec00"], [data-source-section^="pg166_sec00"],
+        [data-source-section^="pg170_sec00"], [data-source-section="pg173_sec001"]),
+  html body #content#content#content#content#content#content.adt-source-page
+    :is([data-section-id^="pg163_sec00"], [data-section-id^="pg166_sec00"],
+        [data-section-id^="pg170_sec00"], [data-section-id="pg173_sec001"]) {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg163_sec001"] > section > div:first-child,
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg163_sec001"] > section > div:first-child > div,
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg163_sec001"] > section > div:first-child > div > div {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg163_sec001"] > section > div:first-child > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg163_sec001"] img {
+    width: min(7rem, 100%) !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id^="pg166_sec00"] table,
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id^="pg166_sec00"] tbody,
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id^="pg166_sec00"] tr,
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id^="pg166_sec00"] :is(th, td) {
+    box-sizing: border-box !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id^="pg166_sec00"] tr:not(:first-child) {
+    margin-bottom: 0.75rem !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id^="pg166_sec00"] tr:first-child {
+    display: none !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg170_sec001"] > section > div,
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg170_sec002"] > section > div:nth-child(2),
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg173_sec001"] .space-y-10 > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg170_sec001"] > section > div > div {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-auto-rows: auto !important;
+    row-gap: 1.5rem !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg173_sec001"] .space-y-10 > div:last-child > div > .grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-auto-rows: auto !important;
+    height: auto !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id="pg173_sec001"] .book-page167-step-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 1rem !important;
+    height: auto !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id="pg173_sec001"] .book-page167-step-copy {
+    display: grid !important;
+    grid-template-columns: 2rem minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-section-id="pg173_sec001"] .book-page167-money {
+    justify-self: center !important;
+    max-width: 100% !important;
+  }
+
+  html body #content#content#content#content#content#content.adt-source-page
+    [data-source-section="pg170_sec001"] .grid > div > div {
+    width: min(16rem, 100%) !important;
+    max-width: 100% !important;
   }
 }

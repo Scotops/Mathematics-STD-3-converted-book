@@ -374,6 +374,8 @@
       <file href="assets/config.json" />
       <file href="assets/interface_translations/en/interface_translations.json" />
       <file href="assets/media-playback-independence.js" />
+      <file href="assets/mobile-sheet-drag.css" />
+      <file href="assets/mobile-sheet-drag.js" />
       <file href="assets/offline-preloader.js" />
       <file href="assets/reader-chrome-overrides.css" />
       <file href="assets/sign-language-video.css" />
