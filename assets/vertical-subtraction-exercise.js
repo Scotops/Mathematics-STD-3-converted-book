@@ -1,11 +1,12 @@
 (() => {
   'use strict';
 
-  const section = document.querySelector('[data-section-id="pg071_sec001"]');
-  if (!section) return;
+  function initialise() {
+    const section = document.querySelector('[data-section-id="pg071_sec001"]');
+    if (!section) return;
 
-  function arrangeVertically() {
-    section.querySelectorAll('.grid > div').forEach((item) => {
+    function arrangeVertically() {
+      section.querySelectorAll('.grid > div').forEach((item) => {
       const exercise = item.querySelector('span.fitb-sentence') || item.querySelector('.fitb-sentence');
       if (!exercise) return;
 
@@ -64,10 +65,17 @@
         answer.style.borderBottom = '2px solid #111';
         exercise.appendChild(answer);
       }
-    });
+      });
+    }
+
+    arrangeVertically();
+    window.addEventListener('load', arrangeVertically, { once: true });
+    [50, 150, 300, 600].forEach((delay) => window.setTimeout(arrangeVertically, delay));
   }
 
-  arrangeVertically();
-  window.addEventListener('load', arrangeVertically, { once: true });
-  window.setTimeout(arrangeVertically, 500);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialise, { once: true });
+  } else {
+    initialise();
+  }
 })();

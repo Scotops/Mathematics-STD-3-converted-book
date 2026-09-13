@@ -4550,3 +4550,358 @@ html body #content.adt-source-page.book-standard-content-from-page17:not(:has([d
   font-size: 26.3856px !important;
   line-height: 1.25 !important;
 }
+
+/* Superseded responsive draft. The active layer is responsive-reader.css,
+   loaded after every page-specific stylesheet. */
+@media (max-width: 0px) {
+/* Responsive reader layer.
+   Desktop keeps the source-page geometry above. Tablet and phone layouts
+   deliberately reflow the semantic page instead of shrinking a complete
+   920px sheet until its text becomes unreadable. */
+:root {
+  --book-reader-dock-height: 60px;
+  --book-safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html,
+body {
+  max-width: 100%;
+}
+
+#nav-container > [role='group'][aria-label='Reader controls'] {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  margin-inline: 0 !important;
+  padding-bottom: calc(.5rem + var(--book-safe-bottom)) !important;
+}
+
+#nav-container [data-dock-trigger] {
+  min-width: 44px;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+/* Popovers inherit a desktop 30rem width from the runtime. Constrain every
+   reader popover to the real visual viewport, including narrow phones. */
+[data-slot='popover-content'] {
+  box-sizing: border-box !important;
+  width: min(30rem, var(--available-width, calc(100vw - 1rem))) !important;
+  max-width: min(var(--available-width, calc(100vw - 1rem)), calc(100vw - 1rem)) !important;
+  max-height: calc(100dvh - var(--book-reader-dock-height) - 1rem) !important;
+  overflow: auto !important;
+}
+
+[data-slot='popover-content'] > div {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: min(600px, calc(100dvh - var(--book-reader-dock-height) - 1rem)) !important;
+}
+
+@media (max-width: 900px) {
+  :root { --book-reader-dock-height: 64px; }
+
+  html,
+  body {
+    overflow-x: clip !important;
+  }
+
+  body[nav-position='bottom'] {
+    padding-bottom: calc(var(--book-reader-dock-height) + var(--book-safe-bottom)) !important;
+  }
+
+  body > main {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 0 calc(var(--book-reader-dock-height) + 1rem + var(--book-safe-bottom)) !important;
+    overflow: visible !important;
+  }
+
+  #content.adt-source-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+    box-shadow: none !important;
+  }
+
+  #content.adt-source-page > .book-source-autofit {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+  }
+
+  html body #content.adt-source-page > :is(.adt-source-page-part, .book-source-autofit > .adt-source-page-part) {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: clamp(1rem, 5.5vw, 3.25rem) !important;
+    padding-right: clamp(1rem, 5.5vw, 3.25rem) !important;
+  }
+
+  html body #content.adt-source-page > .book-source-autofit [data-section-id],
+  html body #content.adt-source-page > .adt-source-page-part [data-section-id] {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-inline: auto !important;
+  }
+
+  #content.adt-source-page *,
+  #content.adt-source-page *::before,
+  #content.adt-source-page *::after {
+    box-sizing: border-box;
+  }
+
+  #content.adt-source-page :is(img, video, canvas, iframe, svg) {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  #content.adt-source-page :is(input, select, textarea, button, pre) {
+    max-width: 100% !important;
+  }
+
+  #content.adt-source-page :is(table, pre, .overflow-x-auto) {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overscroll-behavior-inline: contain;
+  }
+
+  html body #content.adt-source-page [class*='grid-cols-']:not(.book-calendar-grid) {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)) !important;
+  }
+
+  #content.adt-source-page :is([data-section-id], figure) {
+    max-width: 100% !important;
+  }
+
+  #content.adt-source-page :is([data-section-id], figure):has(> table) {
+    overflow-x: auto !important;
+    overscroll-behavior-inline: contain;
+  }
+
+  #content.adt-source-page :is([data-section-id='pg154_sec001'], [data-section-id='pg155_sec001'])
+    .book-calendar-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1.15rem !important;
+  }
+
+  #content.adt-source-page :is([data-section-id='pg154_sec001'], [data-section-id='pg155_sec001'])
+    .book-calendar-holidays {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+  }
+
+  #content.adt-source-page.book-standard-content-from-page17 .book-standard-body-text,
+  html body #content.adt-source-page.book-standard-content-from-page17:not(:has([data-section-id='pg154_sec001'])):not(:has([data-section-id='pg155_sec001']))
+    .book-standard-body-text {
+    font-size: clamp(1rem, 2.35vw, 1.35rem) !important;
+    line-height: 1.38 !important;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: .25rem !important;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-1,
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-3 {
+    min-width: 0 !important;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-1 > button {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 16rem !important;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-3 {
+    padding-left: 0 !important;
+    gap: .25rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  :root { --book-reader-dock-height: 108px; }
+
+  #content.adt-source-page::before,
+  #content.adt-source-page::after,
+  .source-book-page-footer {
+    height: 84px !important;
+  }
+
+  .source-book-page-number {
+    bottom: 22px !important;
+    min-width: 46px !important;
+    padding: 4px 12px 3px !important;
+    font-size: 16px !important;
+  }
+
+  #content.adt-source-page > .book-source-autofit > .adt-source-page-part:first-child {
+    padding-top: 64px !important;
+  }
+
+  #content.adt-source-page > .book-source-autofit > .adt-source-page-part:last-child {
+    padding-bottom: 92px !important;
+  }
+
+  #content.adt-source-page :is(p, li, td, th, label) {
+    overflow-wrap: anywhere;
+  }
+
+  html body #content.adt-source-page [class*='grid-cols-']:not(.book-calendar-grid) {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  #content.adt-source-page table:not(.book-calendar-month) {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #content.adt-source-page .book-calendar-month {
+    display: table !important;
+  }
+
+  html body #content.adt-source-page [data-section-id='pg071_sec001'] .grid.grid-cols-3,
+  html body #content.adt-source-page [data-section-id='pg128_sec001'] .grid.grid-cols-3 {
+    grid-template-columns: minmax(0, 1fr) !important;
+    column-gap: 0 !important;
+    row-gap: 1.5rem !important;
+  }
+
+  html body #content.adt-source-page [data-section-id='pg071_sec001'] .grid.grid-cols-3 > .flex,
+  html body #content.adt-source-page [data-section-id='pg128_sec001'] .grid.grid-cols-3 > .flex {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #content.adt-source-page :is([data-section-id='pg154_sec001'], [data-section-id='pg155_sec001'])
+    .book-calendar-grid,
+  #content.adt-source-page :is([data-section-id='pg154_sec001'], [data-section-id='pg155_sec001'])
+    .book-calendar-holidays {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 1.15rem !important;
+  }
+
+  #content.adt-source-page :is([data-section-id='pg154_sec001'], [data-section-id='pg155_sec001'])
+    .book-calendar-2020 > header {
+    align-items: center !important;
+    flex-direction: column !important;
+    gap: .25rem !important;
+  }
+
+  #content.adt-source-page :is([data-section-id='pg154_sec001'], [data-section-id='pg155_sec001'])
+    .book-calendar-2020 > header strong {
+    position: static !important;
+    right: auto !important;
+  }
+
+  #content.adt-source-page :is([data-source-kind='example'], .book-example-card) {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: clamp(.75rem, 4vw, 1.25rem) !important;
+    padding-right: clamp(.75rem, 4vw, 1.25rem) !important;
+  }
+
+  #content.adt-source-page [data-source-heading-wrap='example'] {
+    max-width: calc(100% - .75rem) !important;
+  }
+
+  #content.adt-source-page [data-source-heading='example'] {
+    max-width: 100% !important;
+    padding: .55rem .9rem !important;
+    font-size: clamp(1.05rem, 5vw, 1.35rem) !important;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    grid-template-areas:
+      'menu navigation'
+      'tools tools' !important;
+    row-gap: .2rem !important;
+    padding: .35rem .5rem calc(.35rem + var(--book-safe-bottom)) !important;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-1 {
+    grid-area: menu;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-2 {
+    grid-area: navigation;
+    justify-self: end;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-3 {
+    grid-area: tools;
+    justify-self: center;
+    justify-content: center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-1 > button {
+    max-width: none !important;
+    padding-inline: .55rem !important;
+  }
+
+  [data-slot='popover-content'] {
+    width: min(var(--available-width, calc(100vw - .75rem)), calc(100vw - .75rem)) !important;
+    max-width: min(var(--available-width, calc(100vw - .75rem)), calc(100vw - .75rem)) !important;
+  }
+}
+
+@media (max-width: 280px) {
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-1 > button {
+    width: 44px !important;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-1 > button > span {
+    display: none !important;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-3 {
+    gap: 0 !important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 480px) {
+  :root { --book-reader-dock-height: 60px; }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] {
+    grid-template-columns: 44px auto minmax(0, 1fr) !important;
+    grid-template-areas: 'menu navigation tools' !important;
+    padding-block: .3rem calc(.3rem + var(--book-safe-bottom)) !important;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-1 > button {
+    width: 44px !important;
+    padding: 0 !important;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-1 > button > span {
+    display: none !important;
+  }
+
+  #nav-container > [role='group'][aria-label='Reader controls'] > .order-3 {
+    justify-self: end;
+    justify-content: flex-end !important;
+  }
+}
+
+}
