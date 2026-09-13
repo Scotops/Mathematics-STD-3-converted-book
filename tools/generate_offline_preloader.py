@@ -39,9 +39,9 @@ source = re.sub(
     flags=re.DOTALL,
 )
 inline = {url: load(path) for url, path in RESOURCES.items()}
-replacement = "var INLINE = " + json.dumps(inline, ensure_ascii=False, separators=(",", ":")) + ";\n  var BASE_DIR"
+replacement = "var INLINE = " + json.dumps(inline, ensure_ascii=False, separators=(",", ":")) + ";"
 updated, count = re.subn(
-    r"var INLINE = \{.*?\};\n  var BASE_DIR",
+    r"var INLINE = \{[^\r\n]*\};",
     lambda _match: replacement,
     source,
     count=1,

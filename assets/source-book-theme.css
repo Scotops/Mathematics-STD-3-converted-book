@@ -1,4 +1,4 @@
-@import url("./reader-chrome-overrides.css?v=112");
+@import url("./reader-chrome-overrides.css?v=121");
 
 :root {
   --book-blue: #00aee9;
@@ -360,9 +360,13 @@
 #content.adt-source-page [data-section-id='pg071_sec001'] .fitb-sentence > span.book-vertical-problem {
   display: grid !important;
   grid-template-columns: 1.15rem max-content !important;
+  justify-content: end !important;
   justify-items: end !important;
+  justify-self: center !important;
   align-items: end !important;
+  width: 6.2rem !important;
   min-width: 6.2rem;
+  margin-inline: auto !important;
   font-size: 1.08rem !important;
   line-height: 1.22 !important;
   white-space: nowrap !important;

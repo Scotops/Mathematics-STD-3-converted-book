@@ -1,8 +1,14 @@
 [
   {
+    "section_id": "front_cover",
+    "href": "index.html?reader=34",
+    "title": "Front cover",
+    "chapter_id": "front_cover"
+  },
+  {
     "section_id": "pg001_sec001",
-    "href": "index.html?reader=32",
-    "title": "Mathematics",
+    "href": "pg001_sec001.html?reader=34",
+    "title": "Certificate of Approval",
     "chapter_id": "pg001_n0002"
   },
   {
@@ -1093,7 +1099,7 @@
   },
   {
     "section_id": "pg185_sec001",
-    "href": "pg185_sec001.html?reader=33",
+    "href": "pg185_sec001.html?reader=34",
     "title": "Back cover",
     "chapter_id": "pg185_sec001"
   }

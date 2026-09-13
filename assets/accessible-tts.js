@@ -8,6 +8,9 @@
 
   const MAX_CHUNK_LENGTH = 180;
   const ENGLISH_LANG = 'en-US';
+  const ENGLISH_MALE_VOICE_STORAGE_KEY = 'adt-english-male-voice-v1';
+  const MALE_VOICE_HINT = /\bmale\b|andrew(?:multilingual)?|brian(?:multilingual)?|christopher|daniel|david|eric|george|guy|jacob|james|mark|roger|ryan(?:multilingual)?|thomas|google uk english male/i;
+  const FEMALE_VOICE_HINT = /\bfemale\b|allison|aria|ava|emma|hazel|heera|jenny|karen|libby|michelle|moira|natasha|samantha|serena|sonia|susan|tessa|victoria|zira|google (?:us|uk) english female/i;
   const MAJOR_PAUSE_MS = 1000;
   const STRUCTURAL_PAUSE_MS = 320;
   const ONE_SECOND_PAUSE_MS = 1000;
@@ -925,42 +928,62 @@
     const exact = voices.filter((voice) => String(voice.lang || '').replace('_', '-').toLowerCase() === requestedLanguage.toLowerCase());
     const matching = voices.filter((voice) => new RegExp(`^${languageCode}(?:[_-]|$)`, 'i').test(voice.lang)
       || (languageCode === 'sw' && /swahili|rehema|daudi|rafiki/i.test(voice.name)));
-    const pool = exact.length ? exact : (matching.length ? matching : (languageCode === 'en' ? voices : []));
+    // English must consider every installed English locale: an en-GB male
+    // voice is preferable to an en-US female voice when the page is en-US.
+    const pool = languageCode === 'en'
+      ? (matching.length ? matching : voices)
+      : (exact.length ? exact : (matching.length ? matching : []));
+    if (languageCode === 'en') {
+      let savedVoice = null;
+      try {
+        savedVoice = JSON.parse(window.localStorage?.getItem(ENGLISH_MALE_VOICE_STORAGE_KEY) || 'null');
+      } catch {}
+      if (savedVoice) {
+        const persisted = pool.find((voice) => (
+          (savedVoice.voiceURI && voice.voiceURI === savedVoice.voiceURI)
+          || (voice.name === savedVoice.name && voice.lang === savedVoice.lang)
+        ) && !FEMALE_VOICE_HINT.test(voice.name));
+        if (persisted) return persisted;
+      }
+    }
     const score = (voice) => {
       const name = voice.name.toLowerCase();
       let value = 0;
-      // Natural and neural voices are much warmer than the legacy desktop
-      // voices and are easier for young learners to listen to for long pages.
+      if (String(voice.lang || '').replace('_', '-').toLowerCase() === requestedLanguage.toLowerCase()) value += 25;
+      // Keep one male English narrator throughout the book. Multilingual
+      // natural voices rank first so the same speaker can also pronounce the
+      // Swahili names marked in the acknowledgements.
       if (/natural|neural|premium|enhanced/.test(name)) value += 120;
-      if (/microsoft (jenny|aria|sonia|ava|emma|michelle|natasha|serena)/.test(name)) value += 70;
-      if (/google (us|uk) english.*female|samantha|karen|moira|tessa|victoria/.test(name)) value += 45;
-      if (/female/.test(name)) value += 20;
+      if (/multilingual/.test(name)) value += 90;
+      if (languageCode === 'en' && MALE_VOICE_HINT.test(name)) value += 420;
+      if (languageCode === 'en' && FEMALE_VOICE_HINT.test(name)) value -= 1000;
       if (languageCode === 'sw' && /rehema|daudi|rafiki|swahili/.test(name)) value += 180;
       if (voice.localService) value += 8;
-      // Avoid the older voices that commonly sound clipped or robotic.
-      if (/microsoft (david|mark|zira|hazel)|desktop|legacy/.test(name)) value -= 80;
+      if (/desktop|legacy/.test(name)) value -= 80;
       return value;
     };
-    return pool.sort((a, b) => score(b) - score(a))[0] || null;
+    const selected = pool.sort((a, b) => {
+      const scoreDifference = score(b) - score(a);
+      if (scoreDifference) return scoreDifference;
+      return `${a.name}\u0000${a.voiceURI || ''}`.localeCompare(`${b.name}\u0000${b.voiceURI || ''}`);
+    })[0] || null;
+    if (selected && languageCode === 'en' && !FEMALE_VOICE_HINT.test(selected.name)) {
+      try {
+        window.localStorage?.setItem(ENGLISH_MALE_VOICE_STORAGE_KEY, JSON.stringify({
+          voiceURI: selected.voiceURI || '',
+          name: selected.name,
+          lang: selected.lang
+        }));
+      } catch {}
+    }
+    return selected;
   }
 
-  // Windows installations do not always include a Swahili system voice and
-  // can silently read `sw-TZ` text with an English voice. These acknowledgement
-  // chunks therefore use narration generated with Microsoft Rehema (sw-TZ),
-  // making their pronunciation consistent on every learner's device.
-  const EMBEDDED_SWAHILI_AUDIO = new Map([
-    ['Miss Ivi P Bimbiga, Doctor Kenethi R Nzowa, and Mister Jonathani H Paskali.', './content/i18n/en/audio/pg004_swahili_names_01.mp3?v=2'],
-    ['Doctor Mikaeli H Mkwizu, Doctor Furaha M Chuma, Doctor Augustino I Msigwa, Doctor Ahmada O Ali, Doctor Mashaka J Mkandawile, Mister Luwilo D Sanga, Mister Elikana E Manyilizu, and', './content/i18n/en/audio/pg004_swahili_names_02.mp3?v=2'],
-    ['Miss Skolastika A Kulanga.', './content/i18n/en/audio/pg004_swahili_names_03.mp3?v=2'],
-    ['Miss Pamela S Makusi.', './content/i18n/en/audio/pg004_swahili_names_04.mp3?v=2'],
-    ['Mister Fikiri A Msimbe, Miss Viktoria R Mwinyi, Mister Godwini J Chipenya, and Mister Gwakisa U Mwandoloma.', './content/i18n/en/audio/pg004_swahili_names_05.mp3?v=2'],
-    ['Miss Ivi P Bimbiga.', './content/i18n/en/audio/pg004_swahili_names_06.mp3?v=2'],
-    ['Doctor Anethi A Komba.', './content/i18n/en/audio/pg004_swahili_names_07.mp3?v=2']
-  ]);
-
-  function embeddedAudioForChunk(chunk) {
-    if (!chunk || !/^sw(?:-|$)/i.test(chunk.lang || '')) return '';
-    return EMBEDDED_SWAHILI_AUDIO.get(chunk.text) || '';
+  function embeddedAudioForChunk() {
+    // The user selected one male narrator for the complete book. Do not swap
+    // to the older acknowledgement recordings; the shared male voice reads
+    // their reviewed phonetic text as part of the same narration session.
+    return '';
   }
 
   function stopActiveAudio() {
@@ -1040,8 +1063,10 @@
     const utterance = new Utterance(nextChunk.text);
     activeUtterance = utterance;
     const requestedLanguage = nextChunk.lang || ENGLISH_LANG;
-    const voice = requestedLanguage === ENGLISH_LANG ? sessionVoice : preferredVoice(requestedLanguage);
-    utterance.lang = voice?.lang || requestedLanguage;
+    const voice = sessionVoice || preferredVoice(ENGLISH_LANG);
+    // Retain the chunk's language hint for multilingual male voices while
+    // keeping the exact same voice object for every English and Swahili chunk.
+    utterance.lang = requestedLanguage;
     if (voice) utterance.voice = voice;
     utterance.rate = speechRate;
     if (player) player.dataset.utteranceRate = String(utterance.rate);
@@ -1282,11 +1307,14 @@
     get isPaused() { return paused; },
     get isPanelVisible() { return Boolean(player?.isConnected && !player.hidden); },
     get activeAudioSource() { return activeAudio?.getAttribute('src') || ''; },
+    get voiceName() { return sessionVoice?.name || ''; },
     get currentChunk() { return currentChunkIndex >= 0 ? queue[currentChunkIndex] || null : null; }
   });
 
   if (canUseWebSpeech && typeof synth.addEventListener === 'function') {
-    synth.addEventListener('voiceschanged', preferredVoice);
+    synth.addEventListener('voiceschanged', () => {
+      if (!playing) sessionVoice = preferredVoice(ENGLISH_LANG);
+    });
   }
 
   // The ADT fades page content in after its interface has loaded. Start the
