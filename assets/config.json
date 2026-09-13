@@ -1,6 +1,6 @@
 {
   "title": "Mathematics Pupil's Book Standard Three",
-  "bundleVersion": "110",
+  "bundleVersion": "112",
   "languages": {
     "available": [
       "en"
@@ -8,12 +8,12 @@
     "default": "en"
   },
   "features": {
-    "signLanguage": false,
+    "signLanguage": true,
     "easyRead": false,
     "glossary": false,
     "eli5": false,
     "readAloud": true,
-    "autoplay": true,
+    "autoplay": false,
     "showTutorial": true,
     "showNavigationControls": true,
     "describeImages": true,

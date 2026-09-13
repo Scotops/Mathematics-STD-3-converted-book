@@ -27,12 +27,23 @@
   // change this from the playback panel without changing the page content.
   // Keep the presets deliberately far apart. Some Windows voices compress
   // nearby Web Speech rates, which made the old choices sound identical.
-  const SPEECH_RATES = Object.freeze({ slow: 0.38, normal: 0.85, fast: 1.8 });
+  const SPEECH_RATES = Object.freeze({ slow: 0.38, normal: 0.85, fast: 1.8, veryFast: 2.4 });
   const storedSpeechRate = Number.parseFloat(window.localStorage?.getItem('adt-reading-speed') || '');
+  // Never autoplay narration in the local editorial preview. Page-by-page
+  // visual audits navigate rapidly and must remain silent; manual controls
+  // and deployed-book narration remain available outside localhost.
+  const localEditorialPreview = /^(?:127\.0\.0\.1|localhost)$/.test(window.location.hostname);
+  const autoplayMuted = localEditorialPreview
+    || window.localStorage?.getItem('book-tts-muted') === 'true'
+    || window.localStorage?.getItem('adt-tts-muted') === 'true';
+  // A previous page can leave Chromium's speech engine speaking while the
+  // editorial preview navigates to the next page.  Cancel that utterance and
+  // keep every localhost playback path silent for the duration of the audit.
+  if (localEditorialPreview && canUseWebSpeech) synth.cancel();
   let speechRate = Object.values(SPEECH_RATES).includes(storedSpeechRate)
     ? storedSpeechRate
     : SPEECH_RATES.normal;
-  let speechVolume = 1;
+  let speechVolume = localEditorialPreview ? 0 : 1;
   let activeUtterance = null;
   let activeAudio = null;
   let playbackGeneration = 0;
@@ -60,23 +71,65 @@
         box-shadow: 0 0 0 2px rgba(255, 193, 7, .18);
       }
       .adt-accessible-tts-player {
-        position: fixed; right: 22px; bottom: 88px; z-index: 2147483000;
-        display: flex; align-items: center; gap: 10px; padding: 10px 14px;
-        color: #fff; background: #262626; border-radius: 15px;
-        box-shadow: 0 8px 24px rgba(0,0,0,.28); font: 600 15px/1.2 system-ui,sans-serif;
+        position: fixed; right: 5px; bottom: 64px; z-index: 2147483000;
+        display: flex; width: fit-content; max-width: 36rem; height: 56px;
+        box-sizing: border-box; align-items: center; justify-content: center;
+        gap: 4px; padding: 6px; color: #f5f5f5;
+        background: rgba(38, 38, 38, .97); border-radius: 10px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.32), 0 0 0 1px rgba(255,255,255,.08);
+        font: 500 12px/1.2 system-ui,sans-serif;
       }
       .adt-accessible-tts-player[hidden] { display: none !important; }
-      .adt-accessible-tts-player button,
-      .adt-accessible-tts-player select {
-        min-width: 42px; min-height: 42px; border: 1px solid #777; border-radius: 10px;
-        color: #fff; background: #333; font: inherit; cursor: pointer;
+      .adt-accessible-tts-player button {
+        display: inline-flex; width: 44px; height: 44px; min-width: 44px;
+        align-items: center; justify-content: center; padding: 0;
+        border: 0; border-radius: 8px; color: #f5f5f5;
+        background: transparent; font: inherit; cursor: pointer;
+        transition: background-color .15s ease, transform .15s ease;
+      }
+      .adt-accessible-tts-player button:hover { background: rgba(255,255,255,.10); }
+      .adt-accessible-tts-player button[data-tts-command="pause"] {
+        border-radius: 999px; color: #262626; background: #fff;
+        box-shadow: 0 3px 8px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.10);
+      }
+      .adt-accessible-tts-player button[data-tts-command="pause"]:hover {
+        background: #f1f1f1; transform: scale(1.05);
+      }
+      .adt-accessible-tts-player button svg { width: 16px; height: 16px; }
+      .adt-accessible-tts-player button[data-tts-command="pause"] svg { width: 20px; height: 20px; }
+      .adt-tts-rate { position: relative; display: inline-flex; }
+      .adt-tts-rate-trigger {
+        width: 120px !important; height: 40px !important; padding: 0 38px 0 14px !important;
+        justify-content: flex-start !important; border: 0 !important;
+        color: #fff !important; background: transparent !important;
+        font: 500 12px/1.2 system-ui,sans-serif !important;
+      }
+      .adt-tts-rate-trigger::after {
+        content: ''; position: absolute; right: 12px; top: 50%;
+        width: 7px; height: 7px; pointer-events: none;
+        border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+        transform: translateY(-68%) rotate(45deg); opacity: .75;
+      }
+      .adt-tts-rate-menu {
+        position: absolute; left: 0; right: auto; bottom: 40px; width: 128px;
+        padding: 4px; border-radius: 12px; color: #fff; background: #262626;
+        box-shadow: 0 10px 28px rgba(0,0,0,.36), 0 0 0 1px rgba(255,255,255,.06);
+      }
+      .adt-tts-rate-menu[hidden] { display: none !important; }
+      .adt-accessible-tts-player .adt-tts-rate-menu button {
+        width: 100%; height: 30px; min-width: 0; padding: 0 8px; justify-content: space-between;
+        border-radius: 6px; font: 500 14px/1.2 system-ui,sans-serif;
+      }
+      .adt-tts-rate-check { width: 16px; font-size: 18px; text-align: center; }
+      .adt-accessible-tts-player button[data-tts-command="volume"] {
+        width: 40px; min-width: 40px;
       }
       .adt-accessible-tts-player button:focus-visible,
-      .adt-accessible-tts-player select:focus-visible { outline: 3px solid #ffe45c; outline-offset: 2px; }
-      .adt-accessible-tts-player select { min-width: 92px; padding: 0 8px; }
+      .adt-tts-rate-trigger:focus-visible { outline: 3px solid #ffe45c; outline-offset: 2px; }
       @media (max-width: 640px) {
-        .adt-accessible-tts-player { left: 10px; right: 10px; bottom: 78px; justify-content: center; gap: 6px; }
-        .adt-accessible-tts-player button { min-width: 38px; }
+        .adt-accessible-tts-player { left: auto; right: 4px; bottom: 64px; max-width: calc(100vw - 8px); gap: 2px; }
+        .adt-accessible-tts-player button { width: 40px; min-width: 40px; }
+        .adt-tts-rate-trigger { width: 104px !important; }
       }
     `;
     document.head.appendChild(style);
@@ -90,38 +143,55 @@
     player.setAttribute('role', 'group');
     player.setAttribute('aria-label', 'Read aloud controls');
     player.innerHTML = `
-      <button type="button" data-tts-command="previous" aria-label="Previous spoken part">&#9198;</button>
-      <button type="button" data-tts-command="pause" aria-label="Pause reading">&#10074;&#10074;</button>
-      <button type="button" data-tts-command="next" aria-label="Next spoken part">&#9197;</button>
-      <button type="button" data-tts-command="stop" aria-label="Stop reading">&#9632;</button>
-      <label><span class="sr-only">Reading speed</span><select data-tts-command="rate" aria-label="Reading speed">
-        <option value="0.38">Slow</option><option value="0.85">Normal</option><option value="1.8">Fast</option>
-      </select></label>
-      <button type="button" data-tts-command="volume" aria-label="Mute or unmute reading">&#128266;</button>
+      <button type="button" data-tts-command="previous" aria-label="Previous spoken part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" x2="5" y1="19" y2="5"></line></svg></button>
+      <button type="button" data-tts-command="pause" aria-label="Pause reading"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16" rx="1"></rect><rect x="14" y="4" width="4" height="16" rx="1"></rect></svg></button>
+      <button type="button" data-tts-command="next" aria-label="Next spoken part"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" x2="19" y1="5" y2="19"></line></svg></button>
+      <button type="button" data-tts-command="stop" aria-label="Stop reading"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"></rect></svg></button>
+      <div class="adt-tts-rate">
+        <button type="button" class="adt-tts-rate-trigger" data-tts-command="rate-toggle" aria-label="Playback speed: Normal" aria-haspopup="menu" aria-expanded="false"><span data-tts-rate-label>Normal</span></button>
+        <div class="adt-tts-rate-menu" role="menu" aria-label="Playback speed" hidden>
+          <button type="button" role="menuitemradio" data-tts-command="rate-option" data-rate-value="0.38"><span>Slow</span><span class="adt-tts-rate-check"></span></button>
+          <button type="button" role="menuitemradio" data-tts-command="rate-option" data-rate-value="0.85"><span>Normal</span><span class="adt-tts-rate-check"></span></button>
+          <button type="button" role="menuitemradio" data-tts-command="rate-option" data-rate-value="1.8"><span>Fast</span><span class="adt-tts-rate-check"></span></button>
+          <button type="button" role="menuitemradio" data-tts-command="rate-option" data-rate-value="2.4"><span>Very Fast</span><span class="adt-tts-rate-check"></span></button>
+        </div>
+      </div>
+      <button type="button" data-tts-command="volume" aria-label="Mute or unmute reading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.7 6.4 8H3v8h3.4l4.6 3.3z"></path><path d="M16 9a5 5 0 0 1 0 6"></path><path d="M19.4 5.6a9 9 0 0 1 0 12.8"></path></svg></button>
     `;
     player.addEventListener('click', (event) => {
       const command = event.target.closest('[data-tts-command]')?.dataset.ttsCommand;
-      if (!command || command === 'rate') return;
+      if (!command) return;
       event.preventDefault(); event.stopPropagation();
+      if (command === 'rate-toggle') {
+        const menu = player.querySelector('.adt-tts-rate-menu');
+        const open = menu.hidden;
+        menu.hidden = !open;
+        event.target.closest('[data-tts-command="rate-toggle"]').setAttribute('aria-expanded', String(open));
+      }
+      if (command === 'rate-option') {
+        setSpeechRate(event.target.closest('[data-rate-value]').dataset.rateValue);
+        player.querySelector('.adt-tts-rate-menu').hidden = true;
+        player.querySelector('[data-tts-command="rate-toggle"]').setAttribute('aria-expanded', 'false');
+      }
       if (command === 'pause') togglePause();
-      if (command === 'stop') stop();
+      if (command === 'stop') {
+        stop();
+        window.setTimeout(() => {
+          setPlayerVisible(false);
+          updateDockReadAloudControls();
+        }, 0);
+      }
       if (command === 'previous') jump(-1);
       if (command === 'next') jump(1);
       if (command === 'volume') {
         speechVolume = speechVolume ? 0 : 1;
-        event.target.innerHTML = speechVolume ? '&#128266;' : '&#128263;';
+        event.target.innerHTML = speechVolume
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.7 6.4 8H3v8h3.4l4.6 3.3z"></path><path d="M16 9a5 5 0 0 1 0 6"></path><path d="M19.4 5.6a9 9 0 0 1 0 12.8"></path></svg>'
+          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.7 6.4 8H3v8h3.4l4.6 3.3z"></path><path d="m16 9 5 6"></path><path d="m21 9-5 6"></path></svg>';
         restartCurrent();
       }
     });
-    const rateControl = player.querySelector('[data-tts-command="rate"]');
-    const handleRateChange = (event) => setSpeechRate(event.target.value);
-    // `input` makes touch and keyboard changes immediate; `change` is retained
-    // for browsers that only emit it when the menu closes.
-    rateControl.addEventListener('input', handleRateChange);
-    rateControl.addEventListener('change', handleRateChange);
     document.body.appendChild(player);
-    const selectedRate = player.querySelector('[data-tts-command="rate"]');
-    selectedRate.value = String(speechRate);
     player.dataset.activeRate = String(speechRate);
     document.documentElement.dataset.adtTtsRate = String(speechRate);
     updatePlayer();
@@ -141,11 +211,40 @@
     return setPlayerVisible(player.hidden);
   }
 
+  function updateDockReadAloudControls() {
+    const label = player?.hidden ? 'Show text to speech controls' : 'Hide text to speech controls';
+    document.querySelectorAll('[data-dock-trigger]').forEach((control) => {
+      if (!isReadAloudControl(control)) return;
+      control.setAttribute('aria-label', label);
+      // The accessible name is sufficient. A native title tooltip otherwise
+      // appears as a second black block behind the open playback bar.
+      control.removeAttribute('title');
+      control.setAttribute('aria-expanded', String(Boolean(player?.isConnected && !player.hidden)));
+    });
+  }
+
   function updatePlayer() {
-    if (!player) return;
-    const pauseButton = player.querySelector('[data-tts-command="pause"]');
-    pauseButton.innerHTML = !playing || paused ? '&#9654;' : '&#10074;&#10074;';
-    pauseButton.setAttribute('aria-label', !playing ? 'Start reading' : (paused ? 'Resume reading' : 'Pause reading'));
+    if (player) {
+      const pauseButton = player.querySelector('[data-tts-command="pause"]');
+      pauseButton.innerHTML = !playing || paused
+        ? '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>'
+        : '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16" rx="1"></rect><rect x="14" y="4" width="4" height="16" rx="1"></rect></svg>';
+      pauseButton.setAttribute('aria-label', !playing ? 'Start reading' : (paused ? 'Resume reading' : 'Pause reading'));
+      const rateNames = new Map([
+        [SPEECH_RATES.slow, 'Slow'], [SPEECH_RATES.normal, 'Normal'],
+        [SPEECH_RATES.fast, 'Fast'], [SPEECH_RATES.veryFast, 'Very Fast']
+      ]);
+      const rateName = rateNames.get(speechRate) || 'Normal';
+      const rateTrigger = player.querySelector('[data-tts-command="rate-toggle"]');
+      rateTrigger?.querySelector('[data-tts-rate-label]')?.replaceChildren(rateName);
+      rateTrigger?.setAttribute('aria-label', `Playback speed: ${rateName}`);
+      player.querySelectorAll('[data-rate-value]').forEach((option) => {
+        const selected = Number(option.dataset.rateValue) === speechRate;
+        option.setAttribute('aria-checked', String(selected));
+        option.querySelector('.adt-tts-rate-check').textContent = selected ? '✓' : '';
+      });
+    }
+    updateDockReadAloudControls();
   }
 
   function setSpeechRate(value) {
@@ -158,7 +257,7 @@
     if (document.documentElement) document.documentElement.dataset.adtTtsRate = String(speechRate);
     if (player) {
       player.dataset.activeRate = String(speechRate);
-      player.querySelector('[data-tts-command="rate"]').value = String(speechRate);
+      updatePlayer();
     }
     // A speed choice must have an audible result. If narration is active,
     // replay the current spoken part at the new rate. If it has finished (or
@@ -172,6 +271,13 @@
   if (nativeMediaPlay) {
     window.HTMLMediaElement.prototype.play = function (...args) {
       if (this instanceof HTMLAudioElement) trackedAudio.add(this);
+      if (localEditorialPreview && this instanceof HTMLAudioElement) {
+        this.muted = true;
+        this.volume = 0;
+        this.pause();
+        try { this.currentTime = 0; } catch {}
+        return Promise.resolve();
+      }
       if (suppressBundledAudio && this instanceof HTMLAudioElement && this.dataset.adtAccessibleTts !== 'true') {
         this.pause();
         this.currentTime = 0;
@@ -967,6 +1073,11 @@
   }
 
   function start() {
+    if (localEditorialPreview) {
+      if (canUseWebSpeech) synth.cancel();
+      stopBundledAudio();
+      return;
+    }
     const markedText = sanitizeForSpeech(extractPageText());
     const text = markedText.replace(/\[\[adt_lang:[^\]]+\]\]/gi, ' ').replace(/\s+/g, ' ').trim();
     if (!text) return;
@@ -1139,13 +1250,9 @@
       window.clearTimeout(pendingControlTimer);
       pendingControlTimer = null;
     }
-    if (player?.isConnected) {
-      const visible = togglePlayerVisibility();
-      control.setAttribute('aria-expanded', String(visible));
-    } else {
-      start();
-      control.setAttribute('aria-expanded', 'true');
-    }
+    if (player?.isConnected) togglePlayerVisibility();
+    else start();
+    updateDockReadAloudControls();
   }, true);
 
   // Exposed for the existing audio-button event handler and for testing.
@@ -1186,7 +1293,7 @@
   // unchanged full-page narrator as soon as that content is actually visible,
   // while retaining the speaker button and playback panel for manual control.
   function scheduleAutoplay(attempt = 0) {
-    if (!canUseWebSpeech || autoplayStarted || playing) return;
+    if (!canUseWebSpeech || autoplayMuted || autoplayStarted || playing) return;
     // Matrix corrections require these content pages to wait for the learner
     // to press Play instead of beginning narration automatically.
     if (/\/pg0(?:23|25|26)_sec001\.html$/i.test(window.location.pathname)) return;
@@ -1197,6 +1304,10 @@
       autoplayStarted = true;
       ensurePlayer();
       start();
+      // Autoplay may begin when the page becomes ready, but the Hisabati-style
+      // control bar appears only after the learner presses the speaker button.
+      setPlayerVisible(false);
+      updateDockReadAloudControls();
       return;
     }
     if (attempt < 60) window.setTimeout(() => scheduleAutoplay(attempt + 1), 100);

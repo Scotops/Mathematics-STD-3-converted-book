@@ -29,6 +29,15 @@ def load(path: Path):
 
 
 source = OUTPUT.read_text(encoding="utf-8")
+# If a merge left two generated INLINE maps, keep the incoming map as the
+# template before rebuilding it from the canonical source files below.
+source = re.sub(
+    r"<<<<<<< HEAD\r?\n.*?=======\r?\n(.*?)>>>>>>> origin/main\r?\n",
+    lambda match: match.group(1),
+    source,
+    count=1,
+    flags=re.DOTALL,
+)
 inline = {url: load(path) for url, path in RESOURCES.items()}
 replacement = "var INLINE = " + json.dumps(inline, ensure_ascii=False, separators=(",", ":")) + ";\n  var BASE_DIR"
 updated, count = re.subn(

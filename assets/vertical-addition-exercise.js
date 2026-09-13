@@ -17,7 +17,7 @@
         }
         return;
       }
-      if (!expression || !input || !match) return;
+      if (!expression || !match) return;
 
       exercise.dataset.verticalAddition = 'true';
       exercise.style.display = 'flex';
@@ -29,6 +29,7 @@
       exercise.style.lineHeight = '1.2';
 
       expression.textContent = match[1];
+      exercise.setAttribute('aria-label', `${match[1]} plus ${match[2]}`);
       expression.style.display = 'block';
       expression.style.width = '100%';
       expression.style.paddingRight = '8px';
@@ -42,11 +43,22 @@
       secondAddend.style.paddingRight = '8px';
       secondAddend.style.borderBottom = '2px solid #111';
       secondAddend.style.textAlign = 'right';
-      input.before(secondAddend);
-
-      input.style.display = 'block';
-      input.style.width = '100%';
-      input.style.marginTop = '12px';
+      if (input) {
+        input.before(secondAddend);
+        input.style.display = 'block';
+        input.style.width = '100%';
+        input.style.marginTop = '12px';
+      } else {
+        exercise.append(secondAddend);
+        const answerSpace = document.createElement('span');
+        answerSpace.dataset.verticalAnswerSpace = 'true';
+        answerSpace.setAttribute('aria-hidden', 'true');
+        answerSpace.style.display = 'block';
+        answerSpace.style.width = '100%';
+        answerSpace.style.height = '32px';
+        answerSpace.style.borderBottom = '2px solid #111';
+        exercise.append(answerSpace);
+      }
     });
   }
 
